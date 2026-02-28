@@ -33,7 +33,5 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSNetworkUsageDescription</key>
-	<string>应用需要网络权限来连接服务器进行登录和数据同步</string>
 </dict>
 </plist>

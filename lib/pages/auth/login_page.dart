@@ -115,11 +115,11 @@ class _LoginPageState extends State<LoginPage> {
 
         // 保存登录信息
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('userId', model.userId!);
+        await prefs.setInt('userId', model.userId!);
         await prefs.setString('userName', model.userName!);
         await prefs.setString('accountName', model.accountName!);
         await prefs.setString('lastUpdateTime', model.lastUpdateTime!);
-        await prefs.setString('token', model.token!);
+        // await prefs.setString('token', model.token!);
 
         // 登录成功，跳转到主界面
         Navigator.pushReplacementNamed(context, '/main');

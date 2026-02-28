@@ -1,5 +1,5 @@
 class LoginResponseModel {
-  String? userId;
+  int? userId;
   String? userName;
   String? accountName;
   String? lastUpdateTime;
@@ -11,7 +11,7 @@ class LoginResponseModel {
   LoginResponseModel.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
     userName = json['userName'];
-    accountName = json['accountName'];
+    accountName = json['accountFullName'];
     lastUpdateTime = json['lastUpdateTime'];
     token = json['token'];
     avatar = json['avatar'];
