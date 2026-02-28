@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'response_model.dart';
 
 class NetworkUtil {
   static const String BASE_URL = 'http://api.jianguanoa.com/1.0/';
@@ -14,53 +15,70 @@ class NetworkUtil {
   bool _netStatus = true;
 
   NetworkUtil._internal() {
-    _dio = Dio(BaseOptions(
-      baseUrl: BASE_URL,
-      connectTimeout: Duration(seconds: 10),
-      receiveTimeout: Duration(seconds: 10),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    ));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: BASE_URL,
+        connectTimeout: Duration(seconds: 10),
+        receiveTimeout: Duration(seconds: 10),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      ),
+    );
     _monitorNetworking();
   }
 
   Future<Response> post(String url, Map<String, dynamic> parameters) async {
     try {
-      Response response = await _dio.post(url, data: parameters);
+      // 根据POSTMETHOD设置Content-Type
+      Options? options;
+      if (parameters.containsKey('POSTMETHOD') && parameters['POSTMETHOD'] == 'JSON') {
+        options = Options(headers: {'Content-Type': 'application/json'});
+      } else {
+        options = Options(headers: {'Content-Type': 'application/x-www-form-urlencoded'});
+      }
+
+      Response response = await _dio.post(url, data: parameters, options: options);
       print('[Request] URL: ${_dio.options.baseUrl}$url');
       print('[Request] params: $parameters');
       print('[Response] Data: ${response.data}');
 
-      if (response.data is Map) {
-        Map<String, dynamic> responseDict = response.data;
-        int code = responseDict['code'] ?? 0;
+      Map<String, dynamic> responseData;
+      if (response.data is String) {
+        responseData = json.decode(response.data);
+      } else if (response.data is Map) {
+        responseData = response.data;
+      } else {
+        throw Exception('无效的响应格式');
+      }
 
-        if (parameters.containsKey('POSTMETHOD') && parameters['POSTMETHOD'] == 'JSON') {
-          if (code == 0) {
-            return Response(
-              requestOptions: response.requestOptions,
-              data: responseDict['resp'],
-              statusCode: response.statusCode,
-            );
-          } else {
-            String info = responseDict['info'] ?? '服务器出错';
-            throw Exception(info);
-          }
-        }
+      ResponseModel<dynamic> responseModel = ResponseModel.fromJson(
+        responseData,
+      );
 
-        if (code == 1) {
+      if (parameters.containsKey('POSTMETHOD') &&
+          parameters['POSTMETHOD'] == 'JSON') {
+        if (responseModel.code == 0) {
           return Response(
             requestOptions: response.requestOptions,
-            data: responseDict['data'],
+            data: responseModel.data,
             statusCode: response.statusCode,
           );
         } else {
-          String info = responseDict['info'] ?? '服务器出错';
-          throw Exception(info);
+          throw Exception(
+            responseModel.info.isNotEmpty ? responseModel.info : '服务器出错',
+          );
         }
+      }
+
+      if (responseModel.code == 1) {
+        return Response(
+          requestOptions: response.requestOptions,
+          data: responseModel.data,
+          statusCode: response.statusCode,
+        );
       } else {
-        throw Exception('无效的响应格式');
+        throw Exception(
+          responseModel.info.isNotEmpty ? responseModel.info : '服务器出错',
+        );
       }
     } catch (e) {
       if (!_netStatus) {
@@ -81,7 +99,9 @@ class NetworkUtil {
     }
 
     int currentInterval = DateTime.now().millisecondsSinceEpoch;
-    String sha1Authentication = generateSHA1('$lastUpdateTime$userId$currentInterval');
+    String sha1Authentication = generateSHA1(
+      '$lastUpdateTime$userId$currentInterval',
+    );
 
     return {
       '_uid': userId,
@@ -117,20 +137,37 @@ class NetworkUtil {
     String? lastUpdateTime = prefs.getString('lastUpdateTime');
 
     int currentInterval = DateTime.now().millisecondsSinceEpoch;
-    String sha1Authentication = generateSHA1('$lastUpdateTime$userId$currentInterval');
+    String sha1Authentication = generateSHA1(
+      '$lastUpdateTime$userId$currentInterval',
+    );
 
     FormData formData = FormData.fromMap({
       '_uid': userId,
       '_timestamp': currentInterval,
       '_signature': sha1Authentication,
-      'img': await MultipartFile.fromFile(image.path, filename: '${DateTime.now().millisecondsSinceEpoch}.jpg'),
+      'img': await MultipartFile.fromFile(
+        image.path,
+        filename: '${DateTime.now().millisecondsSinceEpoch}.jpg',
+      ),
     });
 
     Response response = await _dio.post(url, data: formData);
-    if (response.data['code'] == 1) {
-      return response.data['data']['imgName'];
+    Map<String, dynamic> responseData;
+    if (response.data is String) {
+      responseData = json.decode(response.data);
+    } else if (response.data is Map) {
+      responseData = response.data;
     } else {
-      throw Exception(response.data['info'] ?? '上传失败');
+      throw Exception('无效的响应格式');
+    }
+    ResponseModel<dynamic> responseModel = ResponseModel.fromJson(responseData);
+    if (responseModel.code == 1) {
+      Map<String, dynamic> data = responseModel.data as Map<String, dynamic>;
+      return data['imgName'] as String;
+    } else {
+      throw Exception(
+        responseModel.info.isNotEmpty ? responseModel.info : '上传失败',
+      );
     }
   }
 }

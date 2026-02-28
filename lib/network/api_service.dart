@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:flutter_app/network/network_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,7 +12,11 @@ class ApiService {
   ApiService._internal();
 
   // 登录
-  Future<Map<String, dynamic>> login(String accountName, String userName, String password) async {
+  Future<Map<String, dynamic>> login(
+    String accountName,
+    String userName,
+    String password,
+  ) async {
     int currentInterval = DateTime.now().millisecondsSinceEpoch;
     String sha1Pass = _networkUtil.generateSHA1('$currentInterval$password');
 
@@ -26,7 +32,11 @@ class ApiService {
   }
 
   // 获取用户令牌
-  Future<Map<String, dynamic>> getUserToken(String accountName, String userName, String password) async {
+  Future<Map<String, dynamic>> getUserToken(
+    String accountName,
+    String userName,
+    String password,
+  ) async {
     int currentInterval = DateTime.now().millisecondsSinceEpoch;
     String md5Pass = _generateMD5(password);
 
@@ -39,16 +49,20 @@ class ApiService {
       'POSTMETHOD': 'JSON',
     };
 
-    var response = await _networkUtil.post('http://uc.jianguanoa.com/login', parameters);
-    return response.data;
+    var response = await _networkUtil.post(
+      'http://uc.jianguanoa.com/login',
+      parameters,
+    );
+    var userDataResponse = await getUserInfo(response.data['token'], userName);
+    return userDataResponse;
   }
 
   // 获取用户信息
-  Future<Map<String, dynamic>> getUserInfo(String token, String loginName) async {
-    Map<String, dynamic> parameters = {
-      'token': token,
-      'loginName': loginName,
-    };
+  Future<Map<String, dynamic>> getUserInfo(
+    String token,
+    String loginName,
+  ) async {
+    Map<String, dynamic> parameters = {'token': token, 'loginName': loginName};
 
     var response = await _networkUtil.post('new-login', parameters);
     return response.data;
@@ -56,19 +70,32 @@ class ApiService {
 
   // 发送验证码
   Future<Map<String, dynamic>> sendCode(Map<String, dynamic> params) async {
-    var response = await _networkUtil.post('http://uc.jianguanoa.com/api/passwdRest/sendSms', params);
+    var response = await _networkUtil.post(
+      'http://uc.jianguanoa.com/api/passwdRest/sendSms',
+      params,
+    );
     return response.data;
   }
 
   // 重置密码
-  Future<Map<String, dynamic>> resetPassword(Map<String, dynamic> params) async {
-    var response = await _networkUtil.post('http://uc.jianguanoa.com/api/passwdRest/submit', params);
+  Future<Map<String, dynamic>> resetPassword(
+    Map<String, dynamic> params,
+  ) async {
+    var response = await _networkUtil.post(
+      'http://uc.jianguanoa.com/api/passwdRest/submit',
+      params,
+    );
     return response.data;
   }
 
   // 更新密码
-  Future<Map<String, dynamic>> updatePassword(Map<String, dynamic> params) async {
-    var response = await _networkUtil.post('http://uc.jianguanoa.com/user/changePasswd', params);
+  Future<Map<String, dynamic>> updatePassword(
+    Map<String, dynamic> params,
+  ) async {
+    var response = await _networkUtil.post(
+      'http://uc.jianguanoa.com/user/changePasswd',
+      params,
+    );
     return response.data;
   }
 
@@ -145,7 +172,10 @@ class ApiService {
       throw Exception('未登录');
     }
 
-    var response = await _networkUtil.post('main/datalistconfig/version', authInfo);
+    var response = await _networkUtil.post(
+      'main/datalistconfig/version',
+      authInfo,
+    );
     return response.data;
   }
 
@@ -222,18 +252,26 @@ class ApiService {
       throw Exception('未登录');
     }
 
-    var response = await _networkUtil.post('address-book/get/$userId', authInfo);
+    var response = await _networkUtil.post(
+      'address-book/get/$userId',
+      authInfo,
+    );
     return response.data;
   }
 
   // 设置联系人常用状态
-  Future<bool> setAddressBookContactFrequent(String userId, bool frequent) async {
+  Future<bool> setAddressBookContactFrequent(
+    String userId,
+    bool frequent,
+  ) async {
     Map<String, dynamic>? authInfo = await _networkUtil.getAuthenticationInfo();
     if (authInfo == null) {
       throw Exception('未登录');
     }
 
-    String url = frequent ? 'address-book/set-to-frequent/on' : 'address-book/set-to-frequent/off';
+    String url = frequent
+        ? 'address-book/set-to-frequent/on'
+        : 'address-book/set-to-frequent/off';
     authInfo['userId'] = userId;
 
     await _networkUtil.post(url, authInfo);
@@ -241,7 +279,12 @@ class ApiService {
   }
 
   // 获取通知列表
-  Future<Map<String, dynamic>> getNotificationList(int status, String? keyword, int page, int rows) async {
+  Future<Map<String, dynamic>> getNotificationList(
+    int status,
+    String? keyword,
+    int page,
+    int rows,
+  ) async {
     Map<String, dynamic>? authInfo = await _networkUtil.getAuthenticationInfo();
     if (authInfo == null) {
       throw Exception('未登录');
@@ -253,7 +296,10 @@ class ApiService {
     authInfo['page'] = page;
     authInfo['rows'] = rows;
 
-    var response = await _networkUtil.post('notification/list/$status', authInfo);
+    var response = await _networkUtil.post(
+      'notification/list/$status',
+      authInfo,
+    );
     return response.data;
   }
 
@@ -286,12 +332,20 @@ class ApiService {
       throw Exception('未登录');
     }
 
-    var response = await _networkUtil.post('notification/get-unread-count', authInfo);
+    var response = await _networkUtil.post(
+      'notification/get-unread-count',
+      authInfo,
+    );
     return response.data;
   }
 
   // 获取待办事项列表
-  Future<Map<String, dynamic>> getBacklogList(int status, String? keyword, int page, int rows) async {
+  Future<Map<String, dynamic>> getBacklogList(
+    int status,
+    String? keyword,
+    int page,
+    int rows,
+  ) async {
     Map<String, dynamic>? authInfo = await _networkUtil.getAuthenticationInfo();
     if (authInfo == null) {
       throw Exception('未登录');
@@ -304,12 +358,20 @@ class ApiService {
     authInfo['page'] = page;
     authInfo['rows'] = rows;
 
-    var response = await _networkUtil.post('workflow/backlog/list/$statusValue', authInfo);
+    var response = await _networkUtil.post(
+      'workflow/backlog/list/$statusValue',
+      authInfo,
+    );
     return response.data;
   }
 
   // 获取相关事项列表
-  Future<Map<String, dynamic>> getRelatedToMeList(int status, String? keyword, int page, int rows) async {
+  Future<Map<String, dynamic>> getRelatedToMeList(
+    int status,
+    String? keyword,
+    int page,
+    int rows,
+  ) async {
     Map<String, dynamic>? authInfo = await _networkUtil.getAuthenticationInfo();
     if (authInfo == null) {
       throw Exception('未登录');
@@ -321,12 +383,21 @@ class ApiService {
     authInfo['page'] = page;
     authInfo['rows'] = rows;
 
-    var response = await _networkUtil.post('workflow/relatedtome/list/$status', authInfo);
+    var response = await _networkUtil.post(
+      'workflow/relatedtome/list/$status',
+      authInfo,
+    );
     return response.data;
   }
 
   // 获取数据列表
-  Future<Map<String, dynamic>> getDataList(String dataId, Map<String, dynamic>? filterDict, int page, int rows, int reminderIndex) async {
+  Future<Map<String, dynamic>> getDataList(
+    String dataId,
+    Map<String, dynamic>? filterDict,
+    int page,
+    int rows,
+    int reminderIndex,
+  ) async {
     Map<String, dynamic>? authInfo = await _networkUtil.getAuthenticationInfo();
     if (authInfo == null) {
       throw Exception('未登录');
@@ -414,7 +485,8 @@ class ApiService {
 
   // 生成 MD5
   String _generateMD5(String input) {
-    // 简化实现，实际项目中应使用 crypto 库
-    return input;
+    var bytes = utf8.encode(input);
+    var digest = md5.convert(bytes);
+    return digest.toString();
   }
 }

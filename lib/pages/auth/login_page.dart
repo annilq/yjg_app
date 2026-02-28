@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
       });
 
       try {
-        var response = await ApiService().login(
+        var response = await ApiService().getUserToken(
           _accountNameController.text,
           _userNameController.text,
           _passwordController.text,
