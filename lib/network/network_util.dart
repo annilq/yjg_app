@@ -99,7 +99,7 @@ class NetworkUtil {
   void _monitorNetworking() async {
     // 简单的网络状态监测
     try {
-      final result = await InternetAddress.lookup('google.com');
+      final result = await InternetAddress.lookup('baidu.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         _netStatus = true;
       } else {
