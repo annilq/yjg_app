@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/models/main_menus_response_model.dart';
 import 'package:flutter_app/models/main_reminds_response_model.dart';
-import 'package:flutter_app/pages/main/components/backlog_menu_component.dart';
-import 'package:flutter_app/pages/main/components/common_apps_component.dart';
-import 'package:flutter_app/pages/main/components/announcement_carousel_component.dart';
-import 'package:flutter_app/pages/main/components/common_modules_component.dart';
-import 'package:flutter_app/pages/main/components/fixed_apps_component.dart';
-import 'package:flutter_app/pages/main/components/copyright_component.dart';
+import 'package:flutter_app/pages/main/home/components/backlog_menu_component.dart';
+import 'package:flutter_app/pages/main/home/components/common_apps_component.dart';
+import 'package:flutter_app/pages/main/home/components/announcement_carousel_component.dart';
+import 'package:flutter_app/pages/main/home/components/common_modules_component.dart';
+import 'package:flutter_app/pages/main/home/components/fixed_apps_component.dart';
+import 'package:flutter_app/pages/main/home/components/copyright_component.dart';
 
 class HomePage extends StatefulWidget {
   @override
