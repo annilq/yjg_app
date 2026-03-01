@@ -91,7 +91,7 @@ class NetworkUtil {
 
   Future<Map<String, dynamic>?> getAuthenticationInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userId');
+    int? userId = prefs.getInt('userId');
     String? lastUpdateTime = prefs.getString('lastUpdateTime');
 
     if (userId == null || lastUpdateTime == null) {
@@ -133,7 +133,7 @@ class NetworkUtil {
   // 上传图片
   Future<String> uploadImage(File image, String url) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userId');
+    int? userId = prefs.getInt('userId');
     String? lastUpdateTime = prefs.getString('lastUpdateTime');
 
     int currentInterval = DateTime.now().millisecondsSinceEpoch;

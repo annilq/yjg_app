@@ -3,6 +3,8 @@ import 'package:flutter_app/pages/auth/login_page.dart';
 import 'package:flutter_app/pages/auth/reset_password_page.dart';
 import 'package:flutter_app/pages/auth/update_password_page.dart';
 import 'package:flutter_app/pages/main/main_page.dart';
+import 'package:flutter_app/pages/office/backlog/backlog_list_page.dart';
+import 'package:flutter_app/pages/office/relatedtome/relatedtome_list_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,6 +24,8 @@ class MyApp extends StatelessWidget {
         '/reset-password': (context) => ResetPasswordPage(),
         '/update-password': (context) => UpdatePasswordPage(),
         '/main': (context) => MainPage(),
+        '/office/backlog': (context) => BacklogListPage(),
+        '/office/relatedtome': (context) => RelatedToMeListPage(),
       },
     );
   }

@@ -35,26 +35,37 @@ class BacklogMenuComponent extends StatelessWidget {
             {'title': '发起', 'icon': CupertinoIcons.add_circled, 'count': 0},
           ];
           var item = menuItems[index];
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(item['icon'], color: Colors.white),
-              SizedBox(height: 8),
-              Text(item['title'], style: TextStyle(color: Colors.white, fontSize: 12)),
-              if (item['count'] > 0)
-                Container(
-                  margin: EdgeInsets.only(top: 4),
-                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10),
+          return GestureDetector(
+            onTap: () {
+              if (index == 0) {
+                // 跳转到待办页面
+                Navigator.pushNamed(context, '/office/backlog');
+              } else if (index == 1) {
+                // 跳转到我发起的页面
+                Navigator.pushNamed(context, '/office/relatedtome');
+              }
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(item['icon'], color: Colors.white),
+                SizedBox(height: 8),
+                Text(item['title'], style: TextStyle(color: Colors.white, fontSize: 12)),
+                if (item['count'] > 0)
+                  Container(
+                    margin: EdgeInsets.only(top: 4),
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '${item['count']}',
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
                   ),
-                  child: Text(
-                    '${item['count']}',
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                  ),
-                ),
-            ],
+              ],
+            ),
           );
         },
       ),
