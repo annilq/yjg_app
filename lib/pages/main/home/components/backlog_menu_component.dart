@@ -43,6 +43,9 @@ class BacklogMenuComponent extends StatelessWidget {
               } else if (index == 1) {
                 // 跳转到我发起的页面
                 Navigator.pushNamed(context, '/office/relatedtome');
+              } else if (index == 2) {
+                // 跳转到提醒页面
+                Navigator.pushNamed(context, '/office/notices');
               }
             },
             child: Column(
