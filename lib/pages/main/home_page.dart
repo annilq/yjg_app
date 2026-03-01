@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/models/main_menus_response_model.dart';
 import 'package:flutter_app/models/main_reminds_response_model.dart';
+import 'package:flutter_app/pages/main/components/backlog_menu_component.dart';
+import 'package:flutter_app/pages/main/components/common_apps_component.dart';
+import 'package:flutter_app/pages/main/components/announcement_carousel_component.dart';
+import 'package:flutter_app/pages/main/components/common_modules_component.dart';
+import 'package:flutter_app/pages/main/components/fixed_apps_component.dart';
+import 'package:flutter_app/pages/main/components/copyright_component.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -43,16 +50,20 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('首页'),
+        title: null,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           Stack(
             children: [
               IconButton(
-                icon: Icon(Icons.notifications),
+                icon: Icon(CupertinoIcons.bell),
                 onPressed: () {
                   Navigator.pushNamed(context, '/notification');
                 },
@@ -92,67 +103,32 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 待办事项
-                  Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('待办事项', style: TextStyle(fontSize: 16)),
-                          Text('$_backlogCount 件', style: TextStyle(color: Colors.red)),
-                        ],
-                      ),
-                    ),
+                  // 待办菜单区域
+                  BacklogMenuComponent(
+                    backlogCount: _backlogCount,
+                    remindCount: _reminds.length,
                   ),
                   SizedBox(height: 16),
 
-                  // 系统提醒
-                  Text('系统提醒', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
-                  ..._reminds.map((remind) => Card(
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(remind.title ?? '', style: TextStyle(fontSize: 14)),
-                              SizedBox(height: 4),
-                              Text(remind.content ?? '', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                            ],
-                          ),
-                        ),
-                      )),
+                  // 常用应用区域
+                  CommonAppsComponent(menus: _menus),
                   SizedBox(height: 16),
 
-                  // 主菜单
-                  Text('功能菜单', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: 1,
-                    ),
-                    itemCount: _menus.length,
-                    itemBuilder: (context, index) {
-                      MenuModel menu = _menus[index];
-                      return GestureDetector(
-                        onTap: () {
-                          // 处理菜单点击
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.apps), // 这里应该使用实际的图标
-                            SizedBox(height: 8),
-                            Text(menu.menuName ?? '', style: TextStyle(fontSize: 12)),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                  // 公告轮播区域
+                  AnnouncementCarouselComponent(reminds: _reminds),
+                  SizedBox(height: 16),
+
+                  // 常用模块区域
+                  CommonModulesComponent(),
+                  SizedBox(height: 16),
+
+                  // 固定应用区域
+                  FixedAppsComponent(),
+                  SizedBox(height: 16),
+
+                  // 底部版权信息
+                  CopyrightComponent(),
+                  SizedBox(height: 16),
                 ],
               ),
             ),

@@ -1,0 +1,63 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+class BacklogMenuComponent extends StatelessWidget {
+  final int backlogCount;
+  final int remindCount;
+
+  const BacklogMenuComponent({
+    Key? key,
+    required this.backlogCount,
+    required this.remindCount,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: EdgeInsets.all(16),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          childAspectRatio: 1,
+        ),
+        itemCount: 4,
+        itemBuilder: (context, index) {
+          List<Map<String, dynamic>> menuItems = [
+            {'title': '待处理', 'icon': CupertinoIcons.mail, 'count': backlogCount},
+            {'title': '已发起', 'icon': CupertinoIcons.paperplane, 'count': 0},
+            {'title': '提醒', 'icon': CupertinoIcons.bell, 'count': remindCount},
+            {'title': '发起', 'icon': CupertinoIcons.add_circled, 'count': 0},
+          ];
+          var item = menuItems[index];
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(item['icon'], color: Colors.white),
+              SizedBox(height: 8),
+              Text(item['title'], style: TextStyle(color: Colors.white, fontSize: 12)),
+              if (item['count'] > 0)
+                Container(
+                  margin: EdgeInsets.only(top: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    '${item['count']}',
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
