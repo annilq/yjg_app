@@ -47,6 +47,7 @@ dependencies:
   # Localizations
   flutter_localizations:
     sdk: flutter
+  webview_flutter: ^4.13.1
 
 dev_dependencies:
   flutter_test:

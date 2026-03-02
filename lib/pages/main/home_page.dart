@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/network/api_service.dart';
-import 'package:flutter_app/models/main_menus_response_model.dart';
+
 import 'package:flutter_app/models/main_reminds_response_model.dart';
 import 'package:flutter_app/components/app_bar.dart';
 import 'package:flutter_app/pages/main/home/components/backlog_menu_component.dart';
@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<MenuModel> _menus = [];
+
   List<RemindModel> _reminds = [];
   int _backlogCount = 0;
   bool _isLoading = true;
@@ -30,11 +30,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadData() async {
     try {
-      // 获取主菜单
-      var menusResponse = await ApiService().getMainMenus();
-      MainMenusResponseModel menusModel = MainMenusResponseModel.fromJson(menusResponse);
-      _menus = menusModel.menuModels ?? [];
-
       // 获取提醒
       var remindsResponse = await ApiService().getMainReminds();
       MainRemindsResponseModel remindsModel = MainRemindsResponseModel.fromJson(remindsResponse);
@@ -112,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 16),
 
                   // 常用应用区域
-                  CommonAppsComponent(menus: _menus),
+                  CommonAppsComponent(),
                   SizedBox(height: 16),
 
                   // 公告轮播区域

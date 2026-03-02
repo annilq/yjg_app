@@ -1,21 +1,65 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/models/main_menus_response_model.dart';
 import 'package:flutter_app/theme/theme.dart';
 
-class CommonAppsComponent extends StatelessWidget {
-  final List<MenuModel> menus;
-  final VoidCallback onSettingTap;
-  final ValueChanged<MenuModel> onMenuTap;
-  final VoidCallback onAllFunctionsTap;
-
+class CommonAppsComponent extends StatefulWidget {
   const CommonAppsComponent({
     super.key,
-    required this.menus,
-    required this.onSettingTap,
-    required this.onMenuTap,
-    required this.onAllFunctionsTap,
   });
+
+  @override
+  _CommonAppsComponentState createState() => _CommonAppsComponentState();
+}
+
+class _CommonAppsComponentState extends State<CommonAppsComponent> {
+  List<MenuModel> _menus = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    try {
+      // 获取主菜单
+      var menusResponse = await ApiService().getMainMenus();
+      MainMenusResponseModel menusModel = MainMenusResponseModel.fromJson(menusResponse);
+      _menus = menusModel.menuModels ?? [];
+    } catch (e) {
+      print('加载常用应用数据失败: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  // 处理设置按钮点击
+  void _handleSettingTap() {
+    Navigator.pushNamed(context, '/workflow/setting');
+  }
+
+  // 处理菜单点击
+  void _handleMenuTap(MenuModel menu) {
+    Navigator.pushNamed(
+      context,
+      '/workflow/list',
+      arguments: {
+        'dataId': menu.menuId,
+        'workflowCode': menu.menuIcon,
+        'name': menu.menuName,
+      },
+    );
+  }
+
+  // 处理全部功能点击
+  void _handleAllFunctionsTap() {
+    Navigator.pushNamed(context, '/workflow/setting');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +72,7 @@ class CommonAppsComponent extends StatelessWidget {
             children: [
               Text('常用应用', style: AppTheme.titleStyle),
               GestureDetector(
-                onTap: onSettingTap,
+                onTap: _handleSettingTap,
                 child: Container(
                   padding: EdgeInsets.all(8),
                   child: Icon(CupertinoIcons.settings, color: AppTheme.primaryColor, size: 20),
@@ -37,60 +81,65 @@ class CommonAppsComponent extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 1,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-            ),
-            itemCount: menus.length,
-            itemBuilder: (context, index) {
-              MenuModel menu = menus[index];
-              return GestureDetector(
-                onTap: () => onMenuTap(menu),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
+          _isLoading
+              ? Container(
+                  height: 200,
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              : GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: _menus.length,
+                  itemBuilder: (context, index) {
+                    MenuModel menu = _menus[index];
+                    return GestureDetector(
+                      onTap: () => _handleMenuTap(menu),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: AppTheme.primaryColor.withAlpha(25),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              CupertinoIcons.square_grid_2x2,
+                              color: AppTheme.primaryColor,
+                              size: 24,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            menu.menuName ?? '',
+                            style: AppTheme.smallStyle,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
-                      child: Icon(
-                        CupertinoIcons.square_grid_2x2,
-                        color: AppTheme.primaryColor,
-                        size: 24,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      menu.menuName ?? '',
-                      style: AppTheme.smallStyle,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              );
-            },
-          ),
           SizedBox(height: 12),
           // 全部功能入口
           GestureDetector(
-            onTap: onAllFunctionsTap,
+            onTap: _handleAllFunctionsTap,
             child: Container(
               alignment: Alignment.center,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 border: Border.all(color: AppTheme.lightGray),
                 borderRadius: BorderRadius.circular(8),
-                color: AppTheme.lightGray.withOpacity(0.5),
+                color: AppTheme.lightGray.withAlpha(128),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

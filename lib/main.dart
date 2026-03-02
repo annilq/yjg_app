@@ -9,6 +9,11 @@ import 'package:flutter_app/pages/main/main_page.dart';
 import 'package:flutter_app/pages/office/backlog/backlog_list_page.dart';
 import 'package:flutter_app/pages/notices/notices_list_page.dart';
 import 'package:flutter_app/pages/office/relatedtome/relatedtome_list_page.dart';
+import 'package:flutter_app/pages/workflow/list/workflow_list_page.dart';
+import 'package:flutter_app/pages/workflow/setting/workflow_setting_page.dart';
+import 'package:flutter_app/pages/workflow/module_list/module_list_page.dart';
+import 'package:flutter_app/pages/workflow/module_setting/module_setting_page.dart';
+import 'package:flutter_app/pages/webview/webview_page.dart';
 import 'package:flutter_app/theme/theme.dart';
 
 void main() {
@@ -43,6 +48,26 @@ class MyApp extends StatelessWidget {
         '/office/backlog': (context) => BacklogListPage(),
         '/office/notices': (context) => NoticesListPage(),
         '/office/relatedtome': (context) => RelatedToMeListPage(),
+        '/workflow/list': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+          return WorkflowListPage(
+            workflowCode: args['workflowCode'] ?? '',
+            dataId: args['dataId'] ?? '',
+            name: args['name'] ?? '',
+          );
+        },
+        '/workflow/setting': (context) => WorkflowSettingPage(),
+        '/workflow/moduleList': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+          return ModuleListPage(
+            moduleName: args['moduleName'] ?? '',
+          );
+        },
+        '/workflow/moduleSetting': (context) => ModuleSettingPage(),
+        '/webview': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+          return WebviewPage(params: args);
+        },
       },
     );
   }
