@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/models/address_book_frequent_response_model.dart';
+import 'package:flutter_app/components/index.dart';
 
 class ContactDetailPage extends StatefulWidget {
   final String userId;
@@ -106,12 +107,9 @@ class _ContactDetailPageState extends State<ContactDetailPage> {
                         ),
                       ),
                       SizedBox(height: 24),
-                      ElevatedButton(
+                      Button(
                         onPressed: _toggleFrequent,
-                        child: Text(_isFrequent ? '取消常用' : '设为常用'),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
-                        ),
+                        text: _isFrequent ? '取消常用' : '设为常用',
                       ),
                     ],
                   ),

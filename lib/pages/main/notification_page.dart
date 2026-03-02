@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/models/notification_list_page_model.dart';
+import 'package:flutter_app/components/index.dart';
 
 class NotificationPage extends StatefulWidget {
   @override
@@ -44,7 +45,7 @@ class _NotificationPageState extends State<NotificationPage> {
         title: Text('通知'),
         actions: [
           if (_unreadCount > 0)
-            TextButton(
+            TextButtonCustom(
               onPressed: () async {
                 try {
                   await ApiService().setNotificationAllRead();
@@ -109,7 +110,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               Text(item.createTime ?? '', style: TextStyle(fontSize: 12, color: Colors.grey)),
                               SizedBox(height: 8),
                               if (item.status == 0)
-                                ElevatedButton(
+                                Button(
                                   onPressed: () async {
                                     try {
                                       await ApiService().setNotificationRead(item.id ?? '');
@@ -121,7 +122,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                       print('标记已读失败: $e');
                                     }
                                   },
-                                  child: Text('标记已读'),
+                                  text: '标记已读',
                                 ),
                             ],
                           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/models/login_response_model.dart';
+import 'package:flutter_app/components/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -28,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
+              TextFormFieldCustom(
                 controller: _accountNameController,
                 decoration: InputDecoration(
                   labelText: '账号',
@@ -42,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               SizedBox(height: 16.0),
-              TextFormField(
+              TextFormFieldCustom(
                 controller: _userNameController,
                 decoration: InputDecoration(
                   labelText: '用户名',
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               SizedBox(height: 16.0),
-              TextFormField(
+              TextFormFieldCustom(
                 controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: '密码',
@@ -74,21 +75,18 @@ class _LoginPageState extends State<LoginPage> {
               Center(
                 child: _isLoading
                     ? CircularProgressIndicator()
-                    : ElevatedButton(
+                    : Button(
                         onPressed: _login,
-                        child: Text('登录'),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
-                        ),
+                        text: '登录',
                       ),
               ),
               SizedBox(height: 16.0),
               Center(
-                child: TextButton(
+                child: TextButtonCustom(
                   onPressed: () {
                     Navigator.pushNamed(context, '/reset-password');
                   },
-                  child: Text('忘记密码'),
+                  text: '忘记密码',
                 ),
               ),
             ],

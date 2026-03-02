@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/network/api_service.dart';
+import 'package:flutter_app/components/index.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
+              TextFormFieldCustom(
                 controller: _phoneController,
                 decoration: InputDecoration(
                   labelText: '手机号',
@@ -46,7 +47,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               Row(
                 children: [
                   Expanded(
-                    child: TextFormField(
+                    child: TextFormFieldCustom(
                       controller: _codeController,
                       decoration: InputDecoration(
                         labelText: '验证码',
@@ -61,14 +62,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     ),
                   ),
                   SizedBox(width: 16.0),
-                  ElevatedButton(
-                    onPressed: _countdown > 0 ? null : _sendCode,
-                    child: Text(_countdown > 0 ? '$_countdown秒后重发' : '发送验证码'),
+                  Button(
+                    onPressed: _countdown > 0 ? () {} : _sendCode,
+                    text: _countdown > 0 ? '$_countdown秒后重发' : '发送验证码',
                   ),
                 ],
               ),
               SizedBox(height: 16.0),
-              TextFormField(
+              TextFormFieldCustom(
                 controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: '新密码',
@@ -83,7 +84,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 },
               ),
               SizedBox(height: 16.0),
-              TextFormField(
+              TextFormFieldCustom(
                 controller: _confirmPasswordController,
                 decoration: InputDecoration(
                   labelText: '确认密码',
@@ -104,12 +105,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               Center(
                 child: _isLoading
                     ? CircularProgressIndicator()
-                    : ElevatedButton(
+                    : Button(
                         onPressed: _resetPassword,
-                        child: Text('确认重置'),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
-                        ),
+                        text: '确认重置',
                       ),
               ),
             ],

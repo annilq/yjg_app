@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/models/backlog_list_page_model.dart';
+import 'package:flutter_app/components/index.dart';
 
 class WorkflowPage extends StatefulWidget {
   @override
@@ -76,11 +77,11 @@ class _WorkflowPageState extends State<WorkflowPage> {
                                   SizedBox(height: 8),
                                   Text(item.createTime ?? '', style: TextStyle(fontSize: 12, color: Colors.grey)),
                                   SizedBox(height: 8),
-                                  ElevatedButton(
+                                  Button(
                                     onPressed: () {
                                       // 处理工作流
                                     },
-                                    child: Text('处理'),
+                                    text: '处理',
                                   ),
                                 ],
                               ),

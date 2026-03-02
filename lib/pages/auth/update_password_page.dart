@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/network/api_service.dart';
+import 'package:flutter_app/components/index.dart';
 
 class UpdatePasswordPage extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
+              TextFormFieldCustom(
                 controller: _oldPasswordController,
                 decoration: InputDecoration(
                   labelText: '原密码',
@@ -41,7 +42,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                 },
               ),
               SizedBox(height: 16.0),
-              TextFormField(
+              TextFormFieldCustom(
                 controller: _newPasswordController,
                 decoration: InputDecoration(
                   labelText: '新密码',
@@ -56,7 +57,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                 },
               ),
               SizedBox(height: 16.0),
-              TextFormField(
+              TextFormFieldCustom(
                 controller: _confirmPasswordController,
                 decoration: InputDecoration(
                   labelText: '确认密码',
@@ -77,12 +78,9 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
               Center(
                 child: _isLoading
                     ? CircularProgressIndicator()
-                    : ElevatedButton(
+                    : Button(
                         onPressed: _updatePassword,
-                        child: Text('确认修改'),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
-                        ),
+                        text: '确认修改',
                       ),
               ),
             ],
