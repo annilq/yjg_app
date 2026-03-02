@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/components/index.dart';
+
 
 class RelatedToMeTabComponent extends StatelessWidget {
   final int currentIndex;
@@ -12,88 +14,22 @@ class RelatedToMeTabComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey[200]!),
+    return CupertinoTabComponent(
+      items: [
+        CupertinoTabItem(
+          text: '已通过',
+          onTap: () => onTabChanged(0),
         ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () => onTabChanged(0),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: currentIndex == 0 ? Theme.of(context).primaryColor : Colors.transparent,
-                      width: 2,
-                    ),
-                  ),
-                ),
-                child: Text(
-                  '已通过',
-                  style: TextStyle(
-                    color: currentIndex == 0 ? Theme.of(context).primaryColor : Colors.grey,
-                    fontWeight: currentIndex == 0 ? FontWeight.bold : FontWeight.normal,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => onTabChanged(1),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: currentIndex == 1 ? Theme.of(context).primaryColor : Colors.transparent,
-                      width: 2,
-                    ),
-                  ),
-                ),
-                child: Text(
-                  '审核中',
-                  style: TextStyle(
-                    color: currentIndex == 1 ? Theme.of(context).primaryColor : Colors.grey,
-                    fontWeight: currentIndex == 1 ? FontWeight.bold : FontWeight.normal,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => onTabChanged(2),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: currentIndex == 2 ? Theme.of(context).primaryColor : Colors.transparent,
-                      width: 2,
-                    ),
-                  ),
-                ),
-                child: Text(
-                  '未批准',
-                  style: TextStyle(
-                    color: currentIndex == 2 ? Theme.of(context).primaryColor : Colors.grey,
-                    fontWeight: currentIndex == 2 ? FontWeight.bold : FontWeight.normal,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+        CupertinoTabItem(
+          text: '审核中',
+          onTap: () => onTabChanged(1),
+        ),
+        CupertinoTabItem(
+          text: '未批准',
+          onTap: () => onTabChanged(2),
+        ),
+      ],
+      activeIndex: currentIndex,
     );
   }
 }
