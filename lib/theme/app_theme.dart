@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class AppTheme {
   // 颜色方案
@@ -52,16 +51,16 @@ class AppTheme {
       colorScheme: ColorScheme.fromSwatch()
           .copyWith(secondary: secondaryColor),
       scaffoldBackgroundColor: white,
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(cardBorderRadius),
         ),
       ),
       textTheme: TextTheme(
-        headline6: titleStyle,
-        bodyText2: bodyStyle,
-        caption: smallStyle,
+        titleLarge: titleStyle,
+        bodyMedium: bodyStyle,
+        bodySmall: smallStyle,
       ),
       buttonTheme: ButtonThemeData(
         buttonColor: primaryColor,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class AppTheme {
@@ -52,12 +53,6 @@ class AppTheme {
       colorScheme: ColorScheme.fromSwatch()
           .copyWith(secondary: secondaryColor),
       scaffoldBackgroundColor: white,
-      cardTheme: CardThemeData(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(cardBorderRadius),
-        ),
-      ),
       textTheme: TextTheme(
         titleLarge: titleStyle,
         bodyMedium: bodyStyle,
@@ -68,6 +63,24 @@ class AppTheme {
         textTheme: ButtonTextTheme.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+    );
+  }
+  
+  // Cupertino主题数据
+  static CupertinoThemeData get cupertinoThemeData {
+    return CupertinoThemeData(
+      primaryColor: primaryColor,
+      primaryContrastingColor: secondaryColor,
+      scaffoldBackgroundColor: white,
+      textTheme: CupertinoTextThemeData(
+        navTitleTextStyle: titleStyle,
+        textStyle: bodyStyle,
+        actionTextStyle: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w500,
+          color: primaryColor,
         ),
       ),
     );

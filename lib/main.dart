@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_app/pages/auth/login_page.dart';
 import 'package:flutter_app/pages/auth/reset_password_page.dart';
 import 'package:flutter_app/pages/auth/update_password_page.dart';
@@ -15,9 +18,22 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return PlatformApp(
       title: '云建管',
-      theme: AppTheme.themeData,
+      material: (context, platform) => MaterialAppData(
+        theme: AppTheme.themeData,
+      ),
+      cupertino: (_, __) => CupertinoAppData(
+        theme: AppTheme.cupertinoThemeData,
+      ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('zh', 'CN'),
+      ],
       initialRoute: '/',
       routes: {
         '/': (context) => LoginPage(),
