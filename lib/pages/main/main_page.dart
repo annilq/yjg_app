@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/main/home_page.dart';
-import 'package:flutter_app/pages/main/workflow_page.dart';
 import 'package:flutter_app/pages/main/address_book_page.dart';
-import 'package:flutter_app/pages/main/notification_page.dart';
 import 'package:flutter_app/pages/main/me_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -14,9 +12,7 @@ class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     HomePage(),
-    WorkflowPage(),
     AddressBookPage(),
-    NotificationPage(),
     MePage(),
   ];
 
@@ -37,16 +33,8 @@ class _MainPageState extends State<MainPage> {
             label: '首页',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.work),
-            label: '工作流',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.people),
             label: '通讯录',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: '通知',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
