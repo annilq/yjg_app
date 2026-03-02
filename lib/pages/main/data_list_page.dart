@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/network/api_service.dart';
+import 'package:flutter_app/components/app_bar.dart';
 import 'package:flutter_app/models/data_list_page_model.dart';
 
 class DataListPage extends StatefulWidget {
@@ -78,8 +79,8 @@ class _DataListPageState extends State<DataListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+      appBar: CustomAppBar(
+        title: widget.title,
         actions: [
           IconButton(
             icon: Icon(Icons.filter_list),

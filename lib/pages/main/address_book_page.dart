@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/network/api_service.dart';
+import 'package:flutter_app/components/app_bar.dart';
 import 'package:flutter_app/models/address_book_frequent_response_model.dart';
 import 'package:flutter_app/models/address_book_full_response_model.dart';
 import 'package:flutter_app/pages/main/contact_detail_page.dart';
@@ -43,8 +44,8 @@ class _AddressBookPageState extends State<AddressBookPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('通讯录'),
+      appBar: CustomAppBar(
+        title: '通讯录',
         actions: [
           IconButton(
             icon: Icon(Icons.search),

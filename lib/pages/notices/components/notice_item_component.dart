@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_app/components/card_item.dart';
 import 'package:flutter_app/theme/theme.dart';
 
 class NoticeItemComponent extends StatelessWidget {
@@ -38,6 +39,41 @@ class NoticeItemComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final type = item['type'] ?? 'default';
+    
+    // 创建自定义图标
+    final customIcon = Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: _getColorByType(type).withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(
+        _getIconByType(type),
+        color: _getColorByType(type),
+        size: 20,
+      ),
+    );
+
+    // 创建包含图标和标题计数的行
+    Widget header = Row(
+      children: [
+        customIcon,
+        SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            item['title'] ?? '无标题',
+            style: AppTheme.titleStyle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (item['count'] != null && item['count'] > 0)
+          CardItem.countBadge(item['count']),
+      ],
+    );
+
     return AppTheme.cardWithTap(
       onTap: () {
         // 处理通知点击
@@ -45,55 +81,16 @@ class NoticeItemComponent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: _getColorByType(item['type'] ?? 'default').withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  _getIconByType(item['type'] ?? 'default'),
-                  color: _getColorByType(item['type'] ?? 'default'),
-                  size: 20,
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  item['title'] ?? '无标题',
-                  style: AppTheme.titleStyle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              if (item['count'] != null && item['count'] > 0)
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: AppTheme.errorColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    '${item['count'] ?? 1}',
-                    style: TextStyle(
-                      color: AppTheme.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          SizedBox(height: 8),
+          header,
+          if (item['time'] != null)
+            SizedBox(height: 8),
           if (item['time'] != null)
             Text(
               item['time'] ?? '',
               style: AppTheme.smallStyle,
             ),
-          SizedBox(height: 8),
+          if (item['content'] != null)
+            SizedBox(height: 8),
           if (item['content'] != null)
             Text(
               item['content'] ?? '',

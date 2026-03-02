@@ -41,8 +41,8 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('通知'),
+      appBar: CustomAppBar(
+        title: '通知',
         actions: [
           if (_unreadCount > 0)
             TextButtonCustom(

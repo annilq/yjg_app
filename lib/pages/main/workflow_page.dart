@@ -43,8 +43,8 @@ class _WorkflowPageState extends State<WorkflowPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('工作流'),
+      appBar: CustomAppBar(
+        title: '工作流',
       ),
       body: Column(
         children: [

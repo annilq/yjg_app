@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/network/api_service.dart';
+import 'package:flutter_app/components/app_bar.dart';
 import 'package:flutter_app/pages/auth/update_password_page.dart';
 import 'package:flutter_app/pages/main/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,8 +75,8 @@ class _MePageState extends State<MePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('我的'),
+      appBar: CustomAppBar(
+        title: '我的',
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

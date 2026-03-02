@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/pages/notices/components/notice_item_component.dart';
+import 'package:flutter_app/components/app_bar.dart';
 
 class NoticesListPage extends StatefulWidget {
   @override
@@ -57,20 +58,16 @@ class _NoticesListPageState extends State<NoticesListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('提醒'),
-        actions: [
-          IconButton(
-            icon: Icon(CupertinoIcons.search),
-            onPressed: () {
-              // 显示搜索框
-              showSearch(
-                context: context,
-                delegate: NoticeSearchDelegate(_onSearch),
-              );
-            },
-          ),
-        ],
+      appBar: CustomAppBar(
+        title: '提醒',
+        showSearch: true,
+        onSearchPressed: () {
+          // 显示搜索框
+          showSearch(
+            context: context,
+            delegate: NoticeSearchDelegate(_onSearch),
+          );
+        },
       ),
       body: _isLoading && _noticeItems.isEmpty
           ? Center(child: CircularProgressIndicator())

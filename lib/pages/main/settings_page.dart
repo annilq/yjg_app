@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/network/api_service.dart';
+import 'package:flutter_app/components/app_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -73,8 +74,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('系统设置'),
+      appBar: CustomAppBar(
+        title: '系统设置',
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

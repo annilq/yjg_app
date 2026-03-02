@@ -17,8 +17,8 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('修改密码'),
+      appBar: CustomAppBar(
+        title: '修改密码',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

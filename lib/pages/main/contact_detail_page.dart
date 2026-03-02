@@ -59,8 +59,8 @@ class _ContactDetailPageState extends State<ContactDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('联系人详情'),
+      appBar: CustomAppBar(
+        title: '联系人详情',
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

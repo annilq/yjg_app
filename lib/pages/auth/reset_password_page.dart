@@ -20,8 +20,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('忘记密码'),
+      appBar: CustomAppBar(
+        title: '忘记密码',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

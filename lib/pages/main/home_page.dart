@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/models/main_menus_response_model.dart';
 import 'package:flutter_app/models/main_reminds_response_model.dart';
+import 'package:flutter_app/components/app_bar.dart';
 import 'package:flutter_app/pages/main/home/components/backlog_menu_component.dart';
 import 'package:flutter_app/pages/main/home/components/common_apps_component.dart';
 import 'package:flutter_app/pages/main/home/components/announcement_carousel_component.dart';
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: CustomAppBar(
         title: null,
         backgroundColor: Colors.transparent,
         elevation: 0,

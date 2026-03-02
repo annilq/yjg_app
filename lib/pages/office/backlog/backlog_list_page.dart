@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/pages/office/backlog/components/backlog_tab_component.dart';
 import 'package:flutter_app/pages/office/backlog/components/backlog_item_component.dart';
+import 'package:flutter_app/components/app_bar.dart';
 
 class BacklogListPage extends StatefulWidget {
   @override
@@ -82,20 +83,16 @@ class _BacklogListPageState extends State<BacklogListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('我的待办'),
-        actions: [
-          IconButton(
-            icon: Icon(CupertinoIcons.search),
-            onPressed: () {
-              // 显示搜索框
-              showSearch(
-                context: context,
-                delegate: BacklogSearchDelegate(_onSearch),
-              );
-            },
-          ),
-        ],
+      appBar: CustomAppBar(
+        title: '我的待办',
+        showSearch: true,
+        onSearchPressed: () {
+          // 显示搜索框
+          showSearch(
+            context: context,
+            delegate: BacklogSearchDelegate(_onSearch),
+          );
+        },
       ),
       body: Column(
         children: [
