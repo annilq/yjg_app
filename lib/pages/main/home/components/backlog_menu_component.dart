@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_app/theme/theme.dart';
 
 class BacklogMenuComponent extends StatelessWidget {
   final int backlogCount;
@@ -15,10 +16,11 @@ class BacklogMenuComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.circular(8),
+        color: AppTheme.primaryColor,
+        borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
+        boxShadow: [AppTheme.cardShadow],
       ),
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppTheme.cardPadding),
       child: GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),

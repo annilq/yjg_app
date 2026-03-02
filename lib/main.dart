@@ -4,8 +4,9 @@ import 'package:flutter_app/pages/auth/reset_password_page.dart';
 import 'package:flutter_app/pages/auth/update_password_page.dart';
 import 'package:flutter_app/pages/main/main_page.dart';
 import 'package:flutter_app/pages/office/backlog/backlog_list_page.dart';
-import 'package:flutter_app/pages/office/notices/notices_list_page.dart';
+import 'package:flutter_app/pages/notices/notices_list_page.dart';
 import 'package:flutter_app/pages/office/relatedtome/relatedtome_list_page.dart';
+import 'package:flutter_app/theme/theme.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,9 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '云建管',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: AppTheme.themeData,
       initialRoute: '/',
       routes: {
         '/': (context) => LoginPage(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_app/theme/theme.dart';
 
 class FixedAppsComponent extends StatelessWidget {
   const FixedAppsComponent({Key? key}) : super(key: key);
@@ -11,67 +12,73 @@ class FixedAppsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Row(
-          children: [
-            // 左侧日期显示
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('${DateTime.now().month}月${DateTime.now().day}日', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  Text('$_getWeekday()', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                ],
-              ),
+    return AppTheme.cardContainer(
+      child: Row(
+        children: [
+          // 左侧日期显示
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: AppTheme.lightGray,
+              borderRadius: BorderRadius.circular(12),
             ),
-            SizedBox(width: 16),
-            // 右侧2x2网格布局
-            Expanded(
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2,
-                ),
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  List<Map<String, dynamic>> apps = [
-                    {'title': '考勤打卡', 'icon': CupertinoIcons.time, 'color': Colors.blue},
-                    {'title': '签到', 'icon': CupertinoIcons.checkmark_circle, 'color': Colors.green},
-                    {'title': '工作报告', 'icon': CupertinoIcons.pencil, 'color': Colors.orange},
-                    {'title': '工作任务', 'icon': CupertinoIcons.checkmark_seal, 'color': Colors.purple},
-                  ];
-                  var app = apps[index];
-                  return Container(
-                    margin: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: app['color'].withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Icon(app['icon'], color: app['color']),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('${DateTime.now().month}月${DateTime.now().day}日', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.darkGray)),
+                Text('$_getWeekday()', style: AppTheme.smallStyle),
+              ],
+            ),
+          ),
+          SizedBox(width: 16),
+          // 右侧2x2网格布局
+          Expanded(
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 2.5,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemCount: 4,
+              itemBuilder: (context, index) {
+                List<Map<String, dynamic>> apps = [
+                  {'title': '考勤打卡', 'icon': CupertinoIcons.time, 'color': AppTheme.primaryColor},
+                  {'title': '签到', 'icon': CupertinoIcons.checkmark_circle, 'color': AppTheme.secondaryColor},
+                  {'title': '工作报告', 'icon': CupertinoIcons.pencil, 'color': AppTheme.warningColor},
+                  {'title': '工作任务', 'icon': CupertinoIcons.checkmark_seal, 'color': AppTheme.errorColor},
+                ];
+                var app = apps[index];
+                return AppTheme.cardWithTap(
+                  onTap: () {
+                    // 处理应用点击
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: app['color'].withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        Text(app['title'], style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                        child: Icon(app['icon'], color: app['color'], size: 16),
+                      ),
+                      SizedBox(width: 8),
+                      Text(app['title'], style: AppTheme.smallStyle),
+                    ],
+                  ),
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.all(0),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+      margin: EdgeInsets.all(0),
     );
   }
 }

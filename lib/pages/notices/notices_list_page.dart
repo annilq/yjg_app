@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/network/api_service.dart';
-import 'package:flutter_app/pages/office/notices/components/notice_item_component.dart';
+import 'package:flutter_app/pages/notices/components/notice_item_component.dart';
 
 class NoticesListPage extends StatefulWidget {
   @override
