@@ -17,6 +17,7 @@ class RemindModel {
   String? content;
   String? createTime;
   int? status;
+  int? count;
 
   RemindModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -24,5 +25,6 @@ class RemindModel {
     content = json['content'];
     createTime = json['createTime'];
     status = json['status'];
+    count = json['count'];
   }
 }

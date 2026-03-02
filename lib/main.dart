@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
         '/update-password': (context) => UpdatePasswordPage(),
         '/main': (context) => MainPage(),
         '/office/backlog': (context) => BacklogListPage(),
-        '/office/notices': (context) => NoticesListPage(),
         '/office/relatedtome': (context) => RelatedToMeListPage(),
+        '/notices': (context) => NoticesListPage(),
         '/workflow/list': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
           return WorkflowListPage(
