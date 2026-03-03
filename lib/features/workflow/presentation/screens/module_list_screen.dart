@@ -53,7 +53,7 @@ class _ModuleListScreenState extends ConsumerState<ModuleListScreen> {
   }
 
   void _goFlowDetail(dynamic item) {
-    context.go(
+    context.push(
       '/workflow/list',
       extra: {
         'dataId': item['id'],

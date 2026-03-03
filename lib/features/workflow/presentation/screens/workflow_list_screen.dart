@@ -112,7 +112,7 @@ class _WorkflowListScreenState extends ConsumerState<WorkflowListScreen> {
         },
       };
 
-      context.go(
+      context.push(
         '/webview',
         extra: params,
       );

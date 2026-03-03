@@ -59,7 +59,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               IconButton(
                 icon: const Icon(CupertinoIcons.bell),
                 onPressed: () {
-                  context.go('/notices');
+                  context.push('/notices');
                 },
               ),
               if (_backlogCount > 0)

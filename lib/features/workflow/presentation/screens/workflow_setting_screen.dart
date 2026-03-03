@@ -67,7 +67,7 @@ class _WorkflowSettingScreenState extends ConsumerState<WorkflowSettingScreen> {
 
   void _goFlowDetail(dynamic item) {
     if (item != null && item.containsKey('id') && item.containsKey('text')) {
-      context.go(
+      context.push(
         '/workflow/list',
         extra: {
           'dataId': item['id'] ?? '',

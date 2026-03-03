@@ -41,11 +41,11 @@ class BacklogMenuComponent extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               if (index == 0) {
-                context.go('/office/backlog');
+                context.push('/office/backlog');
               } else if (index == 1) {
-                context.go('/office/relatedtome');
+                context.push('/office/relatedtome');
               } else if (index == 2) {
-                context.go('/notices');
+                context.push('/notices');
               }
             },
             child: Column(

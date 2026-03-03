@@ -41,12 +41,12 @@ class _CommonAppsComponentState extends State<CommonAppsComponent> {
 
   // 处理设置按钮点击
   void _handleSettingTap() {
-    context.go('/workflow/setting');
+    context.push('/workflow/setting');
   }
 
   // 处理菜单点击
   void _handleMenuTap(MenuModel menu) {
-    context.go(
+    context.push(
       '/workflow/list',
       extra: {
         'dataId': menu.menuId,
@@ -58,7 +58,7 @@ class _CommonAppsComponentState extends State<CommonAppsComponent> {
 
   // 处理全部功能点击
   void _handleAllFunctionsTap() {
-    context.go('/workflow/setting');
+    context.push('/workflow/setting');
   }
 
   @override

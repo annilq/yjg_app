@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
 
 class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
@@ -47,7 +48,7 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
       elevation: elevation ?? 0,
       centerTitle: true,
       automaticallyImplyLeading: automaticallyImplyLeading,
-      leading: automaticallyImplyLeading && Navigator.of(context).canPop()
+      leading: automaticallyImplyLeading && GoRouter.of(context).canPop()
           ? IconButton(
               icon: const Icon(CupertinoIcons.chevron_left),
               color: AppTheme.white,

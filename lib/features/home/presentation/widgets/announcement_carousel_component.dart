@@ -106,7 +106,7 @@ class _AnnouncementCarouselComponentState extends State<AnnouncementCarouselComp
           IconButton(
             icon: Icon(CupertinoIcons.chevron_forward, color: AppTheme.mediumGray),
             onPressed: () {
-              context.go('/notices');
+              context.push('/notices');
             },
           ),
         ],
