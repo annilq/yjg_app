@@ -1,76 +1,41 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_app/pages/auth/login_page.dart';
-import 'package:flutter_app/pages/auth/reset_password_page.dart';
-import 'package:flutter_app/pages/auth/update_password_page.dart';
-import 'package:flutter_app/pages/main/main_page.dart';
-import 'package:flutter_app/pages/office/backlog/backlog_list_page.dart';
-import 'package:flutter_app/pages/notices/notices_list_page.dart';
-import 'package:flutter_app/pages/office/relatedtome/relatedtome_list_page.dart';
-import 'package:flutter_app/pages/workflow/list/workflow_list_page.dart';
-import 'package:flutter_app/pages/workflow/setting/workflow_setting_page.dart';
-import 'package:flutter_app/pages/workflow/module_list/module_list_page.dart';
-import 'package:flutter_app/pages/workflow/module_setting/module_setting_page.dart';
-import 'package:flutter_app/pages/webview/webview_page.dart';
-import 'package:flutter_app/theme/theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_app/routes/app_router.dart';
+import 'package:flutter_app/core/theme/app_theme.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return PlatformApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
+    return PlatformApp.router(
       title: '云建管',
-      material: (context, platform) => MaterialAppData(
+      material: (context, platform) => MaterialAppRouterData(
         theme: AppTheme.themeData,
+        routerConfig: router,
       ),
-      cupertino: (_, __) => CupertinoAppData(
+      cupertino: (_, __) => CupertinoAppRouterData(
         theme: AppTheme.cupertinoThemeData,
+        routerConfig: router,
       ),
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
+      supportedLocales: const [
         Locale('zh', 'CN'),
       ],
-      initialRoute: '/',
-      routes: {
-        '/': (context) => LoginPage(),
-        '/reset-password': (context) => ResetPasswordPage(),
-        '/update-password': (context) => UpdatePasswordPage(),
-        '/main': (context) => MainPage(),
-        '/office/backlog': (context) => BacklogListPage(),
-        '/office/relatedtome': (context) => RelatedToMeListPage(),
-        '/notices': (context) => NoticesListPage(),
-        '/workflow/list': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-          return WorkflowListPage(
-            workflowCode: args['workflowCode'] ?? '',
-            dataId: args['dataId'] ?? '',
-            name: args['name'] ?? '',
-          );
-        },
-        '/workflow/setting': (context) => WorkflowSettingPage(),
-        '/workflow/moduleList': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-          return ModuleListPage(
-            moduleName: args['moduleName'] ?? '',
-          );
-        },
-        '/workflow/moduleSetting': (context) => ModuleSettingPage(),
-        '/webview': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-          return WebviewPage(params: args);
-        },
-      },
     );
   }
 }
-
-
