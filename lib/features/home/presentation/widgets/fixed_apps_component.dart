@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_app/theme/theme.dart';
+import 'package:flutter_app/core/theme/app_theme.dart';
 
 class FixedAppsComponent extends StatelessWidget {
   const FixedAppsComponent({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
-import 'package:flutter_app/theme/theme.dart';
+import 'package:flutter_app/core/theme/app_theme.dart';
 
 class NoticeItemWidget extends StatelessWidget {
   final dynamic item;

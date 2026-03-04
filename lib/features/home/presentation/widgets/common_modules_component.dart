@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_app/theme/theme.dart';
+import 'package:flutter_app/core/theme/app_theme.dart';
 
 class CommonModulesComponent extends StatelessWidget {
   const CommonModulesComponent({Key? key}) : super(key: key);
