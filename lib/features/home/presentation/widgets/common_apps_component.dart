@@ -1,68 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_app/network/api_service.dart';
-import 'package:flutter_app/models/main_menus_response_model.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
+import 'package:flutter_app/shared/widgets/business_card.dart';
+import 'package:flutter_app/features/workflow/providers/workflow_providers.dart';
 
-class CommonAppsComponent extends StatefulWidget {
-  const CommonAppsComponent({
-    super.key,
-  });
+class CommonAppsComponent extends ConsumerWidget {
+  const CommonAppsComponent({super.key});
 
-  @override
-  _CommonAppsComponentState createState() => _CommonAppsComponentState();
-}
-
-class _CommonAppsComponentState extends State<CommonAppsComponent> {
-  List<MenuModel> _menus = [];
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    try {
-      // 获取主菜单
-      var menusResponse = await ApiService().getMainMenus();
-      MainMenusResponseModel menusModel = MainMenusResponseModel.fromJson(menusResponse);
-      _menus = menusModel.menuModels ?? [];
-    } catch (e) {
-      print('加载常用应用数据失败: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+  // 处理菜单点击
+  void _handleMenuTap(BuildContext context, dynamic item) {
+    if (item != null && item.containsKey('id') && item.containsKey('text')) {
+      context.push(
+        '/workflow/list',
+        extra: {
+          'dataId': item['id'] ?? '',
+          'workflowCode': item['img'] ?? '',
+          'name': item['text'] ?? '',
+        },
+      );
     }
   }
 
   // 处理设置按钮点击
-  void _handleSettingTap() {
-    context.push('/workflow/setting');
-  }
-
-  // 处理菜单点击
-  void _handleMenuTap(MenuModel menu) {
-    context.push(
-      '/workflow/list',
-      extra: {
-        'dataId': menu.menuId,
-        'workflowCode': menu.menuIcon,
-        'name': menu.menuName,
-      },
-    );
-  }
-
-  // 处理全部功能点击
-  void _handleAllFunctionsTap() {
+  void _handleSettingTap(BuildContext context) {
     context.push('/workflow/setting');
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final menusAsync = ref.watch(menusProvider);
+    final userList = ref.watch(userListProvider);
+
     return AppTheme.cardContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,89 +42,75 @@ class _CommonAppsComponentState extends State<CommonAppsComponent> {
             children: [
               Text('常用应用', style: AppTheme.titleStyle),
               GestureDetector(
-                onTap: _handleSettingTap,
+                onTap: () => _handleSettingTap(context),
                 child: Container(
                   padding: EdgeInsets.all(8),
-                  child: Icon(CupertinoIcons.settings, color: AppTheme.primaryColor, size: 20),
+                  child: Icon(
+                    CupertinoIcons.settings,
+                    color: AppTheme.primaryColor,
+                    size: 20,
+                  ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 12),
-          _isLoading
-              ? Container(
-                  height: 200,
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              : GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 1,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                  ),
-                  itemCount: _menus.length,
-                  itemBuilder: (context, index) {
-                    MenuModel menu = _menus[index];
-                    return GestureDetector(
-                      onTap: () => _handleMenuTap(menu),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 56,
-                            height: 56,
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryColor.withAlpha(25),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              CupertinoIcons.square_grid_2x2,
-                              color: AppTheme.primaryColor,
-                              size: 24,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            menu.menuName ?? '',
-                            style: AppTheme.smallStyle,
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+          menusAsync.when(
+            data: (menus) {
+              return userList.isEmpty
+                  ? Container(
+                      height: 120,
+                      child: Center(
+                        child: Text('暂无常用应用', style: AppTheme.smallStyle),
                       ),
+                    )
+                  : GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 1,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: userList.length,
+                      itemBuilder: (context, index) {
+                        dynamic item;
+                        for (var menu in menus) {
+                          if (menu != null && menu.containsKey('children')) {
+                            for (var child in menu['children']) {
+                              if (child != null &&
+                                  child.containsKey('id') &&
+                                  child['id'].toString() == userList[index]) {
+                                item = child;
+                                break;
+                              }
+                            }
+                          }
+                          if (item != null) break;
+                        }
+
+                        if (item == null) return const SizedBox.shrink();
+
+                        return BusinessCard(
+                          item: item,
+                          editMode: false,
+                          isInUserList: true,
+                          onTap: () => _handleMenuTap(context, item),
+                        );
+                      },
                     );
-                  },
-                ),
-          SizedBox(height: 12),
-          // 全部功能入口
-          GestureDetector(
-            onTap: _handleAllFunctionsTap,
-            child: Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppTheme.lightGray),
-                borderRadius: BorderRadius.circular(8),
-                color: AppTheme.lightGray.withAlpha(128),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    CupertinoIcons.square_grid_2x2,
-                    color: AppTheme.primaryColor,
-                    size: 16,
-                  ),
-                  SizedBox(width: 8),
-                  Text('全部功能', style: TextStyle(color: AppTheme.primaryColor)),
-                ],
-              ),
+            },
+            loading: () => Container(
+              height: 120,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (error, stack) => Container(
+              height: 120,
+              child: Center(child: Text('加载失败', style: AppTheme.smallStyle)),
             ),
           ),
+          SizedBox(height: 12),
         ],
       ),
       margin: EdgeInsets.all(0),

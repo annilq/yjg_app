@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/loading_component.dart';
 import 'package:flutter_app/shared/widgets/error_component.dart';
+import 'package:flutter_app/shared/widgets/business_card.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
 import 'package:flutter_app/features/workflow/providers/workflow_providers.dart';
 
@@ -172,47 +172,11 @@ class _WorkflowSettingContentState extends ConsumerState<WorkflowSettingContent>
 
                                     if (item == null) return const SizedBox.shrink();
 
-                                    return GestureDetector(
+                                    return BusinessCard(
+                                      item: item,
+                                      editMode: _editMode,
+                                      isInUserList: true,
                                       onTap: () => _removeFromFavorite(item),
-                                      child: Column(
-                                        children: [
-                                          Stack(
-                                            children: [
-                                              Container(
-                                                width: 56,
-                                                height: 56,
-                                                decoration: BoxDecoration(
-                                                  color: AppTheme.primaryColor.withAlpha(25),
-                                                  borderRadius: BorderRadius.circular(12),
-                                                ),
-                                                child: Icon(
-                                                  CupertinoIcons.square_grid_2x2,
-                                                  color: AppTheme.primaryColor,
-                                                  size: 24,
-                                                ),
-                                              ),
-                                              if (_editMode)
-                                                Positioned(
-                                                  right: 0,
-                                                  top: 0,
-                                                  child: Icon(
-                                                    CupertinoIcons.delete,
-                                                    color: Colors.red,
-                                                    size: 16,
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            item['text'] ?? '',
-                                            style: AppTheme.smallStyle,
-                                            textAlign: TextAlign.center,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
-                                      ),
                                     );
                                   },
                                 ),
@@ -253,49 +217,11 @@ class _WorkflowSettingContentState extends ConsumerState<WorkflowSettingContent>
                                   }
                                   bool isInUserList = _isInUserList(item['id'].toString());
 
-                                  return GestureDetector(
+                                  return BusinessCard(
+                                    item: item,
+                                    editMode: _editMode,
+                                    isInUserList: isInUserList,
                                     onTap: () => _addToFavorite(item, menu['text'] ?? ''),
-                                    child: Column(
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            Container(
-                                              width: 56,
-                                              height: 56,
-                                              decoration: BoxDecoration(
-                                                color: AppTheme.primaryColor.withAlpha(25),
-                                                borderRadius: BorderRadius.circular(12),
-                                              ),
-                                              child: Icon(
-                                                CupertinoIcons.square_grid_2x2,
-                                                color: AppTheme.primaryColor,
-                                                size: 24,
-                                              ),
-                                            ),
-                                            if (_editMode)
-                                              Positioned(
-                                                right: 0,
-                                                top: 0,
-                                                child: Icon(
-                                                  isInUserList
-                                                      ? CupertinoIcons.delete
-                                                      : CupertinoIcons.add,
-                                                  color: isInUserList ? Colors.red : Colors.green,
-                                                  size: 16,
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          item['text'] ?? '',
-                                          style: AppTheme.smallStyle,
-                                          textAlign: TextAlign.center,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
                                   );
                                 },
                               ),
