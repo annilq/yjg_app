@@ -8,7 +8,6 @@ import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/backlog_menu_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/common_apps_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/announcement_carousel_component.dart';
-import 'package:flutter_app/features/home/presentation/widgets/common_modules_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/fixed_apps_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/copyright_component.dart';
 
@@ -102,11 +101,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     remindCount: _reminds.length,
                   ),
                   const SizedBox(height: 16),
-                  const CommonAppsComponent(),
-                  const SizedBox(height: 16),
                   AnnouncementCarouselComponent(reminds: _reminds),
                   const SizedBox(height: 16),
-                  const CommonModulesComponent(),
+                  const CommonAppsComponent(),
+                  const SizedBox(height: 16),
                   const SizedBox(height: 16),
                   const FixedAppsComponent(),
                   const SizedBox(height: 16),
