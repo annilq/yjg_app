@@ -211,7 +211,7 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
                             ),
                           ),
                           Text(
-                            item['status'] ?? '',
+                            item['status']?.toString() ?? '',
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.blue,

@@ -6,7 +6,7 @@ class WorkflowService {
   WorkflowService(this._apiService);
 
   Future<List<dynamic>> getMenus() async {
-    final response = await _apiService.getMainWorkflows();
+    final response = await _apiService.getMainMenus();
     return response['menus'] ?? [];
   }
 
