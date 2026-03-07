@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
+import 'package:flutter_app/shared/widgets/loading_component.dart';
+import 'package:flutter_app/shared/widgets/error_component.dart';
+import 'package:flutter_app/features/workflow/providers/workflow_providers.dart';
 
-class WorkflowListScreen extends ConsumerStatefulWidget {
+class WorkflowListScreen extends ConsumerWidget {
   final String workflowCode;
   final String dataId;
   final String name;
@@ -18,44 +19,70 @@ class WorkflowListScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<WorkflowListScreen> createState() => _WorkflowListScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBarComponent(
+        title: name,
+      ),
+      body: WorkflowListContent(
+        workflowCode: workflowCode,
+        dataId: dataId,
+        name: name,
+      ),
+    );
+  }
 }
 
-class _WorkflowListScreenState extends ConsumerState<WorkflowListScreen> {
-  late String _title;
-  late String _workflowCode;
-  late String _dataId;
+class WorkflowListContent extends ConsumerStatefulWidget {
+  final String workflowCode;
+  final String dataId;
+  final String name;
+
+  const WorkflowListContent({
+    super.key,
+    required this.workflowCode,
+    required this.dataId,
+    required this.name,
+  });
+
+  @override
+  ConsumerState<WorkflowListContent> createState() => _WorkflowListContentState();
+}
+
+class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
   Map<String, dynamic> _config = {};
   List<dynamic> _dataList = [];
   int _page = 1;
-  int _rows = 10;
+  final int _rows = 10;
   bool _hasMore = true;
   bool _isLoading = true;
-  Map<String, dynamic> _searchForm = {};
-  Map<String, dynamic> _pickerParams = {};
+  final Map<String, dynamic> _searchForm = {};
+  final Map<String, dynamic> _pickerParams = {};
 
   @override
   void initState() {
     super.initState();
-    _title = widget.name;
-    _workflowCode = widget.workflowCode;
-    _dataId = widget.dataId;
     _loadConfig();
   }
 
   Future<void> _loadConfig() async {
     try {
-      var configResponse = await ApiService().getMainDataListConfig();
+      final service = ref.read(workflowServiceProvider);
+      var configResponse = await service.getConfig();
       if (configResponse.containsKey('datalistconfig')) {
-        _config = configResponse['datalistconfig'][_dataId] ?? {};
+        setState(() {
+          _config = configResponse['datalistconfig'][widget.dataId] ?? {};
+        });
       }
       await _initLoadData();
     } catch (e) {
       print('加载配置失败: $e');
-    } finally {
       setState(() {
         _isLoading = false;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('加载配置失败，请稍后重试')),
+      );
     }
   }
 
@@ -78,8 +105,9 @@ class _WorkflowListScreenState extends ConsumerState<WorkflowListScreen> {
         ..._pickerParams,
       };
 
-      var response = await ApiService().getDataList(
-        _dataId,
+      final service = ref.read(workflowServiceProvider);
+      var response = await service.getDataList(
+        widget.dataId,
         params,
         _page,
         _rows,
@@ -98,6 +126,9 @@ class _WorkflowListScreenState extends ConsumerState<WorkflowListScreen> {
       setState(() {
         _isLoading = false;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('加载数据失败，请稍后重试')),
+      );
     }
   }
 
@@ -121,84 +152,79 @@ class _WorkflowListScreenState extends ConsumerState<WorkflowListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarComponent(
-        title: _title,
-      ),
-      body: _isLoading && _dataList.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: _initLoadData,
-              child: ListView.builder(
-                itemCount: _dataList.length + (_hasMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index == _dataList.length) {
-                    if (_hasMore) {
-                      _loadData();
-                      return const Center(child: CircularProgressIndicator());
-                    } else {
-                      return const SizedBox.shrink();
-                    }
+    return _isLoading && _dataList.isEmpty
+        ? const LoadingComponent(message: '加载中...')
+        : RefreshIndicator(
+            onRefresh: _initLoadData,
+            child: ListView.builder(
+              itemCount: _dataList.length + (_hasMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == _dataList.length) {
+                  if (_hasMore) {
+                    _loadData();
+                    return const LoadingComponent();
+                  } else {
+                    return const SizedBox.shrink();
                   }
+                }
 
-                  var item = _dataList[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: ListTile(
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  item['title'] ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Text(
-                                item['date'] ?? '',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Row(
+                var item = _dataList[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              item['name'] ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
+                            Expanded(
+                              child: Text(
+                                item['title'] ?? '',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             Text(
-                              item['status'] ?? '',
+                              item['date'] ?? '',
                               style: const TextStyle(
                                 fontSize: 14,
-                                color: Colors.blue,
+                                color: Colors.grey,
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      onTap: () => _goDetail(item),
+                      ],
                     ),
-                  );
-                },
-              ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            item['name'] ?? '',
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text(
+                            item['status'] ?? '',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () => _goDetail(item),
+                  ),
+                );
+              },
             ),
-    );
+          );
   }
 }

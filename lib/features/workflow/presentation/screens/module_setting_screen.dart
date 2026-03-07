@@ -1,120 +1,102 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
+import 'package:flutter_app/shared/widgets/loading_component.dart';
+import 'package:flutter_app/shared/widgets/error_component.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_app/features/workflow/providers/workflow_providers.dart';
 
-class ModuleSettingScreen extends ConsumerStatefulWidget {
+class ModuleSettingScreen extends ConsumerWidget {
   const ModuleSettingScreen({super.key});
 
   @override
-  ConsumerState<ModuleSettingScreen> createState() => _ModuleSettingScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBarComponent(
+        title: '模块设置',
+      ),
+      body: ModuleSettingContent(),
+    );
+  }
 }
 
-class _ModuleSettingScreenState extends ConsumerState<ModuleSettingScreen> {
-  List<dynamic> _menus = [];
-  List<dynamic> _selectedModules = [];
+class ModuleSettingContent extends ConsumerStatefulWidget {
+  const ModuleSettingContent({super.key});
+
+  @override
+  ConsumerState<ModuleSettingContent> createState() => _ModuleSettingContentState();
+}
+
+class _ModuleSettingContentState extends ConsumerState<ModuleSettingContent> {
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadSelectedModules();
     _loadData();
   }
 
-  Future<void> _loadSelectedModules() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? selectedModulesJson = prefs.getString('selectedModules');
-      if (selectedModulesJson != null) {
-        setState(() {
-          _selectedModules = selectedModulesJson.split(',').map((id) => id).toList();
-        });
-      }
-    } catch (e) {
-      print('加载选中模块失败: $e');
-    }
-  }
-
-  Future<void> _saveSelectedModules() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('selectedModules', _selectedModules.join(','));
-    } catch (e) {
-      print('保存选中模块失败: $e');
-    }
-  }
-
   Future<void> _loadData() async {
-    try {
-      var response = await ApiService().getMainWorkflows();
-      setState(() {
-        _menus = response['menus'] ?? [];
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('加载数据失败: $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  void _toggleModule(String moduleId) {
+    // 数据已在provider中加载
     setState(() {
-      if (_selectedModules.contains(moduleId)) {
-        _selectedModules.remove(moduleId);
-      } else {
-        _selectedModules.add(moduleId);
-      }
-      _saveSelectedModules();
+      _isLoading = false;
     });
   }
 
+  void _toggleModule(String moduleId) {
+    final notifier = ref.read(selectedModulesProvider.notifier);
+    notifier.toggleModule(moduleId);
+  }
+
   bool _isModuleSelected(String moduleId) {
-    return _selectedModules.contains(moduleId);
+    final selectedModules = ref.watch(selectedModulesProvider);
+    return selectedModules.contains(moduleId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarComponent(
-        title: '模块设置',
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _menus.length,
-              itemBuilder: (context, index) {
-                var menu = _menus[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          menu['text'] ?? '',
-                          style: AppTheme.titleStyle,
-                        ),
-                        Switch(
-                          value: _isModuleSelected(menu['id'] ?? ''),
-                          onChanged: (value) {
-                            _toggleModule(menu['id'] ?? '');
-                          },
-                          activeColor: AppTheme.primaryColor,
-                        ),
-                      ],
+    final menusAsync = ref.watch(menusProvider);
+
+    return _isLoading
+        ? const LoadingComponent(message: '加载中...')
+        : menusAsync.when(
+            data: (menus) {
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: menus.length,
+                itemBuilder: (context, index) {
+                  var menu = menus[index];
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            menu['text'] ?? '',
+                            style: AppTheme.titleStyle,
+                          ),
+                          Switch(
+                            value: _isModuleSelected(menu['id']?.toString() ?? ''),
+                            onChanged: (value) {
+                              _toggleModule(menu['id']?.toString() ?? '');
+                            },
+                            activeColor: AppTheme.primaryColor,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              );
+            },
+            loading: () => const LoadingComponent(),
+            error: (error, stack) => ErrorComponent(
+              message: '加载失败，请稍后重试',
+              onRetry: _loadData,
             ),
-    );
+          );
   }
 }

@@ -15,16 +15,12 @@ lib/
 │   └── errors/     # 错误处理
 ├── features/       # 功能模块
 │   ├── auth/       # 认证模块
-│   │   ├── data/       # 数据层
-│   │   │   ├── repositories/  # 数据仓库
-│   │   │   └── datasources/   # 数据源
-│   │   ├── domain/     # 领域层
-│   │   │   ├── entities/      # 实体
-│   │   │   └── usecases/      # 用例
-│   │   ├── presentation/ # 表示层
-│   │   │   ├── screens/       # 页面
-│   │   │   └── widgets/       # 组件
-│   │   └── providers/   # 状态管理
+│   │   ├── service/        # 数据服务（合并datasources和repositories）
+│   │   ├── models/          # 实体
+│   │   ├── presentation/    # 表示层
+│   │   │   ├── screens/     # 页面
+│   │   │   └── widgets/     # 组件
+│   │   └── providers/       # 状态管理
 │   ├── home/       # 主页模块
 │   ├── notices/    # 通知模块
 │   ├── office/     # 办公模块
@@ -61,11 +57,9 @@ lib/
 - 页面文件以 `_screen.dart` 结尾（在 features 模块中）
 - 组件文件以 `_widget.dart` 结尾（在 features 模块中）
 - 组件文件以 `_component.dart` 结尾（在 shared 目录中）
-- 模型文件以 `_model.dart` 结尾（在 shared 目录中）
-- 实体文件以 `_entity.dart` 结尾（在 domain 层中）
-- 用例文件以 `_usecase.dart` 结尾（在 domain 层中）
-- 仓库文件以 `_repository.dart` 结尾（在 data 层中）
-- 数据源文件以 `_datasource.dart` 结尾（在 data 层中）
+- 通用模型文件以 `_model.dart` 结尾（在 shared 目录中）
+- 功能模块模型文件以 `_model.dart` 结尾（在 features 模块中）
+- 服务文件以 `_service.dart` 结尾（在 features 模块中）
 - 服务文件以 `_service.dart` 结尾
 - Provider 文件以 `_provider.dart` 结尾
 
@@ -75,10 +69,8 @@ lib/
 - 组件类以 `Widget` 结尾（在 features 模块中）
 - 组件类以 `Component` 结尾（在 shared 目录中）
 - 模型类以 `Model` 结尾（在 shared 目录中）
-- 实体类以 `Entity` 结尾（在 domain 层中）
-- 用例类以 `Usecase` 结尾（在 domain 层中）
-- 仓库类以 `Repository` 结尾（在 data 层中）
-- 数据源类以 `Datasource` 结尾（在 data 层中）
+- 模型类以 `Model` 结尾（在 features 模块中）
+- 服务类以 `Service` 结尾（在 features 模块中）
 - 服务类以 `Service` 结尾
 - Provider 类以 `Provider` 结尾
 
@@ -171,8 +163,7 @@ lib/
 ### 4.4 数据模型
 
 - 通用模型放在 `shared/models/` 目录中
-- 实体放在 `features/{feature}/domain/entities/` 目录中
-- 数据传输对象 (DTO) 放在 `features/{feature}/data/dtos/` 目录中
+- 功能特定模型放在 `features/{feature}/models/` 目录中
 - 数据模型应与后端返回数据结构对应
 - 数据模型应使用 `json_serializable` 进行序列化和反序列化
 - 数据模型应包含必要的字段和方法
@@ -199,18 +190,13 @@ lib/
 - 路由应按功能模块组织
 - 支持深度链接
 
-### 4.8 数据层
+### 4.8 服务层
 
-- 数据仓库放在 `features/{feature}/data/repositories/` 目录中
-- 数据源放在 `features/{feature}/data/datasources/` 目录中
-- 仓库作为单一数据源 (SSOT)
-- 处理缓存、错误处理和重试逻辑
-
-### 4.9 领域层
-
-- 用例放在 `features/{feature}/domain/usecases/` 目录中
-- 处理复杂的业务逻辑
-- 用例应专注于单一功能
+- 服务放在 `features/{feature}/service/` 目录中
+- 合并了原有的datasources和repositories功能
+- 作为单一数据源 (SSOT)
+- 处理数据获取、缓存、错误处理和重试逻辑
+- 封装业务逻辑，提供清晰的API接口
 
 ### 4.10 核心功能
 
@@ -348,6 +334,8 @@ lib/
 - 使用 `flutter format` 格式化代码
 - 使用 `flutter analyze` 分析代码
 - 使用 `flutter devtools` 进行性能分析
+- 运行项目时使用 `flutter run -d macos` 命令
+- 提交代码前运行 `flutter analyze` 确保没有语法问题
 
 ### 10.3 团队协作
 

@@ -19,6 +19,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    _accountNameController.text = '内部演示';
+    _userNameController.text = '张小六';
+    _passwordController.text = '111111';
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
