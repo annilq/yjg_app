@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
 import 'package:flutter_app/shared/widgets/app_search_delegate.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
 import 'package:flutter_app/features/office/presentation/widgets/backlog_tab_widget.dart';
+import 'package:flutter_app/features/office/providers/backlog_provider.dart';
 
 class BacklogListScreen extends ConsumerStatefulWidget {
   const BacklogListScreen({super.key});
@@ -16,77 +16,22 @@ class BacklogListScreen extends ConsumerStatefulWidget {
 }
 
 class _BacklogListScreenState extends ConsumerState<BacklogListScreen> {
-  int _currentTabIndex = 0;
-  List<dynamic> _backlogItems = [];
-  bool _isLoading = false;
-  int _page = 1;
-  int _rows = 10;
-  String? _keyword;
-
   @override
   void initState() {
     super.initState();
-    _loadBacklogList();
-  }
-
-  Future<void> _loadBacklogList() async {
-    setState(() {
-      _isLoading = true;
+    Future.microtask(() {
+      ref.read(backlogProvider.notifier).loadBacklogList();
     });
-    try {
-      var response = await ApiService().getBacklogList(
-        _currentTabIndex,
-        _keyword,
-        _page,
-        _rows,
-      );
-      setState(() {
-        _backlogItems = response['rows'] ?? [];
-      });
-    } catch (e) {
-      print('加载待办列表失败: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  void _onTabChanged(int index) {
-    setState(() {
-      _currentTabIndex = index;
-      _page = 1;
-      _backlogItems = [];
-    });
-    _loadBacklogList();
   }
 
   void _onSearch(String keyword) {
-    setState(() {
-      _keyword = keyword;
-      _page = 1;
-      _backlogItems = [];
-    });
-    _loadBacklogList();
-  }
-
-  Future<void> _refresh() async {
-    _page = 1;
-    _backlogItems = [];
-    await _loadBacklogList();
-  }
-
-  Future<void> _loadMore() async {
-    if (!_isLoading) {
-      setState(() {
-        _page++;
-      });
-      await _loadBacklogList();
-    }
+    ref.read(backlogProvider.notifier).onSearch(keyword);
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(backlogProvider);
+
     return Scaffold(
       appBar: AppBarComponent(
         title: '我的待办',
@@ -101,26 +46,28 @@ class _BacklogListScreenState extends ConsumerState<BacklogListScreen> {
       body: Column(
         children: [
           BacklogTabWidget(
-            currentIndex: _currentTabIndex,
-            onTabChanged: _onTabChanged,
+            currentIndex: state.currentTabIndex,
+            onTabChanged: (index) {
+              ref.read(backlogProvider.notifier).onTabChanged(index);
+            },
           ),
           Expanded(
-            child: _isLoading && _backlogItems.isEmpty
+            child: state.isLoading && state.items.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : RefreshIndicator(
-                    onRefresh: _refresh,
+                    onRefresh: () => ref.read(backlogProvider.notifier).refresh(),
                     child: NotificationListener<ScrollEndNotification>(
                       onNotification: (notification) {
                         if (notification.metrics.pixels ==
                             notification.metrics.maxScrollExtent) {
-                          _loadMore();
+                          ref.read(backlogProvider.notifier).loadMore();
                         }
                         return false;
                       },
                       child: ListView.builder(
-                        itemCount: _backlogItems.length,
+                        itemCount: state.items.length,
                         itemBuilder: (context, index) {
-                          final item = _backlogItems[index];
+                          final item = state.items[index];
                           final icon = CardItemComponent.iconContainer(
                             icon: CupertinoIcons.doc_text,
                             color: AppTheme.primaryColor,

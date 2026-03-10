@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
 import 'package:flutter_app/shared/widgets/app_search_delegate.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
 import 'package:flutter_app/features/office/presentation/widgets/relatedtome_tab_widget.dart';
+import 'package:flutter_app/features/office/providers/relatedtome_provider.dart';
 
 class RelatedToMeListScreen extends ConsumerStatefulWidget {
   const RelatedToMeListScreen({super.key});
@@ -16,77 +16,22 @@ class RelatedToMeListScreen extends ConsumerStatefulWidget {
 }
 
 class _RelatedToMeListScreenState extends ConsumerState<RelatedToMeListScreen> {
-  int _currentTabIndex = 0;
-  List<dynamic> _relatedToMeItems = [];
-  bool _isLoading = false;
-  int _page = 1;
-  int _rows = 10;
-  String? _keyword;
-
   @override
   void initState() {
     super.initState();
-    _loadRelatedToMeList();
-  }
-
-  Future<void> _loadRelatedToMeList() async {
-    setState(() {
-      _isLoading = true;
+    Future.microtask(() {
+      ref.read(relatedToMeProvider.notifier).loadRelatedToMeList();
     });
-    try {
-      var response = await ApiService().getRelatedToMeList(
-        _currentTabIndex,
-        _keyword,
-        _page,
-        _rows,
-      );
-      setState(() {
-        _relatedToMeItems = response['rows'] ?? [];
-      });
-    } catch (e) {
-      print('加载我发起的列表失败: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  void _onTabChanged(int index) {
-    setState(() {
-      _currentTabIndex = index;
-      _page = 1;
-      _relatedToMeItems = [];
-    });
-    _loadRelatedToMeList();
   }
 
   void _onSearch(String keyword) {
-    setState(() {
-      _keyword = keyword;
-      _page = 1;
-      _relatedToMeItems = [];
-    });
-    _loadRelatedToMeList();
-  }
-
-  Future<void> _refresh() async {
-    _page = 1;
-    _relatedToMeItems = [];
-    await _loadRelatedToMeList();
-  }
-
-  Future<void> _loadMore() async {
-    if (!_isLoading) {
-      setState(() {
-        _page++;
-      });
-      await _loadRelatedToMeList();
-    }
+    ref.read(relatedToMeProvider.notifier).onSearch(keyword);
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(relatedToMeProvider);
+
     return Scaffold(
       appBar: AppBarComponent(
         title: '我发起的',
@@ -101,25 +46,27 @@ class _RelatedToMeListScreenState extends ConsumerState<RelatedToMeListScreen> {
       body: Column(
         children: [
           RelatedToMeTabWidget(
-            currentIndex: _currentTabIndex,
-            onTabChanged: _onTabChanged,
+            currentIndex: state.currentTabIndex,
+            onTabChanged: (index) {
+              ref.read(relatedToMeProvider.notifier).onTabChanged(index);
+            },
           ),
           Expanded(
-            child: _isLoading && _relatedToMeItems.isEmpty
+            child: state.isLoading && state.items.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : RefreshIndicator(
-                    onRefresh: _refresh,
+                    onRefresh: () => ref.read(relatedToMeProvider.notifier).refresh(),
                     child: NotificationListener<ScrollEndNotification>(
                       onNotification: (notification) {
                         if (notification.metrics.pixels == notification.metrics.maxScrollExtent) {
-                          _loadMore();
+                          ref.read(relatedToMeProvider.notifier).loadMore();
                         }
                         return false;
                       },
                       child: ListView.builder(
-                        itemCount: _relatedToMeItems.length,
+                        itemCount: state.items.length,
                         itemBuilder: (context, index) {
-                          final item = _relatedToMeItems[index];
+                          final item = state.items[index];
                           final icon = CardItemComponent.iconContainer(
                             icon: CupertinoIcons.doc_text,
                             color: AppTheme.primaryColor,

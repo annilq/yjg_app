@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/features/notices/presentation/widgets/notice_item_widget.dart';
+import 'package:flutter_app/features/notices/providers/notice_provider.dart';
 
 class NoticesListScreen extends ConsumerStatefulWidget {
   const NoticesListScreen({super.key});
@@ -13,53 +13,22 @@ class NoticesListScreen extends ConsumerStatefulWidget {
 }
 
 class _NoticesListScreenState extends ConsumerState<NoticesListScreen> {
-  List<dynamic> _noticeItems = [];
-  bool _isLoading = false;
-
   @override
   void initState() {
     super.initState();
-    _loadNoticeList();
-  }
-
-  Future<void> _loadNoticeList() async {
-    setState(() {
-      _isLoading = true;
+    Future.microtask(() {
+      ref.read(noticeProvider.notifier).loadNotices();
     });
-    try {
-      var response = await ApiService().getMainReminds();
-      setState(() {
-        _noticeItems = response['remindModels'] ?? [];
-      });
-    } catch (e) {
-      print('加载提醒列表失败: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   void _onSearch(String keyword) {
-    setState(() {
-      _noticeItems = [];
-    });
-    _loadNoticeList();
-  }
-
-  Future<void> _refresh() async {
-    _noticeItems = [];
-    await _loadNoticeList();
-  }
-
-  Future<void> _loadMore() async {
-    if (!_isLoading) {
-      await _loadNoticeList();
-    }
+    ref.read(noticeProvider.notifier).loadNotices(keyword: keyword, refresh: true);
   }
 
   @override
   Widget build(BuildContext context) {
+    final noticeState = ref.watch(noticeProvider);
+
     return Scaffold(
       appBar: AppBarComponent(
         title: '提醒',
@@ -71,23 +40,23 @@ class _NoticesListScreenState extends ConsumerState<NoticesListScreen> {
           );
         },
       ),
-      body: _isLoading && _noticeItems.isEmpty
+      body: noticeState.isLoading && noticeState.items.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
-              onRefresh: _refresh,
+              onRefresh: () => ref.read(noticeProvider.notifier).refresh(),
               child: NotificationListener<ScrollEndNotification>(
                 onNotification: (notification) {
                   if (notification.metrics.pixels ==
                       notification.metrics.maxScrollExtent) {
-                    _loadMore();
+                    ref.read(noticeProvider.notifier).loadMore();
                   }
                   return false;
                 },
                 child: ListView.builder(
-                  itemCount: _noticeItems.length,
+                  itemCount: noticeState.items.length,
                   itemBuilder: (context, index) {
                     return NoticeItemWidget(
-                      item: _noticeItems[index],
+                      item: noticeState.items[index],
                     );
                   },
                 ),
