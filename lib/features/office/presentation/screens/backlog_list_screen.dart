@@ -78,9 +78,9 @@ class _BacklogListScreenState extends ConsumerState<BacklogListScreen> {
                           }
                           return CardItemComponent(
                             icon: icon,
-                            title: item['title'] ?? '无标题',
-                            subtitle: item['createTime'] != null ? '创建时间: ${item['createTime']}' : null,
-                            content: item['description'],
+                            title: item['name'] ?? '无标题',
+                            extra: item['createDate'] != null ? ' ${item['createDate']}' : null,
+                            content: item['title'],
                             footer: footer,
                             onTap: () {},
                           );

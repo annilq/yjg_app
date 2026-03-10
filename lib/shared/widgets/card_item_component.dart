@@ -5,7 +5,7 @@ import 'package:flutter_app/core/theme/app_theme.dart';
 class CardItemComponent extends StatefulWidget {
   final Widget icon;
   final String title;
-  final String? subtitle;
+  final String? extra;
   final String? content;
   final Widget? footer;
   final VoidCallback onTap;
@@ -15,7 +15,7 @@ class CardItemComponent extends StatefulWidget {
     super.key,
     required this.icon,
     required this.title,
-    this.subtitle,
+    this.extra,
     this.content,
     this.footer,
     required this.onTap,
@@ -183,13 +183,33 @@ class _CardItemComponentState extends State<CardItemComponent>
                       widget.icon,
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Text(
-                          widget.title,
-                          style: AppTheme.titleStyle.copyWith(
-                            color: isDark ? AppTheme.white : AppTheme.darkGray,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.title,
+                                style: AppTheme.titleStyle.copyWith(
+                                  color: isDark ? AppTheme.white : AppTheme.darkGray,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (widget.extra != null) ...[
+                              const SizedBox(width: 8),
+                              Text(
+                                widget.extra!,
+                                style: AppTheme.smallStyle.copyWith(
+                                  color: isDark 
+                                      ? AppTheme.mediumGray.withValues(alpha: 0.8)
+                                      : AppTheme.mediumGray,
+                                  fontSize: 12,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ],
                         ),
                       ),
                       Icon(
@@ -199,17 +219,6 @@ class _CardItemComponentState extends State<CardItemComponent>
                       ),
                     ],
                   ),
-                  if (widget.subtitle != null) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.subtitle!,
-                      style: AppTheme.smallStyle.copyWith(
-                        color: isDark 
-                            ? AppTheme.mediumGray.withValues(alpha: 0.8)
-                            : AppTheme.mediumGray,
-                      ),
-                    ),
-                  ],
                   if (widget.content != null) ...[
                     const SizedBox(height: 8),
                     Text(
