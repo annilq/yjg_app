@@ -68,7 +68,7 @@ class CommonAppsComponent extends ConsumerWidget {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                        crossAxisCount: 4,
                         childAspectRatio: 1,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
