@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/network/api_service.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
+import 'package:flutter_app/shared/widgets/card_item_component.dart';
+import 'package:flutter_app/shared/widgets/app_search_delegate.dart';
+import 'package:flutter_app/core/theme/app_theme.dart';
 import 'package:flutter_app/features/office/presentation/widgets/backlog_tab_widget.dart';
-import 'package:flutter_app/features/office/presentation/widgets/backlog_item_widget.dart';
 
 class BacklogListScreen extends ConsumerStatefulWidget {
   const BacklogListScreen({super.key});
@@ -92,7 +94,7 @@ class _BacklogListScreenState extends ConsumerState<BacklogListScreen> {
         onSearchPressed: () {
           showSearch(
             context: context,
-            delegate: BacklogSearchDelegate(_onSearch),
+            delegate: AppSearchDelegate(_onSearch),
           );
         },
       ),
@@ -118,8 +120,22 @@ class _BacklogListScreenState extends ConsumerState<BacklogListScreen> {
                       child: ListView.builder(
                         itemCount: _backlogItems.length,
                         itemBuilder: (context, index) {
-                          return BacklogItemWidget(
-                            item: _backlogItems[index],
+                          final item = _backlogItems[index];
+                          final icon = CardItemComponent.iconContainer(
+                            icon: CupertinoIcons.doc_text,
+                            color: AppTheme.primaryColor,
+                          );
+                          Widget? footer;
+                          if (item['status'] != null) {
+                            footer = CardItemComponent.statusBadge(item['status']);
+                          }
+                          return CardItemComponent(
+                            icon: icon,
+                            title: item['title'] ?? '无标题',
+                            subtitle: item['createTime'] != null ? '创建时间: ${item['createTime']}' : null,
+                            content: item['description'],
+                            footer: footer,
+                            onTap: () {},
                           );
                         },
                       ),
@@ -129,45 +145,5 @@ class _BacklogListScreenState extends ConsumerState<BacklogListScreen> {
         ],
       ),
     );
-  }
-}
-
-class BacklogSearchDelegate extends SearchDelegate {
-  final Function(String) onSearch;
-
-  BacklogSearchDelegate(this.onSearch);
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(CupertinoIcons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(CupertinoIcons.back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    onSearch(query);
-    close(context, null);
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Container();
   }
 }
