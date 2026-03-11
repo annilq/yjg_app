@@ -32,7 +32,11 @@ class BacklogMenuComponent extends StatelessWidget {
         itemCount: 4,
         itemBuilder: (context, index) {
           List<Map<String, dynamic>> menuItems = [
-            {'title': '待处理', 'icon': CupertinoIcons.mail, 'count': backlogCount},
+            {
+              'title': '待处理',
+              'icon': CupertinoIcons.mail,
+              'count': backlogCount,
+            },
             {'title': '已发起', 'icon': CupertinoIcons.paperplane, 'count': 0},
             {'title': '提醒', 'icon': CupertinoIcons.bell, 'count': remindCount},
             {'title': '发起', 'icon': CupertinoIcons.add_circled, 'count': 0},
@@ -48,23 +52,34 @@ class BacklogMenuComponent extends StatelessWidget {
                 context.push('/notices');
               }
             },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                Icon(item['icon'], color: Colors.white),
-                SizedBox(height: 8),
-                Text(item['title'], style: TextStyle(color: Colors.white, fontSize: 12)),
-                if (item['count'] > 0)
-                  Container(
-                    margin: EdgeInsets.only(top: 4),
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(item['icon'], color: Colors.white, size: 24),
+                    SizedBox(height: 8),
+                    Text(
+                      item['title'],
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
-                    child: Text(
-                      '${item['count']}',
-                      style: TextStyle(color: Colors.white, fontSize: 10),
+                  ],
+                ),
+                if (item['count'] > 0)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        '${item['count']}',
+                        style: TextStyle(color: Colors.white, fontSize: 10),
+                      ),
                     ),
                   ),
               ],
