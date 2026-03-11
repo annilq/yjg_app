@@ -23,7 +23,6 @@ class ButtonComponent extends ElevatedButton {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      minimumSize: Size(double.infinity, 50),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       textStyle: const TextStyle(
         fontSize: 14.0,

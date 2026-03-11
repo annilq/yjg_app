@@ -2,3 +2,4 @@ npx skills add https://github.com/madteacher/mad-agents-skills --skill flutter-a
 npx skills add https://github.com/madteacher/mad-agents-skills --skill flutter-architecture
 npx skills add https://github.com/jeffallan/claude-skills --skill flutter-expert
 npx skills add pbakaus/impeccable
+npx skills add https://github.com/nextlevelbuilder/ui-ux-pro-max-skill --skill ui-ux-pro-max

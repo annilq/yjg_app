@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
+import 'package:flutter_app/shared/widgets/index.dart';
+import 'package:flutter_app/core/utils/util.dart';
 
 class BusinessCard extends StatelessWidget {
   final dynamic item;
@@ -15,6 +17,33 @@ class BusinessCard extends StatelessWidget {
     required this.isInUserList,
     required this.onTap,
   });
+
+  Widget _buildIcon() {
+    String formKey = item['img'] ?? '';
+    String iconName = Util.getFlowIcon(formKey);
+    
+    // 处理图标名称格式
+    if (iconName.startsWith('icon-')) {
+      iconName = iconName.substring(5);
+    } else if (iconName.startsWith('icon_')) {
+      iconName = iconName.replaceFirst('icon_', '');
+    }
+    
+    try {
+      return IconFontWidget(
+        icon: IconFont.getIcon(iconName),
+        color: AppTheme.primaryColor,
+        size: 24,
+      );
+    } catch (e) {
+      // 如果图标不存在，使用默认图标
+      return IconFontWidget(
+        icon: IconFont.getIcon('a-108-tongyongtubiao'),
+        color: AppTheme.primaryColor,
+        size: 24,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +60,7 @@ class BusinessCard extends StatelessWidget {
                   color: AppTheme.primaryColor.withAlpha(25),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  CupertinoIcons.square_grid_2x2,
-                  color: AppTheme.primaryColor,
-                  size: 24,
-                ),
+                child: _buildIcon(),
               ),
               if (editMode)
                 Positioned(

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_app/shared/widgets/app_bar_component.dart';
-import 'package:flutter_app/shared/widgets/loading_component.dart';
-import 'package:flutter_app/shared/widgets/error_component.dart';
-import 'package:flutter_app/shared/widgets/business_card.dart';
+import 'package:flutter_app/shared/widgets/index.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
 import 'package:flutter_app/features/workflow/providers/workflow_providers.dart';
 
@@ -128,15 +125,18 @@ class _WorkflowSettingContentState extends ConsumerState<WorkflowSettingContent>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text('我的应用', style: AppTheme.titleStyle),
-                                ElevatedButton(
+                                ButtonComponent(
                                   onPressed: _setEditMode,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppTheme.primaryColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
+                                  child: Row(
+                                    children: [
+                                      IconFontWidget(
+                                        icon: IconFont.getIcon('a-huaban6'),
+                                        size: 16,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(_editMode ? '保存' : '管理'),
+                                    ],
                                   ),
-                                  child: Text(_editMode ? '保存' : '管理'),
                                 ),
                               ],
                             ),
