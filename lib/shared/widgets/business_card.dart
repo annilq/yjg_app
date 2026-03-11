@@ -32,14 +32,14 @@ class BusinessCard extends StatelessWidget {
     try {
       return IconFontWidget(
         icon: IconFont.getIcon(iconName),
-        color: AppTheme.primaryColor,
+        color: AppTheme.white,
         size: 24,
       );
     } catch (e) {
       // 如果图标不存在，使用默认图标
       return IconFontWidget(
         icon: IconFont.getIcon('a-108-tongyongtubiao'),
-        color: AppTheme.primaryColor,
+        color: AppTheme.white,
         size: 24,
       );
     }
@@ -47,6 +47,9 @@ class BusinessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formKey = item['img'] ?? '';
+    Color moduleColor = Util.getModuleColor(formKey);
+    
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -57,7 +60,7 @@ class BusinessCard extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withAlpha(25),
+                  color: moduleColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: _buildIcon(),

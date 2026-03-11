@@ -1,4 +1,5 @@
 import 'package:flutter_app/core/constants/app_constants.dart';
+import 'dart:ui';
 
 class Util {
   static const String _themeColor = '#4678fb';
@@ -298,5 +299,30 @@ class Util {
     String timeStr = formatTime(time);
     
     return todayStr == timeStr;
+  }
+
+  static Color getModuleColor(String? formKey) {
+    String moduleClass = getModuleClass(formKey);
+    
+    switch (moduleClass) {
+      case 'bg-project':
+        return const Color(0xFFFF452C);
+      case 'bg-contract':
+        return const Color(0xFFFF9454);
+      case 'bg-finance':
+        return const Color(0xFFFE4F24);
+      case 'bg-chief':
+        return const Color(0xFF04BB69);
+      case 'bg-personnel':
+        return const Color(0xFFDC4BF9);
+      case 'bg-xm':
+        return const Color(0xFF0D54FC);
+      case 'bg-other':
+        return const Color(0xFF1B67FB);
+      case 'bg-material':
+        return const Color(0xFF7130EE);
+      default:
+        return const Color(0xFFFF9454);
+    }
   }
 }
