@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/loading_component.dart';
+import 'package:flutter_app/shared/widgets/card_item_component.dart';
 import 'package:flutter_app/features/workflow/providers/workflow_list_provider.dart';
 
 class WorkflowListScreen extends ConsumerWidget {
@@ -97,59 +98,18 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
                 }
 
                 var item = state.dataList[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                item['title'] ?? '',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Text(
-                              item['date'] ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            item['name'] ?? '',
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            item['status']?.toString() ?? '',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    onTap: () => _goDetail(item),
+                return CardItemComponent(
+                  icon: CardItemComponent.iconContainer(
+                    icon: Icons.work,
+                    color: Colors.blue,
                   ),
+                  title: item['title'] ?? '',
+                  extra: item['date'] ?? '',
+                  content: item['name'] ?? '',
+                  footer: CardItemComponent.statusBadge(
+                    item['status']?.toString() ?? '',
+                  ),
+                  onTap: () => _goDetail(item),
                 );
               },
             ),

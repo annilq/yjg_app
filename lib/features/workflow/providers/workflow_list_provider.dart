@@ -57,30 +57,38 @@ class WorkflowListNotifier extends StateNotifier<WorkflowListState> {
       var configResponse = await service.getConfig();
       if (configResponse.containsKey('datalistconfig')) {
         final config = configResponse['datalistconfig'][dataId] ?? {};
-        state = state.copyWith(config: config);
+        await Future.microtask(() {
+          state = state.copyWith(config: config);
+        });
       }
       await initLoadData(dataId);
     } catch (e) {
       print('加载配置失败: $e');
-      state = state.copyWith(isLoading: false);
+      await Future.microtask(() {
+        state = state.copyWith(isLoading: false);
+      });
     }
   }
 
   Future<void> initLoadData(String dataId) async {
-    state = state.copyWith(
-      hasMore: true,
-      dataList: [],
-      page: 1,
-      isLoading: false, // 这里改为false，因为loadData会设置为true
-      clearData: true,
-    );
+    await Future.microtask(() {
+      state = state.copyWith(
+        hasMore: true,
+        dataList: [],
+        page: 1,
+        isLoading: false, // 这里改为false，因为loadData会设置为true
+        clearData: true,
+      );
+    });
     await loadData(dataId);
   }
 
   Future<void> loadData(String dataId) async {
     if (!state.hasMore || state.isLoading) return;
 
-    state = state.copyWith(isLoading: true);
+    await Future.microtask(() {
+      state = state.copyWith(isLoading: true);
+    });
 
     try {
       final params = {
@@ -100,24 +108,32 @@ class WorkflowListNotifier extends StateNotifier<WorkflowListState> {
       );
 
       List<dynamic> list = response['rows'] ?? [];
-      state = state.copyWith(
-        hasMore: !(response['last'] ?? true),
-        page: state.page + 1,
-        dataList: [...state.dataList, ...list],
-        isLoading: false,
-      );
+      await Future.microtask(() {
+        state = state.copyWith(
+          hasMore: !(response['last'] ?? true),
+          page: state.page + 1,
+          dataList: [...state.dataList, ...list],
+          isLoading: false,
+        );
+      });
     } catch (e) {
       print('加载数据失败: $e');
-      state = state.copyWith(isLoading: false);
+      await Future.microtask(() {
+        state = state.copyWith(isLoading: false);
+      });
     }
   }
 
-  void updateSearchForm(Map<String, dynamic> searchForm) {
-    state = state.copyWith(searchForm: searchForm, page: 1, clearData: true);
+  Future<void> updateSearchForm(Map<String, dynamic> searchForm) async {
+    await Future.microtask(() {
+      state = state.copyWith(searchForm: searchForm, page: 1, clearData: true);
+    });
   }
 
-  void updatePickerParams(Map<String, dynamic> pickerParams) {
-    state = state.copyWith(pickerParams: pickerParams, page: 1, clearData: true);
+  Future<void> updatePickerParams(Map<String, dynamic> pickerParams) async {
+    await Future.microtask(() {
+      state = state.copyWith(pickerParams: pickerParams, page: 1, clearData: true);
+    });
   }
 }
 

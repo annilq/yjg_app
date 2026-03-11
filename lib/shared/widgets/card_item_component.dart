@@ -77,7 +77,7 @@ class CardItemComponent extends StatefulWidget {
         text = '已完成';
         break;
       default:
-        color = AppTheme.mediumGray;
+        color = AppTheme.primaryColor;
         text = '进行中';
         break;
     }
