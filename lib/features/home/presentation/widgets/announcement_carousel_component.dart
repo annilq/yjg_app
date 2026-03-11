@@ -4,20 +4,20 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_app/models/main_reminds_response_model.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
+import 'package:flutter_app/shared/widgets/business_icon_component.dart';
 
 class AnnouncementCarouselComponent extends StatefulWidget {
   final List<RemindModel> reminds;
 
-  const AnnouncementCarouselComponent({
-    super.key,
-    required this.reminds,
-  });
+  const AnnouncementCarouselComponent({super.key, required this.reminds});
 
   @override
-  State<AnnouncementCarouselComponent> createState() => _AnnouncementCarouselComponentState();
+  State<AnnouncementCarouselComponent> createState() =>
+      _AnnouncementCarouselComponentState();
 }
 
-class _AnnouncementCarouselComponentState extends State<AnnouncementCarouselComponent> {
+class _AnnouncementCarouselComponentState
+    extends State<AnnouncementCarouselComponent> {
   int _currentIndex = 0;
   final Duration _scrollDuration = Duration(seconds: 3);
   final Duration _animationDuration = Duration(milliseconds: 500);
@@ -49,18 +49,6 @@ class _AnnouncementCarouselComponentState extends State<AnnouncementCarouselComp
     return AppTheme.cardContainer(
       child: Row(
         children: [
-          // 左侧图标
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(CupertinoIcons.news, color: AppTheme.primaryColor),
-          ),
-          SizedBox(width: 12),
-          // 中间公告轮播
           Expanded(
             child: SizedBox(
               height: 40,
@@ -74,20 +62,30 @@ class _AnnouncementCarouselComponentState extends State<AnnouncementCarouselComp
                       left: 0,
                       right: 0,
                       child: Column(
-                        children: widget.reminds.map((remind) => SizedBox(
-                          height: 40,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(remind.title ?? '', style: AppTheme.bodyStyle),
+                        children: widget.reminds
+                            .map(
+                              (remind) => SizedBox(
+                                height: 40,
+                                child: Row(
+                                  children: [
+                                    // 左侧图标
+                                    BusinessIcon(formKey: remind.formKey??"",size: 24),
+                                    SizedBox(width: 12),
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          remind.title ?? '',
+                                          style: AppTheme.bodyStyle,
+                                        ),
+                                      ),
+                                    ),
+                                    CardItemComponent.countBadge(remind.count!),
+                                  ],
                                 ),
                               ),
-                                CardItemComponent.countBadge(remind.count!)
-                            ],
-                          ),
-                        )).toList(),
+                            )
+                            .toList(),
                       ),
                     )
                   else
@@ -104,7 +102,10 @@ class _AnnouncementCarouselComponentState extends State<AnnouncementCarouselComp
           ),
           // 右侧箭头图标
           IconButton(
-            icon: Icon(CupertinoIcons.chevron_forward, color: AppTheme.mediumGray),
+            icon: Icon(
+              CupertinoIcons.chevron_forward,
+              color: AppTheme.mediumGray,
+            ),
             onPressed: () {
               context.push('/notices');
             },

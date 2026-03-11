@@ -13,6 +13,7 @@ class MainRemindsResponseModel {
 
 class RemindModel {
   String? id;
+  String? formKey;
   String? title;
   String? content;
   String? createTime;
@@ -21,6 +22,7 @@ class RemindModel {
 
   RemindModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    formKey = json['formKey'];
     title = json['title'];
     content = json['content'];
     createTime = json['createTime'];
