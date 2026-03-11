@@ -6,5 +6,6 @@ export 'card_item_component.dart';
 export 'tab_component.dart';
 export 'iconfont/index.dart';
 export 'business_card.dart';
+export 'business_icon_component.dart';
 export 'loading_component.dart';
 export 'error_component.dart';

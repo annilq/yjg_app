@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
+import 'package:flutter_app/shared/widgets/business_icon_component.dart';
 
 class CardItemComponent extends StatefulWidget {
-  final Widget icon;
+  final String formKey;
+  final String? status;
   final String title;
   final String? extra;
   final String? content;
-  final Widget? footer;
   final VoidCallback onTap;
   final EdgeInsets margin;
 
   const CardItemComponent({
     super.key,
-    required this.icon,
+    required this.formKey,
+    this.status,
     required this.title,
     this.extra,
     this.content,
-    this.footer,
     required this.onTap,
     this.margin = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
   });
@@ -25,24 +26,8 @@ class CardItemComponent extends StatefulWidget {
   @override
   State<CardItemComponent> createState() => _CardItemComponentState();
 
-  static Widget iconContainer({
-    required IconData icon,
-    required Color color,
-    double size = 20,
-  }) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: color.withAlpha(25),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Icon(
-        icon,
-        color: color,
-        size: size,
-      ),
-    );
+  static Widget iconContainer({required String formKey, double size = 40}) {
+    return BusinessIcon(formKey: formKey, size: size);
   }
 
   static Widget countBadge(int count) {
@@ -113,10 +98,7 @@ class _CardItemComponentState extends State<CardItemComponent>
       duration: const Duration(milliseconds: 100),
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.98).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
   }
 
@@ -141,14 +123,19 @@ class _CardItemComponentState extends State<CardItemComponent>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
+    // 构建图标
+    final icon = BusinessIcon(formKey: widget.formKey, size: 40);
+
+    // 构建footer
+    final status = (widget.status != null
+        ? CardItemComponent.statusBadge(widget.status!)
+        : null);
+
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: child,
-        );
+        return Transform.scale(scale: _scaleAnimation.value, child: child);
       },
       child: Container(
         margin: widget.margin,
@@ -169,7 +156,7 @@ class _CardItemComponentState extends State<CardItemComponent>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
                 border: Border.all(
-                  color: isDark 
+                  color: isDark
                       ? Colors.white.withValues(alpha: 0.1)
                       : AppTheme.lightGray,
                   width: 1,
@@ -180,7 +167,7 @@ class _CardItemComponentState extends State<CardItemComponent>
                 children: [
                   Row(
                     children: [
-                      widget.icon,
+                      icon,
                       const SizedBox(width: 12),
                       Expanded(
                         child: Row(
@@ -189,7 +176,9 @@ class _CardItemComponentState extends State<CardItemComponent>
                               child: Text(
                                 widget.title,
                                 style: AppTheme.titleStyle.copyWith(
-                                  color: isDark ? AppTheme.white : AppTheme.darkGray,
+                                  color: isDark
+                                      ? AppTheme.white
+                                      : AppTheme.darkGray,
                                 ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -200,8 +189,10 @@ class _CardItemComponentState extends State<CardItemComponent>
                               Text(
                                 widget.extra!,
                                 style: AppTheme.smallStyle.copyWith(
-                                  color: isDark 
-                                      ? AppTheme.mediumGray.withValues(alpha: 0.8)
+                                  color: isDark
+                                      ? AppTheme.mediumGray.withValues(
+                                          alpha: 0.8,
+                                        )
                                       : AppTheme.mediumGray,
                                   fontSize: 12,
                                 ),
@@ -215,26 +206,35 @@ class _CardItemComponentState extends State<CardItemComponent>
                       Icon(
                         CupertinoIcons.chevron_right,
                         size: 16,
-                        color: isDark ? AppTheme.mediumGray : AppTheme.mediumGray,
+                        color: isDark
+                            ? AppTheme.mediumGray
+                            : AppTheme.mediumGray,
                       ),
                     ],
                   ),
-                  if (widget.content != null) ...[
+                  if (widget.content != null || status != null) ...[
                     const SizedBox(height: 8),
-                    Text(
-                      widget.content!,
-                      style: AppTheme.bodyStyle.copyWith(
-                        color: isDark 
-                            ? AppTheme.white.withValues(alpha: 0.9)
-                            : AppTheme.darkGray,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    Row(
+                      children: [
+                        if (widget.content != null) ...[
+                          Expanded(
+                            child: Text(
+                              widget.content!,
+                              style: AppTheme.bodyStyle.copyWith(
+                                color: isDark
+                                    ? AppTheme.white.withValues(alpha: 0.9)
+                                    : AppTheme.darkGray,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                        if (status != null) ...[
+                          status,
+                        ],
+                      ],
                     ),
-                  ],
-                  if (widget.footer != null) ...[
-                    const SizedBox(height: 8),
-                    widget.footer!,
                   ],
                 ],
               ),
@@ -244,5 +244,4 @@ class _CardItemComponentState extends State<CardItemComponent>
       ),
     );
   }
-
 }

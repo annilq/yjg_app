@@ -99,16 +99,11 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
 
                 var item = state.dataList[index];
                 return CardItemComponent(
-                  icon: CardItemComponent.iconContainer(
-                    icon: Icons.work,
-                    color: Colors.blue,
-                  ),
+                  formKey: item['img'] ?? '',
+                  status: item['status']?.toString(),
                   title: item['title'] ?? '',
                   extra: item['date'] ?? '',
                   content: item['name'] ?? '',
-                  footer: CardItemComponent.statusBadge(
-                    item['status']?.toString() ?? '',
-                  ),
                   onTap: () => _goDetail(item),
                 );
               },

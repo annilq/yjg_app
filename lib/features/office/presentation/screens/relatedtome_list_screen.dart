@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
 import 'package:flutter_app/shared/widgets/app_search_delegate.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
 import 'package:flutter_app/features/office/presentation/widgets/relatedtome_tab_widget.dart';
 import 'package:flutter_app/features/office/providers/relatedtome_provider.dart';
 
@@ -67,20 +66,12 @@ class _RelatedToMeListScreenState extends ConsumerState<RelatedToMeListScreen> {
                         itemCount: state.items.length,
                         itemBuilder: (context, index) {
                           final item = state.items[index];
-                          final icon = CardItemComponent.iconContainer(
-                            icon: CupertinoIcons.doc_text,
-                            color: AppTheme.primaryColor,
-                          );
-                          Widget? footer;
-                          if (item['status'] != null) {
-                            footer = CardItemComponent.statusBadge(item['status']);
-                          }
                           return CardItemComponent(
-                            icon: icon,
+                            formKey: item['formKey'] ?? '',
+                            status: item['status']?.toString(),
                             title: item['name'] ?? '无标题',
                             extra: item['createDate'] != null ? ' ${item['createDate']}' : null,
                             content: item['title'],
-                            footer: footer,
                             onTap: () {},
                           );
                         },
