@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_app/models/main_reminds_response_model.dart';
+import 'package:flutter_app/features/home/models/remind_model.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
 import 'package:flutter_app/shared/widgets/business_icon_component.dart';

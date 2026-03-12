@@ -2,51 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_app/network/api_service.dart';
-import 'package:flutter_app/models/main_reminds_response_model.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/backlog_menu_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/common_apps_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/announcement_carousel_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/fixed_apps_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/copyright_component.dart';
+import 'package:flutter_app/features/home/providers/home_providers.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final homeState = ref.watch(homeScreenProvider);
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-  List<RemindModel> _reminds = [];
-  int _backlogCount = 0;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    try {
-      var remindsResponse = await ApiService().getMainReminds();
-      MainRemindsResponseModel remindsModel = MainRemindsResponseModel.fromJson(remindsResponse);
-      _reminds = remindsModel.remindModels ?? [];
-
-      _backlogCount = await ApiService().getWorkflowBacklogCount();
-    } catch (e) {
-      print('加载数据失败: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
         title: null,
@@ -61,7 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   context.push('/notices');
                 },
               ),
-              if (_backlogCount > 0)
+              if (homeState.backlogCount > 0)
                 Positioned(
                   right: 8,
                   top: 8,
@@ -76,7 +46,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       minHeight: 16,
                     ),
                     child: Text(
-                      '$_backlogCount',
+                      '${homeState.backlogCount}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,
@@ -89,30 +59,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
-      body: _isLoading
+      body: homeState.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BacklogMenuComponent(
-                    backlogCount: _backlogCount,
-                    remindCount: _reminds.length,
+          : homeState.error != null
+              ? Center(child: Text(homeState.error!))
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BacklogMenuComponent(
+                        backlogCount: homeState.backlogCount,
+                        remindCount: homeState.reminds.length,
+                      ),
+                      const SizedBox(height: 16),
+                      AnnouncementCarouselComponent(reminds: homeState.reminds),
+                      const SizedBox(height: 16),
+                      const CommonAppsComponent(),
+                      const SizedBox(height: 16),
+                      const SizedBox(height: 16),
+                      const FixedAppsComponent(),
+                      const SizedBox(height: 16),
+                      const CopyrightComponent(),
+                      const SizedBox(height: 16),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  AnnouncementCarouselComponent(reminds: _reminds),
-                  const SizedBox(height: 16),
-                  const CommonAppsComponent(),
-                  const SizedBox(height: 16),
-                  const SizedBox(height: 16),
-                  const FixedAppsComponent(),
-                  const SizedBox(height: 16),
-                  const CopyrightComponent(),
-                  const SizedBox(height: 16),
-                ],
-              ),
-            ),
+                ),
     );
   }
 }
