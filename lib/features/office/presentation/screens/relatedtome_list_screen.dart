@@ -64,15 +64,15 @@ class _RelatedToMeListScreenState extends ConsumerState<RelatedToMeListScreen> {
                       return false;
                     },
                     child: ListView.builder(
-                      itemCount: data.items.length,
+                      itemCount: data.items?.length ?? 0,
                       itemBuilder: (context, index) {
-                        final item = data.items[index];
+                        final item = data.items?[index];
                         return CardItemComponent(
-                          formKey: item.id,
-                          status: item.status,
-                          title: item.title,
-                          extra: ' ${item.createTime}',
-                          content: item.title,
+                          formKey: item?.id ?? '',
+                          status: item?.status ?? '',
+                          title: item?.title ?? '',
+                          extra: ' ${item?.createTime ?? ''}',
+                          content: item?.title ?? '',
                           onTap: () {},
                         );
                       },

@@ -1,15 +1,15 @@
-class WebviewConfig {
-  final String url;
-  final String title;
-  final bool enableJavaScript;
-  final bool enableDomStorage;
-  final bool enableZoom;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  WebviewConfig({
-    required this.url,
-    this.title = '',
-    this.enableJavaScript = true,
-    this.enableDomStorage = true,
-    this.enableZoom = false,
-  });
+part 'webview_model.freezed.dart';
+
+@freezed
+class WebviewConfig with _$WebviewConfig {
+  const factory WebviewConfig({
+    required String url,
+    @Default('') String title,
+    @Default(true) bool enableJavaScript,
+    @Default(true) bool enableDomStorage,
+    @Default(false) bool enableZoom,
+  }) = _WebviewConfig;
 }
+

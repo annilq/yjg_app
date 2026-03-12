@@ -1,63 +1,37 @@
-class WorkflowMenu {
-  final String id;
-  final String text;
-  final String? img;
-  final List<WorkflowItem>? children;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  WorkflowMenu({
-    required this.id,
-    required this.text,
-    this.img,
-    this.children,
-  });
+part 'workflow_model.freezed.dart';
+part 'workflow_model.g.dart';
 
-  factory WorkflowMenu.fromJson(Map<String, dynamic> json) {
-    return WorkflowMenu(
-      id: json['id']?.toString() ?? '',
-      text: json['text'] ?? '',
-      img: json['img'],
-      children: json['children'] != null
-          ? (json['children'] as List)
-              .map((item) => WorkflowItem.fromJson(item))
-              .toList()
-          : null,
-    );
-  }
+@freezed
+class WorkflowMenu with _$WorkflowMenu {
+  const factory WorkflowMenu({
+    String? id,
+    String? text,
+    String? img,
+    List<WorkflowItem>? children,
+  }) = _WorkflowMenu;
+
+  factory WorkflowMenu.fromJson(Map<String, dynamic> json) => _$WorkflowMenuFromJson(json);
 }
 
-class WorkflowItem {
-  final String id;
-  final String text;
-  final String? img;
+@freezed
+class WorkflowItem with _$WorkflowItem {
+  const factory WorkflowItem({
+    String? id,
+    String? text,
+    String? img,
+  }) = _WorkflowItem;
 
-  WorkflowItem({
-    required this.id,
-    required this.text,
-    this.img,
-  });
-
-  factory WorkflowItem.fromJson(Map<String, dynamic> json) {
-    return WorkflowItem(
-      id: json['id']?.toString() ?? '',
-      text: json['text'] ?? '',
-      img: json['img'],
-    );
-  }
+  factory WorkflowItem.fromJson(Map<String, dynamic> json) => _$WorkflowItemFromJson(json);
 }
 
-class WorkflowConfig {
-  final String formKey;
-  final Map<String, dynamic> formMode;
+@freezed
+class WorkflowConfig with _$WorkflowConfig {
+  const factory WorkflowConfig({
+    String? formKey,
+    Map<String, dynamic>? formMode,
+  }) = _WorkflowConfig;
 
-  WorkflowConfig({
-    required this.formKey,
-    required this.formMode,
-  });
-
-  factory WorkflowConfig.fromJson(Map<String, dynamic> json) {
-    return WorkflowConfig(
-      formKey: json['formKey'] ?? '',
-      formMode: json['formMode'] ?? {},
-    );
-  }
+  factory WorkflowConfig.fromJson(Map<String, dynamic> json) => _$WorkflowConfigFromJson(json);
 }

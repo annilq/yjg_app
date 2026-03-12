@@ -1,33 +1,26 @@
-class NoticeModel {
-  final String id;
-  final String title;
-  final String content;
-  final String time;
-  final bool isRead;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  NoticeModel({
-    required this.id,
-    required this.title,
-    required this.content,
-    required this.time,
-    required this.isRead,
-  });
+part 'notice_model.freezed.dart';
+part 'notice_model.g.dart';
 
-  factory NoticeModel.fromJson(Map<String, dynamic> json) {
-    return NoticeModel(
-      id: json['formKey'] ?? json['id'] ?? '',
-      title: json['title'] ?? '',
-      content: json['content'] ?? '',
-      time: json['time'] ?? '',
-      isRead: json['isRead'] ?? false,
-    );
-  }
+@freezed
+class NoticeModel with _$NoticeModel {
+  const factory NoticeModel({
+    String? id,
+    String? title,
+    String? content,
+    String? time,
+    bool? isRead,
+  }) = _NoticeModel;
+
+  factory NoticeModel.fromJson(Map<String, dynamic> json) => _$NoticeModelFromJson(json);
 }
 
-class NoticeListData {
-  final List<NoticeModel> notices;
+@freezed
+class NoticeListData with _$NoticeListData {
+  const factory NoticeListData({
+    List<NoticeModel>? notices,
+  }) = _NoticeListData;
 
-  NoticeListData({
-    required this.notices,
-  });
+  factory NoticeListData.fromJson(Map<String, dynamic> json) => _$NoticeListDataFromJson(json);
 }

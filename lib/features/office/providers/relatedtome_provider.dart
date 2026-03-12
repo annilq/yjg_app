@@ -37,7 +37,7 @@ class RelatedToMeNotifier extends AsyncNotifier<BacklogListData> {
 
     if (!refresh) {
       final currentState = await future;
-      items.insertAll(0, currentState.items);
+      items.insertAll(0, currentState.items ?? []);
     }
 
     _page++;
@@ -62,7 +62,7 @@ class RelatedToMeNotifier extends AsyncNotifier<BacklogListData> {
 
   Future<void> loadMore() async {
     final currentState = await future;
-    if (!currentState.hasMore) return;
+    if (!(currentState.hasMore ?? false)) return;
 
     state = await AsyncValue.guard(() => loadRelatedToMeList(refresh: false));
   }

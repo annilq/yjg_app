@@ -1,35 +1,27 @@
-class BacklogItem {
-  final String id;
-  final String title;
-  final String status;
-  final String createTime;
-  final String assignee;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  BacklogItem({
-    required this.id,
-    required this.title,
-    required this.status,
-    required this.createTime,
-    required this.assignee,
-  });
+part 'backlog_model.freezed.dart';
+part 'backlog_model.g.dart';
 
-  factory BacklogItem.fromJson(Map<String, dynamic> json) {
-    return BacklogItem(
-      id: json['id'] ?? '',
-      title: json['title'] ?? '',
-      status: json['status'] ?? '',
-      createTime: json['createTime'] ?? '',
-      assignee: json['assignee'] ?? '',
-    );
-  }
+@freezed
+class BacklogItem with _$BacklogItem {
+  const factory BacklogItem({
+    String? id,
+    String? title,
+    String? status,
+    String? createTime,
+    String? assignee,
+  }) = _BacklogItem;
+
+  factory BacklogItem.fromJson(Map<String, dynamic> json) => _$BacklogItemFromJson(json);
 }
 
-class BacklogListData {
-  final List<BacklogItem> items;
-  final bool hasMore;
+@freezed
+class BacklogListData with _$BacklogListData {
+  const factory BacklogListData({
+    List<BacklogItem>? items,
+    bool? hasMore,
+  }) = _BacklogListData;
 
-  BacklogListData({
-    required this.items,
-    required this.hasMore,
-  });
+  factory BacklogListData.fromJson(Map<String, dynamic> json) => _$BacklogListDataFromJson(json);
 }

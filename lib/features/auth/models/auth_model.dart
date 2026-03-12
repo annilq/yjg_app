@@ -1,39 +1,26 @@
-class LoginResponse {
-  final String token;
-  final UserInfo userInfo;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  LoginResponse({
-    required this.token,
-    required this.userInfo,
-  });
+part 'auth_model.freezed.dart';
+part 'auth_model.g.dart';
 
-  factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    return LoginResponse(
-      token: json['token'] ?? '',
-      userInfo: UserInfo.fromJson(json['userInfo'] ?? {}),
-    );
-  }
+@freezed
+class LoginResponse with _$LoginResponse {
+  const factory LoginResponse({
+    String? token,
+    UserInfo? userInfo,
+  }) = _LoginResponse;
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) => _$LoginResponseFromJson(json);
 }
 
-class UserInfo {
-  final String id;
-  final String username;
-  final String name;
-  final String email;
+@freezed
+class UserInfo with _$UserInfo {
+  const factory UserInfo({
+    String? id,
+    String? username,
+    String? name,
+    String? email,
+  }) = _UserInfo;
 
-  UserInfo({
-    required this.id,
-    required this.username,
-    required this.name,
-    required this.email,
-  });
-
-  factory UserInfo.fromJson(Map<String, dynamic> json) {
-    return UserInfo(
-      id: json['id'] ?? '',
-      username: json['username'] ?? '',
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-    );
-  }
+  factory UserInfo.fromJson(Map<String, dynamic> json) => _$UserInfoFromJson(json);
 }

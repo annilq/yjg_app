@@ -44,10 +44,10 @@ class _NoticesListScreenState extends ConsumerState<NoticesListScreen> {
           return RefreshIndicator(
             onRefresh: () => ref.read(noticeProvider.notifier).refresh(),
             child: ListView.builder(
-              itemCount: data.notices.length,
+              itemCount: data.notices?.length ?? 0,
               itemBuilder: (context, index) {
                 return NoticeItemWidget(
-                  item: data.notices[index],
+                  item: data.notices?[index],
                 );
               },
             ),
