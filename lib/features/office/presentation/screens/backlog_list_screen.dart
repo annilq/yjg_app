@@ -14,12 +14,11 @@ class BacklogListScreen extends ConsumerStatefulWidget {
 }
 
 class _BacklogListScreenState extends ConsumerState<BacklogListScreen> {
+  int _currentTabIndex = 0;
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      ref.read(backlogProvider.notifier).loadBacklogList();
-    });
   }
 
   void _onSearch(String keyword) {
@@ -44,40 +43,45 @@ class _BacklogListScreenState extends ConsumerState<BacklogListScreen> {
       body: Column(
         children: [
           BacklogTabWidget(
-            currentIndex: state.currentTabIndex,
+            currentIndex: _currentTabIndex,
             onTabChanged: (index) {
+              _currentTabIndex = index;
               ref.read(backlogProvider.notifier).onTabChanged(index);
             },
           ),
           Expanded(
-            child: state.isLoading && state.items.isEmpty
-                ? const Center(child: CircularProgressIndicator())
-                : RefreshIndicator(
-                    onRefresh: () => ref.read(backlogProvider.notifier).refresh(),
-                    child: NotificationListener<ScrollEndNotification>(
-                      onNotification: (notification) {
-                        if (notification.metrics.pixels ==
-                            notification.metrics.maxScrollExtent) {
-                          ref.read(backlogProvider.notifier).loadMore();
-                        }
-                        return false;
+            child: state.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(child: Text('加载失败: $error')),
+              data: (data) {
+                return RefreshIndicator(
+                  onRefresh: () => ref.read(backlogProvider.notifier).refresh(),
+                  child: NotificationListener<ScrollEndNotification>(
+                    onNotification: (notification) {
+                      if (notification.metrics.pixels ==
+                          notification.metrics.maxScrollExtent) {
+                        ref.read(backlogProvider.notifier).loadMore();
+                      }
+                      return false;
+                    },
+                    child: ListView.builder(
+                      itemCount: data.items.length,
+                      itemBuilder: (context, index) {
+                        final item = data.items[index];
+                        return CardItemComponent(
+                          formKey: item.id,
+                          status: item.status,
+                          title: item.title,
+                          extra: ' ${item.createTime}',
+                          content: item.title,
+                          onTap: () {},
+                        );
                       },
-                      child: ListView.builder(
-                        itemCount: state.items.length,
-                        itemBuilder: (context, index) {
-                          final item = state.items[index];
-                          return CardItemComponent(
-                            formKey: item['formKey'] ?? '',
-                            status: item['status']?.toString(),
-                            title: item['name'] ?? '无标题',
-                            extra: item['createDate'] != null ? ' ${item['createDate']}' : null,
-                            content: item['title'],
-                            onTap: () {},
-                          );
-                        },
-                      ),
                     ),
                   ),
+                );
+              },
+            ),
           ),
         ],
       ),

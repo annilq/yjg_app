@@ -53,18 +53,14 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      ref.read(workflowListProvider.notifier).loadConfig(widget.dataId);
-    });
   }
 
-  void _goDetail(dynamic item) {
-    final state = ref.read(workflowListProvider);
-    if (state.config.containsKey('formKey') && state.config.containsKey('formMode')) {
+  void _goDetail(dynamic item, Map<String, dynamic> config) {
+    if (config.containsKey('formKey') && config.containsKey('formMode')) {
       final params = {
-        'formKey': state.config['formKey'],
+        'formKey': config['formKey'],
         'processType': 'SEARCH',
-        'url': state.config['formMode']['url'],
+        'url': config['formMode']['url'],
         'data': {
           'id': item['id'],
         },
@@ -79,35 +75,39 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(workflowListProvider);
+    final state = ref.watch(workflowListProvider(widget.dataId));
 
-    return state.isLoading && state.dataList.isEmpty
-        ? const LoadingComponent(message: '加载中...')
-        : RefreshIndicator(
-            onRefresh: () => ref.read(workflowListProvider.notifier).initLoadData(widget.dataId),
-            child: ListView.builder(
-              itemCount: state.dataList.length + (state.hasMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == state.dataList.length) {
-                  if (state.hasMore) {
-                    ref.read(workflowListProvider.notifier).loadData(widget.dataId);
-                    return const LoadingComponent();
-                  } else {
-                    return const SizedBox.shrink();
-                  }
+    return state.when(
+      loading: () => const LoadingComponent(message: '加载中...'),
+      error: (error, stack) => Center(child: Text('加载失败: $error')),
+      data: (data) {
+        return RefreshIndicator(
+          onRefresh: () => ref.read(workflowListProvider(widget.dataId).notifier).refresh(),
+          child: ListView.builder(
+            itemCount: data.dataList.length + (data.hasMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == data.dataList.length) {
+                if (data.hasMore) {
+                  ref.read(workflowListProvider(widget.dataId).notifier).loadMore();
+                  return const LoadingComponent();
+                } else {
+                  return const SizedBox.shrink();
                 }
+              }
 
-                var item = state.dataList[index];
-                return CardItemComponent(
-                  formKey: item['img'] ?? '',
-                  status: item['status']?.toString(),
-                  title: item['title'] ?? '',
-                  extra: item['date'] ?? '',
-                  content: item['name'] ?? '',
-                  onTap: () => _goDetail(item),
-                );
-              },
-            ),
-          );
+              var item = data.dataList[index];
+              return CardItemComponent(
+                formKey: item['img'] ?? '',
+                status: item['status']?.toString(),
+                title: item['title'] ?? '',
+                extra: item['date'] ?? '',
+                content: item['name'] ?? '',
+                onTap: () => _goDetail(item, data.config),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }

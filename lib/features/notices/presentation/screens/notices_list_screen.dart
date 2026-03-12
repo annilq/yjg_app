@@ -16,13 +16,10 @@ class _NoticesListScreenState extends ConsumerState<NoticesListScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      ref.read(noticeProvider.notifier).loadNotices();
-    });
   }
 
   void _onSearch(String keyword) {
-    ref.read(noticeProvider.notifier).loadNotices(keyword: keyword, refresh: true);
+    ref.read(noticeProvider.notifier).refresh(keyword: keyword);
   }
 
   @override
@@ -40,28 +37,23 @@ class _NoticesListScreenState extends ConsumerState<NoticesListScreen> {
           );
         },
       ),
-      body: noticeState.isLoading && noticeState.items.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: () => ref.read(noticeProvider.notifier).refresh(),
-              child: NotificationListener<ScrollEndNotification>(
-                onNotification: (notification) {
-                  if (notification.metrics.pixels ==
-                      notification.metrics.maxScrollExtent) {
-                    ref.read(noticeProvider.notifier).loadMore();
-                  }
-                  return false;
-                },
-                child: ListView.builder(
-                  itemCount: noticeState.items.length,
-                  itemBuilder: (context, index) {
-                    return NoticeItemWidget(
-                      item: noticeState.items[index],
-                    );
-                  },
-                ),
-              ),
+      body: noticeState.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(child: Text('加载失败: $error')),
+        data: (data) {
+          return RefreshIndicator(
+            onRefresh: () => ref.read(noticeProvider.notifier).refresh(),
+            child: ListView.builder(
+              itemCount: data.notices.length,
+              itemBuilder: (context, index) {
+                return NoticeItemWidget(
+                  item: data.notices[index],
+                );
+              },
             ),
+          );
+        },
+      ),
     );
   }
 }

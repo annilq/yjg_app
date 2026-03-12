@@ -1,142 +1,117 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/features/workflow/providers/workflow_providers.dart';
 
-class WorkflowListState {
+class WorkflowListData {
   final Map<String, dynamic> config;
   final List<dynamic> dataList;
   final int page;
   final int rows;
   final bool hasMore;
-  final bool isLoading;
   final Map<String, dynamic> searchForm;
   final Map<String, dynamic> pickerParams;
 
-  const WorkflowListState({
+  const WorkflowListData({
     this.config = const {},
     this.dataList = const [],
     this.page = 1,
     this.rows = 10,
     this.hasMore = true,
-    this.isLoading = true,
     this.searchForm = const {},
     this.pickerParams = const {},
   });
-
-  WorkflowListState copyWith({
-    Map<String, dynamic>? config,
-    List<dynamic>? dataList,
-    int? page,
-    int? rows,
-    bool? hasMore,
-    bool? isLoading,
-    Map<String, dynamic>? searchForm,
-    Map<String, dynamic>? pickerParams,
-    bool clearData = false,
-  }) {
-    return WorkflowListState(
-      config: config ?? this.config,
-      dataList: clearData ? (dataList ?? []) : (dataList ?? this.dataList),
-      page: page ?? this.page,
-      rows: rows ?? this.rows,
-      hasMore: hasMore ?? this.hasMore,
-      isLoading: isLoading ?? this.isLoading,
-      searchForm: searchForm ?? this.searchForm,
-      pickerParams: pickerParams ?? this.pickerParams,
-    );
-  }
 }
 
-class WorkflowListNotifier extends StateNotifier<WorkflowListState> {
-  final Ref ref;
+final workflowListProvider = AsyncNotifierProviderFamily<WorkflowListNotifier, WorkflowListData, String>(
+  WorkflowListNotifier.new,
+);
 
-  WorkflowListNotifier(this.ref) : super(const WorkflowListState());
+class WorkflowListNotifier extends FamilyAsyncNotifier<WorkflowListData, String> {
+  late final String _dataId;
+  int _page = 1;
+  final int _rows = 10;
+  Map<String, dynamic> _searchForm = {};
+  Map<String, dynamic> _pickerParams = {};
 
-  Future<void> loadConfig(String dataId) async {
-    try {
-      final service = ref.read(workflowServiceProvider);
-      var configResponse = await service.getConfig();
-      if (configResponse.containsKey('datalistconfig')) {
-        final config = configResponse['datalistconfig'][dataId] ?? {};
-        await Future.microtask(() {
-          state = state.copyWith(config: config);
-        });
-      }
-      await initLoadData(dataId);
-    } catch (e) {
-      print('加载配置失败: $e');
-      await Future.microtask(() {
-        state = state.copyWith(isLoading: false);
-      });
-    }
+  @override
+  Future<WorkflowListData> build(String dataId) async {
+    _dataId = dataId;
+    _page = 1;
+    _searchForm = {};
+    _pickerParams = {};
+    
+    final config = await loadConfig();
+    return await loadData(refresh: true, config: config);
   }
 
-  Future<void> initLoadData(String dataId) async {
-    await Future.microtask(() {
-      state = state.copyWith(
-        hasMore: true,
-        dataList: [],
-        page: 1,
-        isLoading: false, // 这里改为false，因为loadData会设置为true
-        clearData: true,
-      );
-    });
-    await loadData(dataId);
+  Future<Map<String, dynamic>> loadConfig() async {
+    final service = ref.read(workflowServiceProvider);
+    var configResponse = await service.getConfig();
+    if (configResponse.containsKey('datalistconfig')) {
+      return configResponse['datalistconfig'][_dataId] ?? {};
+    }
+    return {};
   }
 
-  Future<void> loadData(String dataId) async {
-    if (!state.hasMore || state.isLoading) return;
-
-    await Future.microtask(() {
-      state = state.copyWith(isLoading: true);
-    });
-
-    try {
-      final params = {
-        'rows': state.rows,
-        'page': state.page,
-        ...state.searchForm,
-        ...state.pickerParams,
-      };
-
-      final service = ref.read(workflowServiceProvider);
-      var response = await service.getDataList(
-        dataId,
-        params,
-        state.page,
-        state.rows,
-        -1,
-      );
-
-      List<dynamic> list = response['rows'] ?? [];
-      await Future.microtask(() {
-        state = state.copyWith(
-          hasMore: !(response['last'] ?? true),
-          page: state.page + 1,
-          dataList: [...state.dataList, ...list],
-          isLoading: false,
-        );
-      });
-    } catch (e) {
-      print('加载数据失败: $e');
-      await Future.microtask(() {
-        state = state.copyWith(isLoading: false);
-      });
+  Future<WorkflowListData> loadData({bool refresh = false, Map<String, dynamic>? config}) async {
+    if (refresh) {
+      _page = 1;
     }
+
+    final params = {
+      'rows': _rows,
+      'page': _page,
+      ..._searchForm,
+      ..._pickerParams,
+    };
+
+    final service = ref.read(workflowServiceProvider);
+    var response = await service.getDataList(
+      _dataId,
+      params,
+      _page,
+      _rows,
+      -1,
+    );
+
+    List<dynamic> list = response['rows'] ?? [];
+    if (!refresh) {
+      final currentState = await future;
+      list.insertAll(0, currentState.dataList);
+    }
+
+    _page++;
+    return WorkflowListData(
+      config: config ?? (await future).config,
+      dataList: list,
+      page: _page,
+      rows: _rows,
+      hasMore: !(response['last'] ?? true),
+      searchForm: _searchForm,
+      pickerParams: _pickerParams,
+    );
   }
 
   Future<void> updateSearchForm(Map<String, dynamic> searchForm) async {
-    await Future.microtask(() {
-      state = state.copyWith(searchForm: searchForm, page: 1, clearData: true);
-    });
+    _searchForm = searchForm;
+    _page = 1;
+    state = await AsyncValue.guard(() => loadData(refresh: true));
   }
 
   Future<void> updatePickerParams(Map<String, dynamic> pickerParams) async {
-    await Future.microtask(() {
-      state = state.copyWith(pickerParams: pickerParams, page: 1, clearData: true);
-    });
+    _pickerParams = pickerParams;
+    _page = 1;
+    state = await AsyncValue.guard(() => loadData(refresh: true));
+  }
+
+  Future<void> refresh() async {
+    state = await AsyncValue.guard(() => loadData(refresh: true));
+  }
+
+  Future<void> loadMore() async {
+    final currentState = await future;
+    if (!currentState.hasMore) return;
+
+    state = await AsyncValue.guard(() => loadData(refresh: false));
   }
 }
 
-final workflowListProvider = StateNotifierProvider<WorkflowListNotifier, WorkflowListState>(
-  (ref) => WorkflowListNotifier(ref),
-);

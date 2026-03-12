@@ -1,64 +1,35 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_app/network/api_service.dart';
+import 'package:flutter_app/features/notices/service/notices_service.dart';
+import 'package:flutter_app/features/notices/models/notice_model.dart';
 
-class NoticeState {
-  final List<dynamic> items;
-  final bool isLoading;
-  final String? keyword;
+final noticesServiceProvider = Provider<NoticesService>((ref) {
+  return NoticesService();
+});
 
-  const NoticeState({
-    this.items = const [],
-    this.isLoading = false,
-    this.keyword,
-  });
-
-  NoticeState copyWith({
-    List<dynamic>? items,
-    bool? isLoading,
-    String? keyword,
-  }) {
-    return NoticeState(
-      items: items ?? this.items,
-      isLoading: isLoading ?? this.isLoading,
-      keyword: keyword ?? this.keyword,
-    );
-  }
-}
-
-class NoticeNotifier extends StateNotifier<NoticeState> {
-  NoticeNotifier() : super(const NoticeState());
-
-  Future<void> loadNotices({String? keyword, bool refresh = false}) async {
-    if (state.isLoading) return;
-
-    if (refresh) {
-      state = state.copyWith(items: [], keyword: keyword);
-    } else {
-      state = state.copyWith(isLoading: true, keyword: keyword);
-    }
-
-    try {
-      var response = await ApiService().getMainReminds();
-      final newItems = response['remindModels'] ?? [];
-      state = state.copyWith(
-        items: refresh ? newItems : [...state.items, ...newItems],
-        isLoading: false,
-      );
-    } catch (e) {
-      print('加载提醒列表失败: $e');
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> refresh() async {
-    await loadNotices(keyword: state.keyword, refresh: true);
-  }
-
-  Future<void> loadMore() async {
-    await loadNotices(keyword: state.keyword, refresh: false);
-  }
-}
-
-final noticeProvider = StateNotifierProvider<NoticeNotifier, NoticeState>(
-  (ref) => NoticeNotifier(),
+final noticeProvider = AsyncNotifierProvider<NoticeNotifier, NoticeListData>(
+  NoticeNotifier.new,
 );
+
+class NoticeNotifier extends AsyncNotifier<NoticeListData> {
+  late final NoticesService _noticesService;
+
+  @override
+  Future<NoticeListData> build() async {
+    _noticesService = ref.read(noticesServiceProvider);
+    return await loadNotices();
+  }
+
+  Future<NoticeListData> loadNotices({String? keyword}) async {
+    final response = await _noticesService.getNotices(keyword: keyword);
+    final remindModels = response['remindModels'] ?? [];
+    
+    final notices = List<NoticeModel>.from(remindModels.map((item) => NoticeModel.fromJson(item)));
+    
+    return NoticeListData(notices: notices);
+  }
+
+  Future<void> refresh({String? keyword}) async {
+    state = await AsyncValue.guard(() => loadNotices(keyword: keyword));
+  }
+}
+

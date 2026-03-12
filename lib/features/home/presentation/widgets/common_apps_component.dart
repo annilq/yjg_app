@@ -31,7 +31,7 @@ class CommonAppsComponent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final menusAsync = ref.watch(menusProvider);
-    final userList = ref.watch(userListProvider);
+    final userListAsync = ref.watch(userListProvider);
 
     return AppTheme.cardContainer(
       child: Column(
@@ -57,49 +57,61 @@ class CommonAppsComponent extends ConsumerWidget {
           SizedBox(height: 12),
           menusAsync.when(
             data: (menus) {
-              return userList.isEmpty
-                  ? Container(
-                      height: 120,
-                      child: Center(
-                        child: Text('暂无常用应用', style: AppTheme.smallStyle),
-                      ),
-                    )
-                  : GridView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        childAspectRatio: 1,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                      ),
-                      itemCount: userList.length,
-                      itemBuilder: (context, index) {
-                        dynamic item;
-                        for (var menu in menus) {
-                          if (menu != null && menu.containsKey('children')) {
-                            for (var child in menu['children']) {
-                              if (child != null &&
-                                  child.containsKey('id') &&
-                                  child['id'].toString() == userList[index]) {
-                                item = child;
-                                break;
+              return userListAsync.when(
+                data: (userList) {
+                  return userList.isEmpty
+                      ? Container(
+                          height: 120,
+                          child: Center(
+                            child: Text('暂无常用应用', style: AppTheme.smallStyle),
+                          ),
+                        )
+                      : GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            childAspectRatio: 1,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
+                          itemCount: userList.length,
+                          itemBuilder: (context, index) {
+                            dynamic item;
+                            for (var menu in menus) {
+                              if (menu != null && menu.containsKey('children')) {
+                                for (var child in menu['children']) {
+                                  if (child != null &&
+                                      child.containsKey('id') &&
+                                      child['id'].toString() == userList[index]) {
+                                    item = child;
+                                    break;
+                                  }
+                                }
                               }
+                              if (item != null) break;
                             }
-                          }
-                          if (item != null) break;
-                        }
 
-                        if (item == null) return const SizedBox.shrink();
+                            if (item == null) return const SizedBox.shrink();
 
-                        return BusinessCard(
-                          item: item,
-                          editMode: false,
-                          isInUserList: true,
-                          onTap: () => _handleMenuTap(context, item),
+                            return BusinessCard(
+                              item: item,
+                              editMode: false,
+                              isInUserList: true,
+                              onTap: () => _handleMenuTap(context, item),
+                            );
+                          },
                         );
-                      },
-                    );
+                },
+                loading: () => Container(
+                  height: 120,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (error, stack) => Container(
+                  height: 120,
+                  child: Center(child: Text('加载失败', style: AppTheme.smallStyle)),
+                ),
+              );
             },
             loading: () => Container(
               height: 120,

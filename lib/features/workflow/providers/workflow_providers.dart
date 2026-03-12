@@ -12,38 +12,48 @@ final workflowServiceProvider = Provider<WorkflowService>((ref) {
 });
 
 // 状态providers
-final menusProvider = FutureProvider<List<dynamic>>((ref) async {
-  final service = ref.watch(workflowServiceProvider);
-  return await service.getMenus();
-});
-
-final selectedModulesProvider = StateNotifierProvider<SelectedModulesNotifier, List<String>>(
-  (ref) => SelectedModulesNotifier(),
+final menusProvider = AsyncNotifierProvider<MenusNotifier, List<dynamic>>(
+  MenusNotifier.new,
 );
 
-class SelectedModulesNotifier extends StateNotifier<List<String>> {
-  SelectedModulesNotifier() : super([]) {
-    _loadSelectedModules();
+class MenusNotifier extends AsyncNotifier<List<dynamic>> {
+  @override
+  Future<List<dynamic>> build() async {
+    final service = ref.read(workflowServiceProvider);
+    return await service.getMenus();
+  }
+}
+
+final selectedModulesProvider = AsyncNotifierProvider<SelectedModulesNotifier, List<String>>(
+  SelectedModulesNotifier.new,
+);
+
+class SelectedModulesNotifier extends AsyncNotifier<List<String>> {
+  @override
+  Future<List<String>> build() async {
+    return await _loadSelectedModules();
   }
 
-  Future<void> _loadSelectedModules() async {
+  Future<List<String>> _loadSelectedModules() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final selectedModules = prefs.getString('selectedModules');
       if (selectedModules != null) {
-        state = selectedModules.split(',').where((id) => id.isNotEmpty).toList();
+        return selectedModules.split(',').where((id) => id.isNotEmpty).toList();
       }
     } catch (e) {
       print('加载选中模块失败: $e');
     }
+    return [];
   }
 
   Future<void> toggleModule(String moduleId) async {
-    final newState = state.contains(moduleId)
-        ? state.where((id) => id != moduleId).toList()
-        : [...state, moduleId];
+    final currentState = await future;
+    final newState = currentState.contains(moduleId)
+        ? currentState.where((id) => id != moduleId).toList()
+        : [...currentState, moduleId];
     
-    state = newState;
+    state = AsyncValue.data(newState);
     
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -54,49 +64,56 @@ class SelectedModulesNotifier extends StateNotifier<List<String>> {
   }
 
   bool isModuleSelected(String moduleId) {
-    return state.contains(moduleId);
+    final currentState = state.value ?? [];
+    return currentState.contains(moduleId);
   }
 }
 
-final userListProvider = StateNotifierProvider<UserListNotifier, List<String>>(
-  (ref) => UserListNotifier(),
+final userListProvider = AsyncNotifierProvider<UserListNotifier, List<String>>(
+  UserListNotifier.new,
 );
 
-class UserListNotifier extends StateNotifier<List<String>> {
-  UserListNotifier() : super([]) {
-    _loadUserList();
+class UserListNotifier extends AsyncNotifier<List<String>> {
+  @override
+  Future<List<String>> build() async {
+    return await _loadUserList();
   }
 
-  Future<void> _loadUserList() async {
+  Future<List<String>> _loadUserList() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userList = prefs.getString('userList');
       if (userList != null) {
-        state = userList.split(',').where((id) => id.isNotEmpty).toList();
+        return userList.split(',').where((id) => id.isNotEmpty).toList();
       }
     } catch (e) {
       print('加载用户列表失败: $e');
     }
+    return [];
   }
 
   Future<void> toggleItem(String itemId) async {
-    final newState = state.contains(itemId)
-        ? state.where((id) => id != itemId).toList()
-        : [...state, itemId];
+    final currentState = await future;
+    final newState = currentState.contains(itemId)
+        ? currentState.where((id) => id != itemId).toList()
+        : [...currentState, itemId];
     
-    state = newState;
+    state = AsyncValue.data(newState);
   }
 
   Future<void> saveUserList() async {
+    final currentState = await future;
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userList', state.join(','));
+      await prefs.setString('userList', currentState.join(','));
     } catch (e) {
       print('保存用户列表失败: $e');
     }
   }
 
   bool isItemInList(String itemId) {
-    return state.contains(itemId);
+    final currentState = state.value ?? [];
+    return currentState.contains(itemId);
   }
 }
+

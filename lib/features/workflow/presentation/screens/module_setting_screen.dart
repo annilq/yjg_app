@@ -48,47 +48,53 @@ class _ModuleSettingContentState extends ConsumerState<ModuleSettingContent> {
     notifier.toggleModule(moduleId);
   }
 
-  bool _isModuleSelected(String moduleId) {
-    final selectedModules = ref.watch(selectedModulesProvider);
-    return selectedModules.contains(moduleId);
-  }
-
   @override
   Widget build(BuildContext context) {
     final menusAsync = ref.watch(menusProvider);
+    final selectedModulesAsync = ref.watch(selectedModulesProvider);
 
     return _isLoading
         ? const LoadingComponent(message: '加载中...')
         : menusAsync.when(
             data: (menus) {
-              return ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: menus.length,
-                itemBuilder: (context, index) {
-                  var menu = menus[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            menu['text'] ?? '',
-                            style: AppTheme.titleStyle,
+              return selectedModulesAsync.when(
+                data: (selectedModules) {
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: menus.length,
+                    itemBuilder: (context, index) {
+                      var menu = menus[index];
+                      bool isSelected = selectedModules.contains(menu['id']?.toString() ?? '');
+                      return Card(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                menu['text'] ?? '',
+                                style: AppTheme.titleStyle,
+                              ),
+                              Switch(
+                                value: isSelected,
+                                onChanged: (value) {
+                                  _toggleModule(menu['id']?.toString() ?? '');
+                                },
+                                activeColor: AppTheme.primaryColor,
+                              ),
+                            ],
                           ),
-                          Switch(
-                            value: _isModuleSelected(menu['id']?.toString() ?? ''),
-                            onChanged: (value) {
-                              _toggleModule(menu['id']?.toString() ?? '');
-                            },
-                            activeColor: AppTheme.primaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   );
                 },
+                loading: () => const LoadingComponent(),
+                error: (error, stack) => ErrorComponent(
+                  message: '加载失败，请稍后重试',
+                  onRetry: _loadData,
+                ),
               );
             },
             loading: () => const LoadingComponent(),
