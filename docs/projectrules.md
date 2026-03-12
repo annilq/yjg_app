@@ -62,6 +62,35 @@ lib/
 - 利用技能指南中的代码模板和示例
 - 定期更新技能指南，保持与 Flutter 最新版本同步
 
+### 2.1 状态管理最佳实践
+
+- **使用 AsyncNotifier 处理异步操作**：对于需要异步加载数据的场景，优先使用 `AsyncNotifier` 替代 `Notifier` + `Future.microtask` 的组合。
+- **优势**：
+  - 自动处理加载、成功、错误状态，无需手动管理 `isLoading` 和 `error` 字段
+  - 代码结构更清晰，避免了状态未初始化的问题
+  - 利用 Riverpod 的内置机制，简化状态管理逻辑
+- **示例**：
+  ```dart
+  final homeScreenProvider = AsyncNotifierProvider<HomeScreenNotifier, HomeScreenData>(
+    HomeScreenNotifier.new,
+  );
+  
+  class HomeScreenNotifier extends AsyncNotifier<HomeScreenData> {
+    @override
+    Future<HomeScreenData> build() async {
+      final homeService = ref.read(homeServiceProvider);
+      
+      final remindsResponse = await homeService.getMainReminds();
+      final backlogCount = await homeService.getWorkflowBacklogCount();
+      
+      return HomeScreenData(
+        reminds: remindsResponse.remindModels ?? [],
+        backlogCount: backlogCount,
+      );
+    }
+  }
+  ```
+
 ## 3. 测试规范
 
 ### 3.1 单元测试

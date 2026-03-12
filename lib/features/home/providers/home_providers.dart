@@ -7,200 +7,100 @@ final homeServiceProvider = Provider<HomeService>((ref) {
   return HomeService();
 });
 
-final homeScreenProvider = NotifierProvider<HomeScreenNotifier, HomeScreenState>(
+final homeScreenProvider = AsyncNotifierProvider<HomeScreenNotifier, HomeScreenData>(
   HomeScreenNotifier.new,
 );
 
-class HomeScreenState {
+class HomeScreenData {
   final List<RemindModel> reminds;
   final int backlogCount;
-  final bool isLoading;
-  final String? error;
 
-  HomeScreenState({
-    this.reminds = const [],
-    this.backlogCount = 0,
-    this.isLoading = true,
-    this.error,
+  HomeScreenData({
+    required this.reminds,
+    required this.backlogCount,
   });
+}
 
-  HomeScreenState copyWith({
-    List<RemindModel>? reminds,
-    int? backlogCount,
-    bool? isLoading,
-    String? error,
-  }) {
-    return HomeScreenState(
-      reminds: reminds ?? this.reminds,
-      backlogCount: backlogCount ?? this.backlogCount,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
+class HomeScreenNotifier extends AsyncNotifier<HomeScreenData> {
+  @override
+  Future<HomeScreenData> build() async {
+    final homeService = ref.read(homeServiceProvider);
+    
+    final remindsResponse = await homeService.getMainReminds();
+    final backlogCount = await homeService.getWorkflowBacklogCount();
+    
+    return HomeScreenData(
+      reminds: remindsResponse.remindModels ?? [],
+      backlogCount: backlogCount,
     );
   }
 }
 
-class HomeScreenNotifier extends Notifier<HomeScreenState> {
-  @override
-  HomeScreenState build() {
-    // 先返回初始状态
-    final initialState = HomeScreenState();
-    // 然后在微任务中加载数据，确保状态已初始化
-    Future.microtask(() => loadData());
-    return initialState;
-  }
-
-  Future<void> loadData() async {
-    try {
-      final homeService = ref.read(homeServiceProvider);
-      
-      final remindsResponse = await homeService.getMainReminds();
-      final backlogCount = await homeService.getWorkflowBacklogCount();
-      
-      state = state.copyWith(
-        reminds: remindsResponse.remindModels ?? [],
-        backlogCount: backlogCount,
-        isLoading: false,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: '加载数据失败: $e',
-      );
-    }
-  }
-}
-
-final addressBookProvider = NotifierProvider<AddressBookNotifier, AddressBookState>(
+final addressBookProvider = AsyncNotifierProvider<AddressBookNotifier, AddressBookData>(
   AddressBookNotifier.new,
 );
 
-class AddressBookState {
+class AddressBookData {
   final List<ContactModel> frequentContacts;
   final List<DeptModel> departments;
-  final bool isLoading;
-  final String? error;
 
-  AddressBookState({
-    this.frequentContacts = const [],
-    this.departments = const [],
-    this.isLoading = true,
-    this.error,
+  AddressBookData({
+    required this.frequentContacts,
+    required this.departments,
   });
+}
 
-  AddressBookState copyWith({
-    List<ContactModel>? frequentContacts,
-    List<DeptModel>? departments,
-    bool? isLoading,
-    String? error,
-  }) {
-    return AddressBookState(
-      frequentContacts: frequentContacts ?? this.frequentContacts,
-      departments: departments ?? this.departments,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
+class AddressBookNotifier extends AsyncNotifier<AddressBookData> {
+  @override
+  Future<AddressBookData> build() async {
+    final homeService = ref.read(homeServiceProvider);
+    
+    final frequentResponse = await homeService.getAddressBookFrequent();
+    final fullResponse = await homeService.getAddressBookFull();
+    
+    return AddressBookData(
+      frequentContacts: frequentResponse.contactModels ?? [],
+      departments: fullResponse.deptModels ?? [],
     );
   }
 }
 
-class AddressBookNotifier extends Notifier<AddressBookState> {
-  @override
-  AddressBookState build() {
-    // 先返回初始状态
-    final initialState = AddressBookState();
-    // 然后在微任务中加载数据，确保状态已初始化
-    Future.microtask(() => loadData());
-    return initialState;
-  }
-
-  Future<void> loadData() async {
-    try {
-      final homeService = ref.read(homeServiceProvider);
-      
-      final frequentResponse = await homeService.getAddressBookFrequent();
-      final fullResponse = await homeService.getAddressBookFull();
-      
-      state = state.copyWith(
-        frequentContacts: frequentResponse.contactModels ?? [],
-        departments: fullResponse.deptModels ?? [],
-        isLoading: false,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: '加载数据失败: $e',
-      );
-    }
-  }
-}
-
-final contactDetailProvider = NotifierProvider.family<ContactDetailNotifier, ContactDetailState, String>(
+final contactDetailProvider = AsyncNotifierProvider.family<ContactDetailNotifier, ContactDetailData, String>(
   ContactDetailNotifier.new,
 );
 
-class ContactDetailState {
-  final ContactModel? contact;
-  final bool isLoading;
+class ContactDetailData {
+  final ContactModel contact;
   final bool isFrequent;
-  final String? error;
 
-  ContactDetailState({
-    this.contact,
-    this.isLoading = true,
-    this.isFrequent = false,
-    this.error,
+  ContactDetailData({
+    required this.contact,
+    required this.isFrequent,
   });
-
-  ContactDetailState copyWith({
-    ContactModel? contact,
-    bool? isLoading,
-    bool? isFrequent,
-    String? error,
-  }) {
-    return ContactDetailState(
-      contact: contact ?? this.contact,
-      isLoading: isLoading ?? this.isLoading,
-      isFrequent: isFrequent ?? this.isFrequent,
-      error: error ?? this.error,
-    );
-  }
 }
 
-class ContactDetailNotifier extends FamilyNotifier<ContactDetailState, String> {
+class ContactDetailNotifier extends FamilyAsyncNotifier<ContactDetailData, String> {
   late final HomeService _homeService;
 
   @override
-  ContactDetailState build(String userId) {
+  Future<ContactDetailData> build(String userId) async {
     _homeService = ref.read(homeServiceProvider);
-    // 先返回初始状态
-    final initialState = ContactDetailState();
-    // 然后在微任务中加载数据，确保状态已初始化
-    Future.microtask(() => loadContactDetail(userId));
-    return initialState;
-  }
-
-  Future<void> loadContactDetail(String userId) async {
-    try {
-      final response = await _homeService.getAddressBookUserDetail(userId);
-      final contact = ContactModel.fromJson(response);
-      state = state.copyWith(
-        contact: contact,
-        isFrequent: contact.isFrequent ?? false,
-        isLoading: false,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: '加载联系人详情失败: $e',
-      );
-    }
+    
+    final response = await _homeService.getAddressBookUserDetail(userId);
+    final contact = ContactModel.fromJson(response);
+    
+    return ContactDetailData(
+      contact: contact,
+      isFrequent: contact.isFrequent ?? false,
+    );
   }
 
   Future<void> toggleFrequent() async {
+    final currentState = await future;
     try {
-      await _homeService.setAddressBookContactFrequent(arg, !state.isFrequent);
-      state = state.copyWith(
-        isFrequent: !state.isFrequent,
-      );
+      await _homeService.setAddressBookContactFrequent(arg, !currentState.isFrequent);
+      // 重新加载数据以更新状态
+      ref.invalidateSelf();
     } catch (e) {
       throw Exception('设置常用联系人失败: $e');
     }

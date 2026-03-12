@@ -31,60 +31,65 @@ class HomeScreen extends ConsumerWidget {
                   context.push('/notices');
                 },
               ),
-              if (homeState.backlogCount > 0)
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 16,
-                      minHeight: 16,
-                    ),
-                    child: Text(
-                      '${homeState.backlogCount}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
+              homeState.when(
+                data: (data) => data.backlogCount > 0
+                    ? Positioned(
+                        right: 8,
+                        top: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 16,
+                            minHeight: 16,
+                          ),
+                          child: Text(
+                            '${data.backlogCount}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
+                loading: () => const SizedBox(),
+                error: (error, stack) => const SizedBox(),
+              ),
             ],
           ),
         ],
       ),
-      body: homeState.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : homeState.error != null
-              ? Center(child: Text(homeState.error!))
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BacklogMenuComponent(
-                        backlogCount: homeState.backlogCount,
-                        remindCount: homeState.reminds.length,
-                      ),
-                      const SizedBox(height: 16),
-                      AnnouncementCarouselComponent(reminds: homeState.reminds),
-                      const SizedBox(height: 16),
-                      const CommonAppsComponent(),
-                      const SizedBox(height: 16),
-                      const SizedBox(height: 16),
-                      const FixedAppsComponent(),
-                      const SizedBox(height: 16),
-                      const CopyrightComponent(),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
-                ),
+      body: homeState.when(
+        data: (data) => SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BacklogMenuComponent(
+                backlogCount: data.backlogCount,
+                remindCount: data.reminds.length,
+              ),
+              const SizedBox(height: 16),
+              AnnouncementCarouselComponent(reminds: data.reminds),
+              const SizedBox(height: 16),
+              const CommonAppsComponent(),
+              const SizedBox(height: 16),
+              const SizedBox(height: 16),
+              const FixedAppsComponent(),
+              const SizedBox(height: 16),
+              const CopyrightComponent(),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(child: Text('加载失败: $error')),
+      ),
     );
   }
 }
