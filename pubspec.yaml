@@ -42,6 +42,8 @@ dependencies:
   crypto: ^3.0.3
   # Image picker for upload
   image_picker: ^1.1.1
+  # File selector for desktop
+  file_selector: ^1.0.3
   # Platform specific widgets
   flutter_platform_widgets: ^10.0.0
   # Localizations
@@ -52,6 +54,8 @@ dependencies:
   flutter_riverpod: ^2.5.0
   # Router
   go_router: ^14.0.0
+  # URL launcher
+  url_launcher: ^6.2.5
   # Code generation
   freezed_annotation: ^2.4.1
   json_annotation: ^4.9.0
@@ -85,6 +89,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/html/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

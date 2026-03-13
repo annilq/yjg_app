@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebView 接口测试</title>
+    <style>
+      body {
+        font-family: -apple-system, sans-serif;
+        padding: 20px;
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+      button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        background: #007aff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+      .result {
+        margin-top: 15px;
+        padding: 10px;
+        background: #f0f0f0;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WebView 接口测试</h1>
+    <button onclick="checkInterface()">检查接口注入状态</button>
+    <button onclick="testGetUserInfo()">getUserInfo()</button>
+    <button onclick="testGetSign()">getSign()</button>
+    <button onclick="testClose()" style="background: #ff3b30">close()</button>
+    <button onclick="testAlert()">alert()</button>
+    <button onclick="testConfirm()">confirm()</button>
+    <button onclick="testChoosePhoto()">choosePhoto()</button>
+    <div id="result" class="result"></div>
+    <script>
+      function log(msg) {
+        console.log(msg);
+        document.getElementById("result").innerHTML =
+          msg + "<br>" + document.getElementById("result").innerHTML;
+      }
+      function checkInterface() {
+        if (window.jsInterface) {
+          log(
+            "✓ 接口注入成功! 方法: " +
+              Object.keys(window.jsInterface).join(", "),
+          );
+        } else {
+          log("✗ 接口注入失败!");
+        }
+      }
+      function testGetUserInfo() {
+        var result = window.jsInterface
+          ? window.jsInterface.getUserInfo()
+          : "no interface";
+        log("getUserInfo: " + JSON.stringify(result));
+      }
+      function testGetSign() {
+        var result = window.jsInterface
+          ? window.jsInterface.getSign()
+          : "no interface";
+        log("getSign: " + JSON.stringify(result));
+      }
+      function testClose() {
+        window.jsInterface && window.jsInterface.close();
+      }
+      function testAlert() {
+        window.jsInterface &&
+          window.jsInterface.use(
+            "alert",
+            function (r) {
+              log("alert回调: " + r);
+            },
+            { title: "测试", info: "你好" },
+          );
+      }
+      function testConfirm() {
+        window.jsInterface &&
+          window.jsInterface.use(
+            "confirm",
+            function (r) {
+              log("confirm回调: " + r);
+            },
+            { title: "确认", info: "确定?" },
+          );
+      }
+      function testChoosePhoto() {
+        window.jsInterface &&
+          window.jsInterface.use(
+            "choosePhoto",
+            function (r) {
+              log("choosePhoto: " + r);
+            },
+            { num: 3, type: "album" },
+          );
+      }
+      window.onload = function () {
+        setTimeout(checkInterface, 500);
+      };
+    </script>
+  </body>
+</html>

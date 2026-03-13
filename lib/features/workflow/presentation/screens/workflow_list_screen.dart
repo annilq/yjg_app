@@ -61,6 +61,7 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
         'formKey': config['formKey'],
         'processType': 'SEARCH',
         'url': config['formMode']['url'],
+        'test': true,
         'data': {
           'id': item['id'],
         },
