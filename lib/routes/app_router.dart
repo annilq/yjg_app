@@ -4,6 +4,7 @@ import 'package:flutter_app/features/auth/presentation/screens/login_screen.dart
 import 'package:flutter_app/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:flutter_app/features/auth/presentation/screens/update_password_screen.dart';
 import 'package:flutter_app/features/home/presentation/screens/main_screen.dart';
+import 'package:flutter_app/features/profile/presentation/screens/profile_screen.dart';
 
 import 'package:flutter_app/features/notices/presentation/screens/notices_list_screen.dart';
 import 'package:flutter_app/features/office/presentation/screens/backlog_list_screen.dart';
@@ -80,6 +81,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           final args = state.extra as Map<String, dynamic>?;
           return WebviewScreen(params: args ?? {});
         },
+      ),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
       ),
     ],
   );

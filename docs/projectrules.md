@@ -50,12 +50,7 @@ lib/
 
 
 ## 2. 开发规范
-开发过程中应参考以下技能指南：
-
-- **flutter-architecture**：提供架构指导和最佳实践，包括 Feature-First 项目组织和 MVVM 模式
-- **flutter-expert**：提供高级 Flutter 开发技巧，包括状态管理、导航和性能优化
-- **flutter-adaptive-ui**：提供自适应 UI 开发指南
-- **flutter-animations**：提供动画开发指南
+开发过程中应参考`.agents/skills/`目录下的技能指南。
 
 - 在开发新功能前，参考相关技能指南
 - 遵循技能指南中的最佳实践

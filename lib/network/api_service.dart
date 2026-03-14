@@ -483,6 +483,15 @@ class ApiService {
     return response.data;
   }
 
+  // 解除微信绑定
+  Future<void> unbindWxLogin() async {
+    Map<String, dynamic>? authInfo = await _networkUtil.getAuthenticationInfo();
+    if (authInfo == null) {
+      throw Exception('未登录');
+    }
+    await _networkUtil.post('unbind-wx-login', authInfo);
+  }
+
   // 生成 MD5
   String _generateMD5(String input) {
     var bytes = utf8.encode(input);

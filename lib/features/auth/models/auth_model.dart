@@ -20,6 +20,9 @@ class UserInfo with _$UserInfo {
     String? username,
     String? name,
     String? email,
+    String? loginName,
+    String? phone,
+    String? avatar,
   }) = _UserInfo;
 
   factory UserInfo.fromJson(Map<String, dynamic> json) => _$UserInfoFromJson(json);

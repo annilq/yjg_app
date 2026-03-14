@@ -213,6 +213,9 @@ mixin _$UserInfo {
   String? get username => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
+  String? get loginName => throw _privateConstructorUsedError;
+  String? get phone => throw _privateConstructorUsedError;
+  String? get avatar => throw _privateConstructorUsedError;
 
   /// Serializes this UserInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -229,7 +232,15 @@ abstract class $UserInfoCopyWith<$Res> {
   factory $UserInfoCopyWith(UserInfo value, $Res Function(UserInfo) then) =
       _$UserInfoCopyWithImpl<$Res, UserInfo>;
   @useResult
-  $Res call({String? id, String? username, String? name, String? email});
+  $Res call({
+    String? id,
+    String? username,
+    String? name,
+    String? email,
+    String? loginName,
+    String? phone,
+    String? avatar,
+  });
 }
 
 /// @nodoc
@@ -251,6 +262,9 @@ class _$UserInfoCopyWithImpl<$Res, $Val extends UserInfo>
     Object? username = freezed,
     Object? name = freezed,
     Object? email = freezed,
+    Object? loginName = freezed,
+    Object? phone = freezed,
+    Object? avatar = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -270,6 +284,18 @@ class _$UserInfoCopyWithImpl<$Res, $Val extends UserInfo>
                 ? _value.email
                 : email // ignore: cast_nullable_to_non_nullable
                       as String?,
+            loginName: freezed == loginName
+                ? _value.loginName
+                : loginName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            phone: freezed == phone
+                ? _value.phone
+                : phone // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            avatar: freezed == avatar
+                ? _value.avatar
+                : avatar // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -285,7 +311,15 @@ abstract class _$$UserInfoImplCopyWith<$Res>
   ) = __$$UserInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? id, String? username, String? name, String? email});
+  $Res call({
+    String? id,
+    String? username,
+    String? name,
+    String? email,
+    String? loginName,
+    String? phone,
+    String? avatar,
+  });
 }
 
 /// @nodoc
@@ -306,6 +340,9 @@ class __$$UserInfoImplCopyWithImpl<$Res>
     Object? username = freezed,
     Object? name = freezed,
     Object? email = freezed,
+    Object? loginName = freezed,
+    Object? phone = freezed,
+    Object? avatar = freezed,
   }) {
     return _then(
       _$UserInfoImpl(
@@ -325,6 +362,18 @@ class __$$UserInfoImplCopyWithImpl<$Res>
             ? _value.email
             : email // ignore: cast_nullable_to_non_nullable
                   as String?,
+        loginName: freezed == loginName
+            ? _value.loginName
+            : loginName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        phone: freezed == phone
+            ? _value.phone
+            : phone // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        avatar: freezed == avatar
+            ? _value.avatar
+            : avatar // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -333,7 +382,15 @@ class __$$UserInfoImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$UserInfoImpl implements _UserInfo {
-  const _$UserInfoImpl({this.id, this.username, this.name, this.email});
+  const _$UserInfoImpl({
+    this.id,
+    this.username,
+    this.name,
+    this.email,
+    this.loginName,
+    this.phone,
+    this.avatar,
+  });
 
   factory _$UserInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserInfoImplFromJson(json);
@@ -346,10 +403,16 @@ class _$UserInfoImpl implements _UserInfo {
   final String? name;
   @override
   final String? email;
+  @override
+  final String? loginName;
+  @override
+  final String? phone;
+  @override
+  final String? avatar;
 
   @override
   String toString() {
-    return 'UserInfo(id: $id, username: $username, name: $name, email: $email)';
+    return 'UserInfo(id: $id, username: $username, name: $name, email: $email, loginName: $loginName, phone: $phone, avatar: $avatar)';
   }
 
   @override
@@ -361,12 +424,25 @@ class _$UserInfoImpl implements _UserInfo {
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.email, email) || other.email == email));
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.loginName, loginName) ||
+                other.loginName == loginName) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.avatar, avatar) || other.avatar == avatar));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, username, name, email);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    username,
+    name,
+    email,
+    loginName,
+    phone,
+    avatar,
+  );
 
   /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -388,6 +464,9 @@ abstract class _UserInfo implements UserInfo {
     final String? username,
     final String? name,
     final String? email,
+    final String? loginName,
+    final String? phone,
+    final String? avatar,
   }) = _$UserInfoImpl;
 
   factory _UserInfo.fromJson(Map<String, dynamic> json) =
@@ -401,6 +480,12 @@ abstract class _UserInfo implements UserInfo {
   String? get name;
   @override
   String? get email;
+  @override
+  String? get loginName;
+  @override
+  String? get phone;
+  @override
+  String? get avatar;
 
   /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
