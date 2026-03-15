@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
-import 'package:flutter_app/features/home/providers/home_providers.dart';
+import 'package:flutter_app/features/contact/providers/contact_providers.dart';
 import 'package:go_router/go_router.dart';
 
 class AddressBookScreen extends ConsumerWidget {

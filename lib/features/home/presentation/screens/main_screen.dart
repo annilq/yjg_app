@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/features/home/presentation/screens/home_screen.dart';
-import 'package:flutter_app/features/home/presentation/screens/address_book_screen.dart';
+import 'package:flutter_app/features/contact/presentation/screens/address_book_screen.dart';
 import 'package:flutter_app/features/profile/presentation/screens/profile_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
