@@ -4,8 +4,8 @@ import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/features/contact/providers/contact_providers.dart';
 import 'package:go_router/go_router.dart';
 
-class AddressBookScreen extends ConsumerWidget {
-  const AddressBookScreen({super.key});
+class ContactScreen extends ConsumerWidget {
+  const ContactScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

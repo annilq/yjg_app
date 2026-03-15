@@ -15,6 +15,7 @@ import 'package:flutter_app/features/workflow/presentation/screens/workflow_sett
 import 'package:flutter_app/features/workflow/presentation/screens/module_list_screen.dart';
 import 'package:flutter_app/features/workflow/presentation/screens/module_setting_screen.dart';
 import 'package:flutter_app/features/webview/presentation/screens/webview_screen.dart';
+import 'package:flutter_app/features/contact/presentation/screens/contact_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -86,6 +87,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/profile',
         builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: '/contact',
+        builder: (context, state) => const ContactScreen(),
       ),
       GoRoute(
         path: '/contact-detail',

@@ -260,7 +260,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final menus = [
       {
         'label': '通讯录',
-        'url': '/address-book',
+        'url': '/contact',
       },
       {
         'label': '修改密码',

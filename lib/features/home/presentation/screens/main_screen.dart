@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/features/home/presentation/screens/home_screen.dart';
-import 'package:flutter_app/features/contact/presentation/screens/address_book_screen.dart';
 import 'package:flutter_app/features/profile/presentation/screens/profile_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
@@ -15,7 +14,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   int _currentIndex = 0;
   final List<Widget> _pages = const [
     HomeScreen(),
-    AddressBookScreen(),
     ProfileScreen(),
   ];
 
@@ -34,10 +32,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: '首页',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: '通讯录',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
