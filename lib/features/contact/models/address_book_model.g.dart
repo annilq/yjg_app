@@ -6,78 +6,50 @@ part of 'address_book_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ContactModelImpl _$$ContactModelImplFromJson(Map<String, dynamic> json) =>
-    _$ContactModelImpl(
-      userId: json['userId'] as String?,
-      userName: json['userName'] as String?,
-      position: json['position'] as String?,
-      department: json['department'] as String?,
-      phone: json['phone'] as String?,
-      email: json['email'] as String?,
-      isFrequent: json['isFrequent'] as bool?,
-      deptName: json['deptName'] as String?,
-    );
+ContactModel _$ContactModelFromJson(Map<String, dynamic> json) => ContactModel(
+  userId: (json['userId'] as num?)?.toInt(),
+  name: json['name'] as String?,
+  position: json['position'] as String?,
+  dept: json['dept'] as String?,
+  phone: json['phone'] as String?,
+  email: json['email'] as String?,
+  fc: json['fc'] as bool?,
+  firstLetter: json['firstLetter'] as String?,
+);
 
-Map<String, dynamic> _$$ContactModelImplToJson(_$ContactModelImpl instance) =>
+Map<String, dynamic> _$ContactModelToJson(ContactModel instance) =>
     <String, dynamic>{
       'userId': instance.userId,
-      'userName': instance.userName,
+      'name': instance.name,
       'position': instance.position,
-      'department': instance.department,
+      'dept': instance.dept,
       'phone': instance.phone,
       'email': instance.email,
-      'isFrequent': instance.isFrequent,
-      'deptName': instance.deptName,
+      'fc': instance.fc,
+      'firstLetter': instance.firstLetter,
     };
 
-_$DeptModelImpl _$$DeptModelImplFromJson(Map<String, dynamic> json) =>
-    _$DeptModelImpl(
-      deptId: json['deptId'] as String?,
-      deptName: json['deptName'] as String?,
-      userModels: (json['userModels'] as List<dynamic>?)
-          ?.map((e) => ContactModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+DeptModel _$DeptModelFromJson(Map<String, dynamic> json) => DeptModel(
+  name: json['name'] as String?,
+  children: (json['children'] as List<dynamic>?)
+      ?.map((e) => ContactModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
 
-Map<String, dynamic> _$$DeptModelImplToJson(_$DeptModelImpl instance) =>
-    <String, dynamic>{
-      'deptId': instance.deptId,
-      'deptName': instance.deptName,
-      'userModels': instance.userModels,
-    };
-
-_$AddressBookFrequentResponseModelImpl
-_$$AddressBookFrequentResponseModelImplFromJson(Map<String, dynamic> json) =>
-    _$AddressBookFrequentResponseModelImpl(
-      code: (json['code'] as num?)?.toInt(),
-      message: json['message'] as String?,
-      contactModels: (json['contactModels'] as List<dynamic>?)
-          ?.map((e) => ContactModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$$AddressBookFrequentResponseModelImplToJson(
-  _$AddressBookFrequentResponseModelImpl instance,
-) => <String, dynamic>{
-  'code': instance.code,
-  'message': instance.message,
-  'contactModels': instance.contactModels,
+Map<String, dynamic> _$DeptModelToJson(DeptModel instance) => <String, dynamic>{
+  'name': instance.name,
+  'children': instance.children,
 };
 
-_$AddressBookFullResponseModelImpl _$$AddressBookFullResponseModelImplFromJson(
+AddressBookResponseModel _$AddressBookResponseModelFromJson(
   Map<String, dynamic> json,
-) => _$AddressBookFullResponseModelImpl(
+) => AddressBookResponseModel(
   code: (json['code'] as num?)?.toInt(),
-  message: json['message'] as String?,
-  deptModels: (json['deptModels'] as List<dynamic>?)
+  data: (json['data'] as List<dynamic>?)
       ?.map((e) => DeptModel.fromJson(e as Map<String, dynamic>))
       .toList(),
 );
 
-Map<String, dynamic> _$$AddressBookFullResponseModelImplToJson(
-  _$AddressBookFullResponseModelImpl instance,
-) => <String, dynamic>{
-  'code': instance.code,
-  'message': instance.message,
-  'deptModels': instance.deptModels,
-};
+Map<String, dynamic> _$AddressBookResponseModelToJson(
+  AddressBookResponseModel instance,
+) => <String, dynamic>{'code': instance.code, 'data': instance.data};

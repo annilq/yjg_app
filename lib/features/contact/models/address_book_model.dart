@@ -1,53 +1,78 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'address_book_model.freezed.dart';
 part 'address_book_model.g.dart';
 
-@freezed
-class ContactModel with _$ContactModel {
-  const factory ContactModel({
-    String? userId,
-    String? userName,
-    String? position,
-    String? department,
-    String? phone,
-    String? email,
-    bool? isFrequent,
-    String? deptName,
-  }) = _ContactModel;
+@JsonSerializable()
+class ContactModel {
+  final int? userId;
+  final String? name;
+  final String? position;
+  final String? dept;
+  final String? phone;
+  final String? email;
+  final bool? fc;
+  final String? firstLetter;
 
-  factory ContactModel.fromJson(Map<String, dynamic> json) => _$ContactModelFromJson(json);
+  ContactModel({
+    this.userId,
+    this.name,
+    this.position,
+    this.dept,
+    this.phone,
+    this.email,
+    this.fc,
+    this.firstLetter,
+  });
+
+  factory ContactModel.fromJson(Map<String, dynamic> json) {
+    // 处理 fc 字段的类型转换，将 int 转换为 bool
+    dynamic fcValue = json['fc'];
+    bool? fc;
+    if (fcValue is int) {
+      fc = fcValue == 1;
+    } else if (fcValue is bool) {
+      fc = fcValue;
+    }
+
+    return ContactModel(
+      userId: json['userId'] as int?,
+      name: json['name'] as String?,
+      position: json['position'] as String?,
+      dept: json['dept'] as String?,
+      phone: json['phone'] as String?,
+      email: json['email'] as String?,
+      fc: fc,
+      firstLetter: json['firstLetter'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() => _$ContactModelToJson(this);
 }
 
-@freezed
-class DeptModel with _$DeptModel {
-  const factory DeptModel({
-    String? deptId,
-    String? deptName,
-    List<ContactModel>? userModels,
-  }) = _DeptModel;
+@JsonSerializable()
+class DeptModel {
+  final String? name;
+  final List<ContactModel>? children;
+
+  DeptModel({
+    this.name,
+    this.children,
+  });
 
   factory DeptModel.fromJson(Map<String, dynamic> json) => _$DeptModelFromJson(json);
+  Map<String, dynamic> toJson() => _$DeptModelToJson(this);
 }
 
-@freezed
-class AddressBookFrequentResponseModel with _$AddressBookFrequentResponseModel {
-  const factory AddressBookFrequentResponseModel({
-    int? code,
-    String? message,
-    List<ContactModel>? contactModels,
-  }) = _AddressBookFrequentResponseModel;
+@JsonSerializable()
+class AddressBookResponseModel {
+  final int? code;
+  final List<DeptModel>? data;
 
-  factory AddressBookFrequentResponseModel.fromJson(Map<String, dynamic> json) => _$AddressBookFrequentResponseModelFromJson(json);
-}
+  AddressBookResponseModel({
+    this.code,
+    this.data,
+  });
 
-@freezed
-class AddressBookFullResponseModel with _$AddressBookFullResponseModel {
-  const factory AddressBookFullResponseModel({
-    int? code,
-    String? message,
-    List<DeptModel>? deptModels,
-  }) = _AddressBookFullResponseModel;
-
-  factory AddressBookFullResponseModel.fromJson(Map<String, dynamic> json) => _$AddressBookFullResponseModelFromJson(json);
+  factory AddressBookResponseModel.fromJson(Map<String, dynamic> json) => _$AddressBookResponseModelFromJson(json);
+  Map<String, dynamic> toJson() => _$AddressBookResponseModelToJson(this);
 }

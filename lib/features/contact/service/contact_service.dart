@@ -4,19 +4,20 @@ import 'package:flutter_app/features/contact/models/address_book_model.dart';
 class ContactService {
   final ApiService _apiService = ApiService();
 
-  Future<AddressBookFrequentResponseModel> getAddressBookFrequent() async {
-    try {
-      var response = await _apiService.getAddressBookFrequent();
-      return AddressBookFrequentResponseModel.fromJson(response);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<AddressBookFullResponseModel> getAddressBookFull() async {
+  Future<AddressBookResponseModel> getAddressBook() async {
     try {
       var response = await _apiService.getAddressBookFull();
-      return AddressBookFullResponseModel.fromJson(response);
+      // 转换数据格式以匹配新的模型结构
+      List<DeptModel> deptModels = [];
+      if (response['deptModels'] != null) {
+        for (var deptData in response['deptModels']) {
+          deptModels.add(DeptModel.fromJson(deptData));
+        }
+      }
+      return AddressBookResponseModel(
+        code: 1,
+        data: deptModels,
+      );
     } catch (e) {
       rethrow;
     }
