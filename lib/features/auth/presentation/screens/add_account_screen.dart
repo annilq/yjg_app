@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/features/auth/providers/auth_providers.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
+import 'package:flutter_app/shared/widgets/index.dart';
 
 class AddAccountScreen extends ConsumerStatefulWidget {
   const AddAccountScreen({super.key});
@@ -16,7 +16,7 @@ class _AddAccountScreenState extends ConsumerState<AddAccountScreen> {
   final _tenantNameController = TextEditingController();
   final _loginNameController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool _isLoading = false;
 
   @override
@@ -59,7 +59,7 @@ class _AddAccountScreenState extends ConsumerState<AddAccountScreen> {
 
     try {
       final accountService = ref.read(accountServiceProvider);
-      
+
       await accountService.addAccount(
         tenantName: _tenantNameController.text,
         loginName: _loginNameController.text,
@@ -68,7 +68,7 @@ class _AddAccountScreenState extends ConsumerState<AddAccountScreen> {
 
       if (mounted) {
         ref.invalidate(accountsProvider);
-        
+
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
@@ -111,40 +111,10 @@ class _AddAccountScreenState extends ConsumerState<AddAccountScreen> {
     }
   }
 
-  InputDecoration _buildInputDecoration({
-    required String labelText,
-    required String hintText,
-    required IconData prefixIcon,
-  }) {
-    return InputDecoration(
-      labelText: labelText,
-      hintText: hintText,
-      prefixIcon: Icon(prefixIcon),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: AppTheme.primaryColor, width: 2.0),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: AppTheme.mediumGray, width: 1.0),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: AppTheme.errorColor, width: 1.0),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('新增账号'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('新增账号'), centerTitle: true),
       body: Builder(
         builder: (innerContext) => SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -154,34 +124,34 @@ class _AddAccountScreenState extends ConsumerState<AddAccountScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
-                TextFormField(
+                TextFormFieldComponent(
                   controller: _tenantNameController,
-                  decoration: _buildInputDecoration(
+                  decoration: const InputDecoration(
                     labelText: '组织名',
                     hintText: '请输入组织名',
-                    prefixIcon: Icons.business,
+                    prefixIcon: Icon(Icons.business),
                   ),
                   validator: _validateTenantName,
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
+                TextFormFieldComponent(
                   controller: _loginNameController,
-                  decoration: _buildInputDecoration(
+                  decoration: const InputDecoration(
                     labelText: '用户名',
                     hintText: '请输入用户名',
-                    prefixIcon: Icons.person,
+                    prefixIcon: Icon(Icons.person),
                   ),
                   validator: _validateLoginName,
                   textInputAction: TextInputAction.next,
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
+                TextFormFieldComponent(
                   controller: _passwordController,
-                  decoration: _buildInputDecoration(
+                  decoration: const InputDecoration(
                     labelText: '密码',
                     hintText: '请输入密码',
-                    prefixIcon: Icons.lock_outline,
+                    prefixIcon: Icon(Icons.lock_outline),
                   ),
                   obscureText: true,
                   validator: _validatePassword,
@@ -189,31 +159,9 @@ class _AddAccountScreenState extends ConsumerState<AddAccountScreen> {
                   onFieldSubmitted: (_) => _submitForm(),
                 ),
                 const SizedBox(height: 40),
-                SizedBox(
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _submitForm,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : const Text(
-                            '添加账号',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                  ),
+                ButtonComponent(
+                  onPressed: _isLoading ? null : _submitForm,
+                  text: '添加账号',
                 ),
               ],
             ),

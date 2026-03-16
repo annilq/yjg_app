@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/features/auth/providers/auth_providers.dart';
 import 'package:flutter_app/features/auth/models/account_model.dart';
+import 'package:flutter_app/shared/widgets/index.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
 
 class AccountsScreen extends ConsumerWidget {
@@ -55,10 +56,7 @@ class _AccountsListContent extends ConsumerWidget {
           children: [
             Text('加载失败: $error'),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onRefresh,
-              child: const Text('重试'),
-            ),
+            ElevatedButton(onPressed: onRefresh, child: const Text('重试')),
           ],
         ),
       ),
@@ -71,9 +69,7 @@ class _AccountsListContent extends ConsumerWidget {
       children: [
         Expanded(
           child: accounts.isEmpty
-              ? const Center(
-                  child: Text('暂无账号'),
-                )
+              ? const Center(child: Text('暂无账号'))
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: accounts.length,
@@ -88,24 +84,7 @@ class _AccountsListContent extends ConsumerWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(16),
-          child: SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: onAddAccount,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primaryColor,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                '新增',
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-          ),
+          child: ButtonComponent(onPressed: onAddAccount, text: '新增'),
         ),
       ],
     );
@@ -115,9 +94,9 @@ class _AccountsListContent extends ConsumerWidget {
     if (account.selected) {
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('切换账号功能开发中')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('切换账号功能开发中')));
   }
 }
 
@@ -125,68 +104,62 @@ class _AccountCard extends StatelessWidget {
   final Account account;
   final VoidCallback onTap;
 
-  const _AccountCard({
-    required this.account,
-    required this.onTap,
-  });
+  const _AccountCard({required this.account, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return AppTheme.cardContainer(
       margin: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: account.disabled ? null : onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
-                child: Text(
-                  account.label.isNotEmpty ? account.label[0] : '?',
-                  style: TextStyle(
-                    color: AppTheme.primaryColor,
-                    fontWeight: FontWeight.bold,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: account.disabled ? null : onTap,
+          borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  child: Text(
+                    account.label.isNotEmpty ? account.label[0] : '?',
+                    style: TextStyle(
+                      color: AppTheme.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      account.label,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    if (account.selected) ...[
-                      const SizedBox(height: 4),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        '当前使用中',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppTheme.primaryColor,
+                        account.label,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
+                      if (account.selected) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          '当前使用中',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              if (account.selected)
-                Icon(
-                  Icons.check_circle,
-                  color: AppTheme.primaryColor,
-                )
-              else
-                Icon(
-                  Icons.chevron_right,
-                  color: AppTheme.mediumGray,
-                ),
-            ],
+                if (account.selected)
+                  Icon(Icons.check_circle, color: AppTheme.primaryColor)
+                else
+                  Icon(Icons.chevron_right, color: AppTheme.mediumGray),
+              ],
+            ),
           ),
         ),
       ),
