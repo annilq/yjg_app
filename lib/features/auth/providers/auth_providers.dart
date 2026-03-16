@@ -1,14 +1,25 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/features/auth/service/auth_service.dart';
+import 'package:flutter_app/features/auth/service/account_service.dart';
 import 'package:flutter_app/features/auth/models/auth_model.dart';
+import 'package:flutter_app/features/auth/models/account_model.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService();
 });
 
+final accountServiceProvider = Provider<AccountService>((ref) {
+  return AccountService();
+});
+
 final authProvider = AsyncNotifierProvider<AuthNotifier, LoginResponse?>(
   AuthNotifier.new,
 );
+
+final accountsProvider = FutureProvider<List<Account>>((ref) async {
+  final accountService = ref.read(accountServiceProvider);
+  return await accountService.getAccounts();
+});
 
 class AuthNotifier extends AsyncNotifier<LoginResponse?> {
   late final AuthService _authService;
@@ -16,7 +27,6 @@ class AuthNotifier extends AsyncNotifier<LoginResponse?> {
   @override
   Future<LoginResponse?> build() async {
     _authService = ref.read(authServiceProvider);
-    // 这里可以添加从本地存储加载token的逻辑
     return null;
   }
 
@@ -24,7 +34,6 @@ class AuthNotifier extends AsyncNotifier<LoginResponse?> {
     final response = await _authService.login(accountName, userName, password);
     final loginResponse = LoginResponse.fromJson(response);
     state = AsyncValue.data(loginResponse);
-    // 这里可以添加保存token到本地存储的逻辑
     return loginResponse;
   }
 
@@ -38,6 +47,5 @@ class AuthNotifier extends AsyncNotifier<LoginResponse?> {
 
   Future<void> logout() async {
     state = AsyncValue.data(null);
-    // 这里可以添加清除本地存储token的逻辑
   }
 }

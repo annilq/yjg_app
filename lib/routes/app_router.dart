@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter_app/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:flutter_app/features/auth/presentation/screens/update_password_screen.dart';
+import 'package:flutter_app/features/auth/presentation/screens/accounts_screen.dart';
+import 'package:flutter_app/features/auth/presentation/screens/add_account_screen.dart';
 import 'package:flutter_app/features/home/presentation/screens/main_screen.dart';
 import 'package:flutter_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:flutter_app/features/contact/presentation/screens/contact_detail_screen.dart';
@@ -32,6 +34,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/update-password',
         builder: (context, state) => UpdatePasswordScreen(),
+      ),
+      GoRoute(
+        path: '/accounts',
+        builder: (context, state) => const AccountsScreen(),
+      ),
+      GoRoute(
+        path: '/accounts/add',
+        builder: (context, state) => const AddAccountScreen(),
       ),
       GoRoute(
         path: '/main',
