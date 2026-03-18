@@ -8,6 +8,7 @@ class Account with _$Account {
   const factory Account({
     required int value,
     required String label,
+    String? tenantName,
     @Default(false) bool selected,
     @Default(false) bool disabled,
   }) = _Account;

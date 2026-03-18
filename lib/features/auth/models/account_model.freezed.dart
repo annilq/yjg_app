@@ -23,6 +23,7 @@ Account _$AccountFromJson(Map<String, dynamic> json) {
 mixin _$Account {
   int get value => throw _privateConstructorUsedError;
   String get label => throw _privateConstructorUsedError;
+  String? get tenantName => throw _privateConstructorUsedError;
   bool get selected => throw _privateConstructorUsedError;
   bool get disabled => throw _privateConstructorUsedError;
 
@@ -40,7 +41,13 @@ abstract class $AccountCopyWith<$Res> {
   factory $AccountCopyWith(Account value, $Res Function(Account) then) =
       _$AccountCopyWithImpl<$Res, Account>;
   @useResult
-  $Res call({int value, String label, bool selected, bool disabled});
+  $Res call({
+    int value,
+    String label,
+    String? tenantName,
+    bool selected,
+    bool disabled,
+  });
 }
 
 /// @nodoc
@@ -60,6 +67,7 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
   $Res call({
     Object? value = null,
     Object? label = null,
+    Object? tenantName = freezed,
     Object? selected = null,
     Object? disabled = null,
   }) {
@@ -73,6 +81,10 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
                 ? _value.label
                 : label // ignore: cast_nullable_to_non_nullable
                       as String,
+            tenantName: freezed == tenantName
+                ? _value.tenantName
+                : tenantName // ignore: cast_nullable_to_non_nullable
+                      as String?,
             selected: null == selected
                 ? _value.selected
                 : selected // ignore: cast_nullable_to_non_nullable
@@ -95,7 +107,13 @@ abstract class _$$AccountImplCopyWith<$Res> implements $AccountCopyWith<$Res> {
   ) = __$$AccountImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int value, String label, bool selected, bool disabled});
+  $Res call({
+    int value,
+    String label,
+    String? tenantName,
+    bool selected,
+    bool disabled,
+  });
 }
 
 /// @nodoc
@@ -114,6 +132,7 @@ class __$$AccountImplCopyWithImpl<$Res>
   $Res call({
     Object? value = null,
     Object? label = null,
+    Object? tenantName = freezed,
     Object? selected = null,
     Object? disabled = null,
   }) {
@@ -127,6 +146,10 @@ class __$$AccountImplCopyWithImpl<$Res>
             ? _value.label
             : label // ignore: cast_nullable_to_non_nullable
                   as String,
+        tenantName: freezed == tenantName
+            ? _value.tenantName
+            : tenantName // ignore: cast_nullable_to_non_nullable
+                  as String?,
         selected: null == selected
             ? _value.selected
             : selected // ignore: cast_nullable_to_non_nullable
@@ -146,6 +169,7 @@ class _$AccountImpl implements _Account {
   const _$AccountImpl({
     required this.value,
     required this.label,
+    this.tenantName,
     this.selected = false,
     this.disabled = false,
   });
@@ -158,6 +182,8 @@ class _$AccountImpl implements _Account {
   @override
   final String label;
   @override
+  final String? tenantName;
+  @override
   @JsonKey()
   final bool selected;
   @override
@@ -166,7 +192,7 @@ class _$AccountImpl implements _Account {
 
   @override
   String toString() {
-    return 'Account(value: $value, label: $label, selected: $selected, disabled: $disabled)';
+    return 'Account(value: $value, label: $label, tenantName: $tenantName, selected: $selected, disabled: $disabled)';
   }
 
   @override
@@ -176,6 +202,8 @@ class _$AccountImpl implements _Account {
             other is _$AccountImpl &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.label, label) || other.label == label) &&
+            (identical(other.tenantName, tenantName) ||
+                other.tenantName == tenantName) &&
             (identical(other.selected, selected) ||
                 other.selected == selected) &&
             (identical(other.disabled, disabled) ||
@@ -185,7 +213,7 @@ class _$AccountImpl implements _Account {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, value, label, selected, disabled);
+      Object.hash(runtimeType, value, label, tenantName, selected, disabled);
 
   /// Create a copy of Account
   /// with the given fields replaced by the non-null parameter values.
@@ -205,6 +233,7 @@ abstract class _Account implements Account {
   const factory _Account({
     required final int value,
     required final String label,
+    final String? tenantName,
     final bool selected,
     final bool disabled,
   }) = _$AccountImpl;
@@ -215,6 +244,8 @@ abstract class _Account implements Account {
   int get value;
   @override
   String get label;
+  @override
+  String? get tenantName;
   @override
   bool get selected;
   @override

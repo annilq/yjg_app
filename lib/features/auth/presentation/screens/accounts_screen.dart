@@ -60,11 +60,11 @@ class _AccountsListContent extends ConsumerWidget {
           ],
         ),
       ),
-      data: (accounts) => _buildList(context, accounts),
+      data: (accounts) => _buildList(context, ref, accounts),
     );
   }
 
-  Widget _buildList(BuildContext context, List<Account> accounts) {
+  Widget _buildList(BuildContext context, WidgetRef ref, List<Account> accounts) {
     return Column(
       children: [
         Expanded(
@@ -77,7 +77,8 @@ class _AccountsListContent extends ConsumerWidget {
                     final account = accounts[index];
                     return _AccountCard(
                       account: account,
-                      onTap: () => _handleSwitchAccount(context, account),
+                      onTap: () => _handleSwitchAccount(context, ref, account),
+                      onDelete: () => _handleDeleteAccount(context, ref, account),
                     );
                   },
                 ),
@@ -90,21 +91,77 @@ class _AccountsListContent extends ConsumerWidget {
     );
   }
 
-  void _handleSwitchAccount(BuildContext context, Account account) {
+  void _handleSwitchAccount(BuildContext context, WidgetRef ref, Account account) {
     if (account.selected) {
       return;
     }
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('切换账号功能开发中')));
+    
+    final accountService = ref.read(accountServiceProvider);
+    accountService.switchAccount(account.value).then((_) {
+      ref.invalidate(accountsProvider);
+      _showMessage(context, '已切换到账号: ${account.label}');
+    }).catchError((error) {
+      _showMessage(context, '切换失败: $error', isError: true);
+    });
+  }
+
+  void _handleDeleteAccount(BuildContext context, WidgetRef ref, Account account) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('删除账号'),
+        content: Text('确定要删除账号 "${account.label}" 吗？'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('删除'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      final accountService = ref.read(accountServiceProvider);
+      accountService.deleteAccount(account.value).then((_) {
+        ref.invalidate(accountsProvider);
+        _showMessage(context, '账号已删除');
+      }).catchError((error) {
+        _showMessage(context, '删除失败: $error', isError: true);
+      });
+    }
+  }
+
+  void _showMessage(BuildContext context, String message, {bool isError = false}) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('确定'),
+          ),
+        ],
+      ),
+    );
   }
 }
 
 class _AccountCard extends StatelessWidget {
   final Account account;
   final VoidCallback onTap;
+  final VoidCallback onDelete;
 
-  const _AccountCard({required this.account, required this.onTap});
+  const _AccountCard({
+    required this.account,
+    required this.onTap,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +198,16 @@ class _AccountCard extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
+                      if (account.tenantName != null && account.tenantName!.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          account.tenantName!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.mediumGray,
+                          ),
+                        ),
+                      ],
                       if (account.selected) ...[
                         const SizedBox(height: 4),
                         Text(
@@ -154,9 +221,14 @@ class _AccountCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (!account.selected && !account.disabled)
+                  IconButton(
+                    icon: Icon(Icons.delete_outline, color: Colors.red[400]),
+                    onPressed: onDelete,
+                  ),
                 if (account.selected)
                   Icon(Icons.check_circle, color: AppTheme.primaryColor)
-                else
+                else if (!account.disabled)
                   Icon(Icons.chevron_right, color: AppTheme.mediumGray),
               ],
             ),
