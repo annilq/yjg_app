@@ -12,7 +12,7 @@ class ButtonComponent extends ElevatedButton {
     super.autofocus,
     super.clipBehavior = Clip.none,
   }) : super(
-          style: _defaultStyle.merge(style),
+          style: style?.merge(_defaultStyle) ?? _defaultStyle,
           child: child ?? (text != null ? Text(text) : null),
         );
 
