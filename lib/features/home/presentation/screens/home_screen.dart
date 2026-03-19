@@ -19,9 +19,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBarComponent(
-        title: null,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        title: '首页' ,
         actions: [
           Stack(
             children: [

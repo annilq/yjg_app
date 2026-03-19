@@ -164,7 +164,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Scaffold(
       appBar: AppBarComponent(
         title: '我的',
-        backgroundColor: const Color(0xFFF5F5F5),
       ),
       body: SingleChildScrollView(
         child: Column(

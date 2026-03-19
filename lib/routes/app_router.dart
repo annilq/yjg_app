@@ -18,15 +18,17 @@ import 'package:flutter_app/features/workflow/presentation/screens/module_list_s
 import 'package:flutter_app/features/workflow/presentation/screens/module_setting_screen.dart';
 import 'package:flutter_app/features/webview/presentation/screens/webview_screen.dart';
 import 'package:flutter_app/features/contact/presentation/screens/contact_screen.dart';
+import 'package:flutter_app/features/settings/presentation/screens/settings_screen.dart';
+import 'package:flutter_app/features/settings/presentation/screens/theme_settings_screen.dart';
+import 'package:flutter_app/features/settings/presentation/screens/language_settings_screen.dart';
+import 'package:flutter_app/features/settings/presentation/screens/notification_settings_screen.dart';
+import 'package:flutter_app/features/settings/presentation/screens/about_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => LoginScreen(),
-      ),
+      GoRoute(path: '/', builder: (context, state) => LoginScreen()),
       GoRoute(
         path: '/reset-password',
         builder: (context, state) => ResetPasswordScreen(),
@@ -43,10 +45,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/accounts/add',
         builder: (context, state) => const AddAccountScreen(),
       ),
-      GoRoute(
-        path: '/main',
-        builder: (context, state) => MainScreen(),
-      ),
+      GoRoute(path: '/main', builder: (context, state) => MainScreen()),
       GoRoute(
         path: '/office/backlog',
         builder: (context, state) => BacklogListScreen(),
@@ -78,9 +77,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/workflow/moduleList',
         builder: (context, state) {
           final args = state.extra as Map<String, dynamic>?;
-          return ModuleListScreen(
-            moduleName: args?['moduleName'] ?? '',
-          );
+          return ModuleListScreen(moduleName: args?['moduleName'] ?? '');
         },
       ),
       GoRoute(
@@ -105,6 +102,26 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/contact-detail',
         builder: (context, state) => const ContactDetailScreen(),
+      ),
+      GoRoute(
+        path: '/settings/theme',
+        builder: (context, state) => const ThemeSettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/language',
+        builder: (context, state) => const LanguageSettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/notification',
+        builder: (context, state) => const NotificationSettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/about',
+        builder: (context, state) => const AboutScreen(),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
       ),
     ],
   );
