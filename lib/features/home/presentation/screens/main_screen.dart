@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/features/settings/presentation/screens/settings_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter_app/features/profile/presentation/screens/profile_screen.dart';
@@ -16,7 +15,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   final List<Widget> _pages = const [
     HomeScreen(),
     ProfileScreen(),
-    SettingsScreen(),
   ];
 
   @override
@@ -38,10 +36,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: '我的',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '设置',
           ),
         ],
       ),

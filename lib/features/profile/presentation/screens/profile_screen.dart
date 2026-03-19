@@ -164,6 +164,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Scaffold(
       appBar: AppBarComponent(
         title: '我的',
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            color: Colors.white,
+            onPressed: () => context.push('/settings'),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
