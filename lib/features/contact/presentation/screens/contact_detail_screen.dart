@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/button_component.dart';
+import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
 import 'package:flutter_app/features/contact/providers/contact_providers.dart';
 
 class ContactDetailScreen extends ConsumerWidget {
@@ -71,14 +72,16 @@ class ContactDetailScreen extends ConsumerWidget {
                   try {
                     await ref.read(contactDetailProvider(userIdStr).notifier).toggleFrequent();
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(contact.fc ?? false ? '已从常用联系人中移除' : '已添加到常用联系人')),
+                      SnackBarHelper.showSnackBar(
+                        context,
+                        contact.fc ?? false ? '已从常用联系人中移除' : '已添加到常用联系人',
                       );
                     }
                   } catch (e) {
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('操作失败')),
+                      SnackBarHelper.showSnackBar(
+                        context,
+                        '操作失败',
                       );
                     }
                   }

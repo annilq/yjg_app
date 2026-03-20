@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
+import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
 import 'package:flutter_app/core/constants/app_images.dart';
 
 class AboutScreen extends ConsumerWidget {
@@ -105,8 +106,9 @@ class AboutScreen extends ConsumerWidget {
                   title: const Text('隐私政策'),
                   trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('隐私政策页面开发中')),
+                    SnackBarHelper.showSnackBar(
+                      context,
+                      '隐私政策页面开发中',
                     );
                   },
                 ),
@@ -115,8 +117,9 @@ class AboutScreen extends ConsumerWidget {
                   title: const Text('用户协议'),
                   trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('用户协议页面开发中')),
+                    SnackBarHelper.showSnackBar(
+                      context,
+                      '用户协议页面开发中',
                     );
                   },
                 ),

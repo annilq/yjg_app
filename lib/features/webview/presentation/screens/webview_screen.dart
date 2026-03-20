@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
+import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
 import 'package:flutter_app/features/webview/presentation/widgets/js_interface_bridge.dart';
 
 class WebviewScreen extends ConsumerStatefulWidget {
@@ -149,8 +150,9 @@ class _WebviewScreenState extends ConsumerState<WebviewScreen> {
 
   void _showSnackBar(String message) {
     if (mounted) {
-      _scaffoldMessengerKey.currentState?.showSnackBar(
-        SnackBar(content: Text(message)),
+      SnackBarHelper.showSnackBarWithKey(
+        _scaffoldMessengerKey,
+        message,
       );
     }
   }

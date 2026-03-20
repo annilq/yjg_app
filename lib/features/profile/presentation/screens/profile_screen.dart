@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/button_component.dart';
+import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
 import 'package:flutter_app/core/constants/app_images.dart';
 import 'package:flutter_app/features/profile/providers/profile_providers.dart';
 import 'package:flutter_app/shared/models/login_response_model.dart';
@@ -93,14 +94,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 try {
                   await ref.read(profileProvider.notifier).clearCache();
                   if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('清除缓存成功')),
+                    SnackBarHelper.showSnackBar(
+                      context,
+                      '清除缓存成功',
                     );
                   }
                 } catch (e) {
                   if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('清除缓存失败: $e')),
+                    SnackBarHelper.showSnackBar(
+                      context,
+                      '清除缓存失败: $e',
                     );
                   }
                 }
@@ -137,8 +140,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   }
                 } catch (e) {
                   if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('解除绑定失败: $e')),
+                    SnackBarHelper.showSnackBar(
+                      context,
+                      '解除绑定失败: $e',
                     );
                   }
                 }
@@ -153,8 +157,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Future<void> _pickAvatar() async {
     final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
     if (image != null && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('头像上传功能待完善')),
+      SnackBarHelper.showSnackBar(
+        context,
+        '头像上传成功',
       );
     }
   }

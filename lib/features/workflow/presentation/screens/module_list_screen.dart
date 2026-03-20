@@ -68,8 +68,9 @@ class _ModuleListContentState extends ConsumerState<ModuleListContent> {
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('加载数据失败，请稍后重试')),
+      SnackBarHelper.showSnackBar(
+        context,
+        '加载数据失败，请稍后重试',
       );
     }
   }

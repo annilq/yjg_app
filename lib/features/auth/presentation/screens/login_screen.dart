@@ -129,8 +129,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
         context.pushReplacement('/main');
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('登录失败: $e')),
+        SnackBarHelper.showSnackBar(
+          context,
+          '登录失败: $e',
         );
       } finally {
         setState(() {
