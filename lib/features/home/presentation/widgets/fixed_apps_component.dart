@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/core/theme/app_theme.dart';
 
 class FixedAppsComponent extends StatelessWidget {
-  const FixedAppsComponent({Key? key}) : super(key: key);
+  const FixedAppsComponent({super.key});
 
   String _getWeekday() {
     List<String> weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
@@ -24,6 +24,8 @@ class FixedAppsComponent extends StatelessWidget {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 2.5,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
         ),
         itemCount: 4,
         itemBuilder: (context, index) {

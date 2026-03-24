@@ -1,59 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
 
+/// 待办菜单组件 - Flat Design 风格
+///
+/// 特点：
+/// - 无阴影，使用边框分隔
+/// - 统一圆角和间距
+/// - 清晰的颜色语义
 class BacklogMenuComponent extends StatelessWidget {
   final int backlogCount;
   final int remindCount;
 
   const BacklogMenuComponent({
-    Key? key,
+    super.key,
     required this.backlogCount,
     required this.remindCount,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.cardPaddingAll,
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark
-            ? Border.all(color: const Color(0xFF2E2E30), width: 1)
-            : null,
-        boxShadow: isDark
-            ? null
-            : [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+        color: (isDark ? DarkColors.surface : LightColors.surface),
+        borderRadius: AppRadius.cardRadius,
+        border: Border.all(
+          color: isDark ? DarkColors.border : LightColors.border,
+          width: 1,
+        ),
       ),
       child: Column(
         children: [
-          // ── 第一行：待处理 + 已发起 ─────────────────────────────
+          // 第一行：待处理 + 已发起
           IntrinsicHeight(
             child: Row(
               children: [
                 Expanded(
                   child: _MenuItemCard(
                     icon: CupertinoIcons.mail,
-                    iconColor: const Color(0xFFEF4444),    // 红 — 待处理
+                    iconColor: AppColors.error,
                     title: '待处理',
                     count: backlogCount,
                     onTap: () => context.push('/office/backlog'),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: AppSpacing.elementGap),
                 Expanded(
                   child: _MenuItemCard(
                     icon: CupertinoIcons.paperplane,
-                    iconColor: const Color(0xFF3B82F6),    // 蓝 — 已发起
+                    iconColor: AppColors.primary,
                     title: '已发起',
                     count: 0,
                     onTap: () => context.push('/office/relatedtome'),
@@ -62,25 +61,25 @@ class BacklogMenuComponent extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 12),
-          // ── 第二行：提醒 + 发起 ───────────────────────────────
+          SizedBox(height: AppSpacing.elementGap),
+          // 第二行：提醒 + 发起
           IntrinsicHeight(
             child: Row(
               children: [
                 Expanded(
                   child: _MenuItemCard(
                     icon: CupertinoIcons.bell,
-                    iconColor: const Color(0xFFF59E0B),    // 黄 — 提醒
+                    iconColor: AppColors.warning,
                     title: '提醒',
                     count: remindCount,
                     onTap: () => context.push('/notices'),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: AppSpacing.elementGap),
                 Expanded(
                   child: _MenuItemCard(
                     icon: CupertinoIcons.add_circled,
-                    iconColor: const Color(0xFF10B981),    // 绿 — 发起
+                    iconColor: AppColors.success,
                     title: '发起',
                     count: 0,
                     onTap: () {},
@@ -95,7 +94,7 @@ class BacklogMenuComponent extends StatelessWidget {
   }
 }
 
-/// 单个菜单卡片
+/// 单个菜单卡片 - Flat Design 风格
 class _MenuItemCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
@@ -114,23 +113,26 @@ class _MenuItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark
-        ? const Color(0xFF252525)
-        : const Color(0xFFF5F7FA);
-    final textColor = isDark
-        ? const Color(0xFFE5E7EB)
-        : const Color(0xFF1F2937);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    // 背景色
+    final bgColor = isDark ? DarkColors.surfaceVariant : LightColors.surfaceVariant;
+    final textColor = colorScheme.onSurface;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.md,
+        ),
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(12),
-          border: isDark
-              ? Border.all(color: const Color(0xFF2E2E30), width: 0.5)
-              : null,
+          borderRadius: AppRadius.allSm,
+          border: Border.all(
+            color: isDark ? DarkColors.border : LightColors.borderLight,
+            width: 1,
+          ),
         ),
         child: Row(
           children: [
@@ -139,8 +141,8 @@ class _MenuItemCard extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
+                color: iconColor.withAlpha(38), // 15% opacity
+                borderRadius: AppRadius.allSm,
               ),
               child: Icon(
                 icon,
@@ -148,7 +150,7 @@ class _MenuItemCard extends StatelessWidget {
                 size: 18,
               ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: AppSpacing.sm),
             // 中间文字
             Expanded(
               child: Column(
@@ -157,20 +159,18 @@ class _MenuItemCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                    style: AppTypography.bodySmall.copyWith(
+                      fontWeight: AppTypography.weightSemibold,
                       color: textColor,
                     ),
                   ),
                   if (count > 0) ...[
-                    const SizedBox(height: 2),
+                    SizedBox(height: AppSpacing.xs),
                     Text(
                       '$count 条待办',
-                      style: TextStyle(
-                        fontSize: 11,
+                      style: AppTypography.caption.copyWith(
                         color: iconColor,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: AppTypography.weightMedium,
                       ),
                     ),
                   ],
@@ -181,9 +181,7 @@ class _MenuItemCard extends StatelessWidget {
             Icon(
               CupertinoIcons.chevron_right,
               size: 14,
-              color: isDark
-                  ? const Color(0xFF4B5563)
-                  : const Color(0xFF9CA3AF),
+              color: isDark ? DarkColors.textTertiary : LightColors.textTertiary,
             ),
           ],
         ),

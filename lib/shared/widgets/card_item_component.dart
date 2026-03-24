@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
 import 'package:flutter_app/shared/widgets/business_icon_component.dart';
 
+/// 卡片项组件 - Flat Design 风格
+///
+/// 特点：
+/// - 无阴影，使用边框分隔
+/// - 统一圆角和间距
+/// - 点击缩放动画
 class CardItemComponent extends StatefulWidget {
   final String formKey;
   final String? status;
@@ -20,7 +26,7 @@ class CardItemComponent extends StatefulWidget {
     this.extra,
     this.content,
     required this.onTap,
-    this.margin = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.margin = AppSpacing.horizontalLg,
   });
 
   @override
@@ -30,57 +36,61 @@ class CardItemComponent extends StatefulWidget {
     return BusinessIcon(formKey: formKey, size: size);
   }
 
-  // Flat Design: countBadge padding 缩小, borderRadius: 8
+  /// 数量徽章 - Flat Design 风格
   static Widget countBadge(int count) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
       decoration: BoxDecoration(
-        color: AppTheme.errorColor,
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.error,
+        borderRadius: AppRadius.allSm,
       ),
       child: Text(
         '$count',
-        style: const TextStyle(
-          color: AppTheme.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
+        style: AppTypography.caption.copyWith(
+          color: AppColors.white,
+          fontWeight: AppTypography.weightSemibold,
         ),
       ),
     );
   }
 
-  // Flat Design: statusBadge padding 缩小, borderRadius: 6, fontSize 11
+  /// 状态徽章 - Flat Design 风格
   static Widget statusBadge(String status) {
     Color color;
     String text;
 
     switch (status) {
       case 'pending':
-        color = AppTheme.warningColor;
+        color = AppColors.warning;
         text = '待处理';
         break;
       case 'completed':
-        color = AppTheme.secondaryColor;
+        color = AppColors.success;
         text = '已完成';
         break;
       default:
-        color = AppTheme.primaryColor;
+        color = AppColors.primary;
         text = '进行中';
         break;
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.xs,
+      ),
       decoration: BoxDecoration(
         color: color.withAlpha(25),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: AppRadius.allSm,
       ),
       child: Text(
         text,
-        style: TextStyle(
-          fontSize: 11,
+        style: AppTypography.caption.copyWith(
           color: color,
-          fontWeight: FontWeight.w500,
+          fontWeight: AppTypography.weightMedium,
         ),
       ),
     );
@@ -125,7 +135,7 @@ class _CardItemComponentState extends State<CardItemComponent>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final icon = BusinessIcon(formKey: widget.formKey, size: 40);
     final status = (widget.status != null
@@ -141,32 +151,37 @@ class _CardItemComponentState extends State<CardItemComponent>
         margin: widget.margin,
         child: Material(
           color: colorScheme.surface,
-          borderRadius: BorderRadius.circular(AppTheme.flatRadius),
+          borderRadius: AppRadius.cardRadius,
           elevation: 0,
           child: InkWell(
             onTap: widget.onTap,
             onTapDown: _handleTapDown,
             onTapUp: _handleTapUp,
             onTapCancel: _handleTapCancel,
-            borderRadius: BorderRadius.circular(AppTheme.flatRadius),
+            borderRadius: AppRadius.cardRadius,
             child: Container(
-              padding: const EdgeInsets.all(AppTheme.flatPadding),
+              padding: AppSpacing.cardPaddingAll,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: isDark ? DarkColors.border : LightColors.border,
+                  width: 1,
+                ),
+                borderRadius: AppRadius.cardRadius,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       icon,
-                      const SizedBox(width: 12),
+                      SizedBox(width: AppSpacing.md),
                       Expanded(
                         child: Row(
                           children: [
                             Expanded(
                               child: Text(
                                 widget.title,
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w600,
+                                style: AppTypography.titleMedium.copyWith(
                                   color: colorScheme.onSurface,
                                 ),
                                 maxLines: 2,
@@ -174,12 +189,11 @@ class _CardItemComponentState extends State<CardItemComponent>
                               ),
                             ),
                             if (widget.extra != null) ...[
-                              const SizedBox(width: 8),
+                              SizedBox(width: AppSpacing.sm),
                               Text(
                                 widget.extra!,
-                                style: TextStyle(
+                                style: AppTypography.bodySmall.copyWith(
                                   color: colorScheme.onSurfaceVariant,
-                                  fontSize: 12,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -196,16 +210,14 @@ class _CardItemComponentState extends State<CardItemComponent>
                     ],
                   ),
                   if (widget.content != null || status != null) ...[
-                    const SizedBox(height: 10),
+                    SizedBox(height: AppSpacing.sm),
                     Row(
                       children: [
                         if (widget.content != null) ...[
                           Expanded(
                             child: Text(
                               widget.content!,
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400,
+                              style: AppTypography.bodyMedium.copyWith(
                                 color: colorScheme.onSurfaceVariant,
                               ),
                               maxLines: 2,
@@ -214,7 +226,7 @@ class _CardItemComponentState extends State<CardItemComponent>
                           ),
                         ],
                         if (status != null) ...[
-                          const SizedBox(width: 8),
+                          SizedBox(width: AppSpacing.sm),
                           status,
                         ],
                       ],

@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
 
+/// 标签组件 - Flat Design 风格
+///
+/// 特点：
+/// - 无阴影，纯色背景
+/// - 统一圆角和间距
+/// - 点击缩放动画
 class TabComponent extends StatelessWidget {
   final List<TabItem> items;
   final int activeIndex;
@@ -22,14 +29,15 @@ class TabComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      margin: margin ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      height: height ?? 44, // Flat Design: 更紧凑
+      margin: margin ?? AppSpacing.horizontalLg,
+      height: height ?? 44,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius ?? 24),
-        color: colorScheme.surfaceContainerHighest,
+        color: isDark ? DarkColors.surfaceVariant : LightColors.surfaceVariant,
       ),
       child: Row(
         children: List.generate(items.length, (index) {
@@ -114,8 +122,8 @@ class _TabItemWidgetState extends State<_TabItemWidget>
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final primaryColor = colorScheme.primary;
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AnimatedBuilder(
       animation: _scaleAnimation,
@@ -143,26 +151,31 @@ class _TabItemWidgetState extends State<_TabItemWidget>
           padding: widget.padding,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            // Flat Design: 无 boxShadow，纯色背景
-            color: widget.isActive ? primaryColor : Colors.transparent,
+            color: widget.isActive 
+                ? (isDark ? AppColors.primaryLight : AppColors.primary) 
+                : Colors.transparent,
             borderRadius: BorderRadius.horizontal(
-              left: widget.isFirst
-                  ? Radius.circular(widget.borderRadius)
-                  : Radius.zero,
-              right: widget.isLast
-                  ? Radius.circular(widget.borderRadius)
-                  : Radius.zero,
+              left:
+                  widget.isFirst
+                      ? Radius.circular(widget.borderRadius)
+                      : Radius.zero,
+              right:
+                  widget.isLast
+                      ? Radius.circular(widget.borderRadius)
+                      : Radius.zero,
             ),
           ),
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 200),
-            style: TextStyle(
-              color: widget.isActive
-                  ? colorScheme.onPrimary
-                  : colorScheme.onSurfaceVariant,
+            style: AppTypography.bodyMedium.copyWith(
+              color:
+                  widget.isActive
+                      ? (isDark ? DarkColors.background : AppColors.white)
+                      : (isDark ? DarkColors.textSecondary : LightColors.textSecondary),
               fontWeight:
-                  widget.isActive ? FontWeight.w600 : FontWeight.w500,
-              fontSize: 14,
+                  widget.isActive
+                      ? AppTypography.weightSemibold
+                      : AppTypography.weightMedium,
               letterSpacing: widget.isActive ? 0.5 : 0,
             ),
             child: Text(widget.item.text),

@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
 import 'package:flutter_app/shared/widgets/business_card.dart';
 import 'package:flutter_app/features/workflow/providers/workflow_providers.dart';
 
+/// 常用应用组件 - Flat Design 风格
 class CommonAppsComponent extends ConsumerWidget {
   const CommonAppsComponent({super.key});
 
@@ -31,28 +32,38 @@ class CommonAppsComponent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     final menusAsync = ref.watch(menusProvider);
     final userListAsync = ref.watch(userListProvider);
 
-    return AppTheme.cardContainer(
-      isDark: isDark,
+    return Container(
+      padding: AppSpacing.cardPaddingAll,
+      decoration: BoxDecoration(
+        color: (isDark ? DarkColors.surface : LightColors.surface),
+        borderRadius: AppRadius.cardRadius,
+        border: Border.all(
+          color: isDark ? DarkColors.border : LightColors.border,
+          width: 1,
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 标题栏
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 '常用应用',
-                style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                style: AppTypography.titleMedium.copyWith(
+                  fontWeight: AppTypography.weightSemibold,
+                ),
               ),
               GestureDetector(
                 onTap: () => _handleSettingTap(context),
                 child: Container(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(AppSpacing.sm),
                   child: Icon(
                     CupertinoIcons.settings,
                     color: colorScheme.primary,
@@ -62,7 +73,8 @@ class CommonAppsComponent extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          SizedBox(height: AppSpacing.elementGap),
+          // 应用网格
           menusAsync.when(
             data: (menus) {
               return userListAsync.when(
@@ -73,7 +85,7 @@ class CommonAppsComponent extends ConsumerWidget {
                           child: Center(
                             child: Text(
                               '暂无常用应用',
-                              style: textTheme.bodySmall?.copyWith(
+                              style: AppTypography.bodySmall.copyWith(
                                 color: colorScheme.onSurfaceVariant,
                               ),
                             ),
@@ -82,21 +94,24 @@ class CommonAppsComponent extends ConsumerWidget {
                       : GridView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            childAspectRatio: 1,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                                childAspectRatio: 1,
+                                crossAxisSpacing: AppSpacing.md,
+                                mainAxisSpacing: AppSpacing.md,
+                              ),
                           itemCount: userList.length,
                           itemBuilder: (context, index) {
                             dynamic item;
                             for (var menu in menus) {
-                              if (menu != null && menu.containsKey('children')) {
+                              if (menu != null &&
+                                  menu.containsKey('children')) {
                                 for (var child in menu['children']) {
                                   if (child != null &&
                                       child.containsKey('id') &&
-                                      child['id'].toString() == userList[index]) {
+                                      child['id'].toString() ==
+                                          userList[index]) {
                                     item = child;
                                     break;
                                   }
@@ -125,7 +140,7 @@ class CommonAppsComponent extends ConsumerWidget {
                   child: Center(
                     child: Text(
                       '加载失败',
-                      style: textTheme.bodySmall?.copyWith(
+                      style: AppTypography.bodySmall.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -142,14 +157,13 @@ class CommonAppsComponent extends ConsumerWidget {
               child: Center(
                 child: Text(
                   '加载失败',
-                  style: textTheme.bodySmall?.copyWith(
+                  style: AppTypography.bodySmall.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
             ),
           ),
-          SizedBox(height: 12),
         ],
       ),
     );

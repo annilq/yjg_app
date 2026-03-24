@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
 import 'package:flutter_app/shared/widgets/index.dart';
 import 'package:flutter_app/core/utils/util.dart';
 
+/// 业务卡片组件 - Flat Design 风格
 class BusinessCard extends StatelessWidget {
   final dynamic item;
   final bool editMode;
@@ -21,25 +22,25 @@ class BusinessCard extends StatelessWidget {
   Widget _buildIcon() {
     String formKey = item['img'] ?? '';
     String iconName = Util.getFlowIcon(formKey);
-    
+
     // 处理图标名称格式
     if (iconName.startsWith('icon-')) {
       iconName = iconName.substring(5);
     } else if (iconName.startsWith('icon_')) {
       iconName = iconName.replaceFirst('icon_', '');
     }
-    
+
     try {
       return IconFontWidget(
         icon: IconFont.getIcon(iconName),
-        color: AppTheme.white,
+        color: AppColors.white,
         size: 24,
       );
     } catch (e) {
       // 如果图标不存在，使用默认图标
       return IconFontWidget(
         icon: IconFont.getIcon('a-108-tongyongtubiao'),
-        color: AppTheme.white,
+        color: AppColors.white,
         size: 24,
       );
     }
@@ -48,11 +49,10 @@ class BusinessCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-    
+
     String formKey = item['img'] ?? '';
     Color moduleColor = Util.getModuleColor(formKey);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -64,7 +64,7 @@ class BusinessCard extends StatelessWidget {
                 height: 56,
                 decoration: BoxDecoration(
                   color: moduleColor,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: AppRadius.allMd,
                 ),
                 child: _buildIcon(),
               ),
@@ -80,10 +80,12 @@ class BusinessCard extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSpacing.sm),
           Text(
             item['text'] ?? '',
-            style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+            style: AppTypography.bodySmall.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

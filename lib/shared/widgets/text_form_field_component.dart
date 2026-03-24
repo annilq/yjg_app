@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
 
-/// 主题感知的 TextFormField 组件
-/// 自动适配浅色/深色主题的输入框样式
+/// 主题感知的 TextFormField 组件 - Flat Design 风格
+///
+/// 特点：
+/// - 自动适配浅色/深色主题
+/// - 统一圆角和边框样式
+/// - 支持所有 TextFormField 属性
 class TextFormFieldComponent extends StatelessWidget {
   final TextEditingController? controller;
   final String? initialValue;
@@ -103,46 +108,42 @@ class TextFormFieldComponent extends StatelessWidget {
     this.enableIMEPersonalizedLearning = true,
   });
 
-  /// 构建主题感知的 InputDecoration
-  /// Flat Design: 扁平边框，无阴影
+  /// 构建主题感知的 InputDecoration - Flat Design 风格
   static InputDecoration buildDefaultDecoration(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final borderColor = isDark
-        ? const Color(0xFF2E2E30) // flatBorderDark
-        : const Color(0xFFE8E8E8); // flatBorder
+    final borderColor = isDark ? DarkColors.border : LightColors.border;
 
     return InputDecoration(
       filled: true,
       fillColor: colorScheme.surface,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: AppRadius.inputRadius,
         borderSide: BorderSide(color: borderColor, width: 1),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: AppRadius.inputRadius,
         borderSide: BorderSide(color: borderColor, width: 1),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: AppRadius.inputRadius,
         borderSide: BorderSide(color: colorScheme.primary, width: 2),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: AppRadius.inputRadius,
         borderSide: BorderSide(color: colorScheme.error, width: 1),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: AppRadius.inputRadius,
         borderSide: BorderSide(color: colorScheme.error, width: 2),
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
-      hintStyle: textTheme.bodyMedium?.copyWith(
+      contentPadding: AppSpacing.inputPadding,
+      hintStyle: AppTypography.bodyMedium.copyWith(
         color: colorScheme.onSurfaceVariant,
       ),
-      errorStyle: TextStyle(color: colorScheme.error, fontSize: 12.0),
-      labelStyle: textTheme.bodyMedium,
-      floatingLabelStyle: textTheme.bodyMedium?.copyWith(
+      errorStyle: AppTypography.caption.copyWith(color: colorScheme.error),
+      labelStyle: AppTypography.bodyMedium,
+      floatingLabelStyle: AppTypography.bodyMedium.copyWith(
         color: colorScheme.primary,
       ),
     );

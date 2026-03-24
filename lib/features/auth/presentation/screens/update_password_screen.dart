@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_app/features/auth/providers/auth_providers.dart';
+import 'package:flutter_app/shared/widgets/index.dart';
 
 class UpdatePasswordScreen extends ConsumerStatefulWidget {
   const UpdatePasswordScreen({super.key});
@@ -127,126 +128,62 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
     );
   }
 
-  InputDecoration _buildInputDecoration({
-    required BuildContext context,
-    required String labelText,
-    required String hintText,
-    required IconData prefixIcon,
-  }) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-    final outlineColor = colorScheme.outline.withValues(alpha: 0.5);
-
-    return InputDecoration(
-      labelText: labelText,
-      hintText: hintText,
-      prefixIcon: Icon(prefixIcon),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: colorScheme.primary, width: 2.0),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: outlineColor, width: 1.0),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: colorScheme.error, width: 1.0),
-      ),
-      hintStyle: textTheme.bodyMedium?.copyWith(
-        color: colorScheme.onSurfaceVariant,
-      ),
-      labelStyle: textTheme.bodyMedium,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('修改密码'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _oldPasswordController,
-                decoration: _buildInputDecoration(
-                  context: context,
-                  labelText: '旧密码',
-                  hintText: '请输入旧密码',
-                  prefixIcon: Icons.lock_outline,
-                ),
-                obscureText: true,
-                validator: _validateOldPassword,
-                textInputAction: TextInputAction.next,
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _newPasswordController,
-                decoration: _buildInputDecoration(
-                  context: context,
-                  labelText: '新密码',
-                  hintText: '请输入新密码',
-                  prefixIcon: Icons.lock,
-                ),
-                obscureText: true,
-                validator: _validateNewPassword,
-                textInputAction: TextInputAction.next,
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _confirmPasswordController,
-                decoration: _buildInputDecoration(
-                  context: context,
-                  labelText: '确认新密码',
-                  hintText: '请再次输入新密码',
-                  prefixIcon: Icons.lock_outline,
-                ),
-                obscureText: true,
-                validator: _validateConfirmPassword,
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) => _submitForm(),
-              ),
-              const SizedBox(height: 40),
-              SizedBox(
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.primary,
-                    foregroundColor: colorScheme.onPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+      appBar: AppBar(title: const Text('修改密码'), centerTitle: true),
+      body: Builder(
+        builder: (innerContext) => SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 20),
+                TextFormFieldComponent(
+                  controller: _oldPasswordController,
+                  decoration: const InputDecoration(
+                    labelText: '旧密码',
+                    hintText: '请输入旧密码',
+                    prefixIcon: Icon(Icons.lock_outline),
                   ),
-                  child: _isLoading
-                      ? SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: colorScheme.onPrimary,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : const Text(
-                          '确定',
-                          style: TextStyle(fontSize: 16),
-                        ),
+                  obscureText: true,
+                  validator: _validateOldPassword,
+                  textInputAction: TextInputAction.next,
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                TextFormFieldComponent(
+                  controller: _newPasswordController,
+                  decoration: const InputDecoration(
+                    labelText: '新密码',
+                    hintText: '请输入新密码',
+                    prefixIcon: Icon(Icons.lock),
+                  ),
+                  obscureText: true,
+                  validator: _validateNewPassword,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 20),
+                TextFormFieldComponent(
+                  controller: _confirmPasswordController,
+                  decoration: const InputDecoration(
+                    labelText: '确认新密码',
+                    hintText: '请再次输入新密码',
+                    prefixIcon: Icon(Icons.lock_outline),
+                  ),
+                  obscureText: true,
+                  validator: _validateConfirmPassword,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _submitForm(),
+                ),
+                const SizedBox(height: 40),
+                ButtonComponent(
+                  onPressed: _isLoading ? null : _submitForm,
+                  text: '确定',
+                ),
+              ],
+            ),
           ),
         ),
       ),

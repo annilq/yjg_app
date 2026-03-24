@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/backlog_menu_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/common_apps_component.dart';
@@ -10,16 +11,18 @@ import 'package:flutter_app/features/home/presentation/widgets/fixed_apps_compon
 import 'package:flutter_app/features/home/presentation/widgets/copyright_component.dart';
 import 'package:flutter_app/features/home/providers/home_providers.dart';
 
+/// 首页 - Flat Design 风格
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeState = ref.watch(homeScreenProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBarComponent(
-        title: '首页' ,
+        title: '首页',
         actions: [
           Stack(
             children: [
@@ -32,13 +35,13 @@ class HomeScreen extends ConsumerWidget {
               homeState.when(
                 data: (data) => data.backlogCount > 0
                     ? Positioned(
-                        right: 8,
-                        top: 8,
+                        right: AppSpacing.sm,
+                        top: AppSpacing.sm,
                         child: Container(
                           padding: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(10),
+                            color: AppColors.error,
+                            borderRadius: AppRadius.allFull,
                           ),
                           constraints: const BoxConstraints(
                             minWidth: 16,
@@ -46,9 +49,8 @@ class HomeScreen extends ConsumerWidget {
                           ),
                           child: Text(
                             '${data.backlogCount}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
+                            style: AppTypography.overline.copyWith(
+                              color: AppColors.white,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -64,7 +66,7 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: homeState.when(
         data: (data) => SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: AppSpacing.screenPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -72,20 +74,27 @@ class HomeScreen extends ConsumerWidget {
                 backlogCount: data.backlogCount,
                 remindCount: data.reminds.length,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.sectionGap),
               AnnouncementCarouselComponent(reminds: data.reminds),
-              const SizedBox(height: 16),
-              const CommonAppsComponent(),
-              const SizedBox(height: 16),
-              const FixedAppsComponent(),
-              const SizedBox(height: 16),
-              const CopyrightComponent(),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.sectionGap),
+              CommonAppsComponent(),
+              SizedBox(height: AppSpacing.sectionGap),
+              FixedAppsComponent(),
+              SizedBox(height: AppSpacing.sectionGap),
+              CopyrightComponent(),
+              SizedBox(height: AppSpacing.sectionGap),
             ],
           ),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('加载失败: $error')),
+        error: (error, stack) => Center(
+          child: Text(
+            '加载失败: $error',
+            style: AppTypography.bodyMedium.copyWith(
+              color: isDark ? DarkColors.textSecondary : LightColors.textSecondary,
+            ),
+          ),
+        ),
       ),
     );
   }

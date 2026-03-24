@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/button_component.dart';
 import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
@@ -338,25 +339,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         children: [
           SizedBox(
             width: double.infinity,
-            child: ButtonComponent(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorScheme.surface,
-                foregroundColor: colorScheme.onSurface,
-              ),
+            child: ButtonComponent.secondary(
               onPressed: _showClearCacheDialog,
               text: '清除缓存',
+              isFullWidth: true,
             ),
           ),
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
-            child: ButtonComponent(
+            child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: colorScheme.surfaceContainerHighest,
-                foregroundColor: colorScheme.error,
+                backgroundColor: colorScheme.error,
+                foregroundColor: AppColors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: AppRadius.buttonRadius,
+                ),
+                padding: AppSpacing.buttonPadding,
               ),
               onPressed: _showLogoutDialog,
-              text: '解除绑定',
+              child: const Text('解除绑定'),
             ),
           ),
         ],
