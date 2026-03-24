@@ -19,14 +19,14 @@ class FixedAppsComponent extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: AppTheme.lightGray,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('${DateTime.now().month}月${DateTime.now().day}日', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.darkGray)),
-                Text('$_getWeekday()', style: AppTheme.smallStyle),
+                Text('${DateTime.now().month}月${DateTime.now().day}日', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
+                Text('$_getWeekday()', style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),
@@ -67,7 +67,7 @@ class FixedAppsComponent extends StatelessWidget {
                         child: Icon(app['icon'], color: app['color'], size: 16),
                       ),
                       SizedBox(width: 8),
-                      Text(app['title'], style: AppTheme.smallStyle),
+                      Text(app['title'], style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),
                   padding: EdgeInsets.all(10),

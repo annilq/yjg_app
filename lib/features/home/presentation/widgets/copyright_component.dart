@@ -6,7 +6,7 @@ class CopyrightComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('© 2026 企业管理系统', style: TextStyle(fontSize: 12, color: Colors.grey)),
+      child: Text('© 2026 企业管理系统', style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
     );
   }
 }

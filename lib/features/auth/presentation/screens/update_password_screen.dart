@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_app/features/auth/providers/auth_providers.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
 
 class UpdatePasswordScreen extends ConsumerStatefulWidget {
   const UpdatePasswordScreen({super.key});
@@ -129,10 +128,15 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
   }
 
   InputDecoration _buildInputDecoration({
+    required BuildContext context,
     required String labelText,
     required String hintText,
     required IconData prefixIcon,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final outlineColor = colorScheme.outline.withValues(alpha: 0.5);
+
     return InputDecoration(
       labelText: labelText,
       hintText: hintText,
@@ -142,21 +146,27 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: AppTheme.primaryColor, width: 2.0),
+        borderSide: BorderSide(color: colorScheme.primary, width: 2.0),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: AppTheme.mediumGray, width: 1.0),
+        borderSide: BorderSide(color: outlineColor, width: 1.0),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: AppTheme.errorColor, width: 1.0),
+        borderSide: BorderSide(color: colorScheme.error, width: 1.0),
       ),
+      hintStyle: textTheme.bodyMedium?.copyWith(
+        color: colorScheme.onSurfaceVariant,
+      ),
+      labelStyle: textTheme.bodyMedium,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('修改密码'),
@@ -173,6 +183,7 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
               TextFormField(
                 controller: _oldPasswordController,
                 decoration: _buildInputDecoration(
+                  context: context,
                   labelText: '旧密码',
                   hintText: '请输入旧密码',
                   prefixIcon: Icons.lock_outline,
@@ -185,6 +196,7 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
               TextFormField(
                 controller: _newPasswordController,
                 decoration: _buildInputDecoration(
+                  context: context,
                   labelText: '新密码',
                   hintText: '请输入新密码',
                   prefixIcon: Icons.lock,
@@ -197,6 +209,7 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
               TextFormField(
                 controller: _confirmPasswordController,
                 decoration: _buildInputDecoration(
+                  context: context,
                   labelText: '确认新密码',
                   hintText: '请再次输入新密码',
                   prefixIcon: Icons.lock_outline,
@@ -212,18 +225,18 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _submitForm,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryColor,
-                    foregroundColor: Colors.white,
+                    backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   child: _isLoading
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 24,
                           height: 24,
                           child: CircularProgressIndicator(
-                            color: Colors.white,
+                            color: colorScheme.onPrimary,
                             strokeWidth: 2,
                           ),
                         )

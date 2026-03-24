@@ -76,7 +76,7 @@ class _AnnouncementCarouselComponentState
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           remind.title ?? '',
-                                          style: AppTheme.bodyStyle,
+                                          style: Theme.of(context).textTheme.bodyMedium,
                                         ),
                                       ),
                                     ),
@@ -93,7 +93,7 @@ class _AnnouncementCarouselComponentState
                       height: 40,
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text('暂无公告', style: AppTheme.bodyStyle),
+                        child: Text('暂无公告', style: Theme.of(context).textTheme.bodyMedium),
                       ),
                     ),
                 ],
@@ -104,7 +104,7 @@ class _AnnouncementCarouselComponentState
           IconButton(
             icon: Icon(
               CupertinoIcons.chevron_forward,
-              color: AppTheme.mediumGray,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             onPressed: () {
               context.push('/notices');

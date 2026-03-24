@@ -50,28 +50,29 @@ class LanguageSettingsScreen extends ConsumerWidget {
     required AppLanguage currentLanguage,
   }) {
     final isSelected = currentLanguage == language;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
         border: isSelected
-            ? Border.all(color: Theme.of(context).primaryColor, width: 1.5)
+            ? Border.all(color: colorScheme.primary, width: 1.5)
             : null,
       ),
       child: ListTile(
-        leading: Icon(icon, color: isSelected ? Theme.of(context).primaryColor : Colors.grey),
+        leading: Icon(icon, color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant),
         title: Text(
           title,
           style: TextStyle(
-            color: isSelected ? Theme.of(context).primaryColor : Colors.black87,
+            color: isSelected ? colorScheme.primary : colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
-        subtitle: Text(subtitle),
+        subtitle: Text(subtitle, style: TextStyle(color: colorScheme.onSurfaceVariant)),
         trailing: isSelected
-            ? Icon(Icons.check, color: Theme.of(context).primaryColor)
+            ? Icon(Icons.check, color: colorScheme.primary)
             : null,
         onTap: () {
           ref.read(languageProvider.notifier).setLanguage(language);

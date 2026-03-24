@@ -59,7 +59,7 @@ class AboutScreen extends ConsumerWidget {
                   height: 80,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    color: const Color(0xFFF5F5F5),
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
                   child: Image.asset(
                     AppImages.logo,
@@ -75,11 +75,11 @@ class AboutScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
+                Text(
                   '版本 1.0.0',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Color(0xFF747476),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -89,22 +89,22 @@ class AboutScreen extends ConsumerWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
               children: [
                 ListTile(
                   title: const Text('公司简介'),
-                  trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                  trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   onTap: () {
                     _showCompanyInfo(context);
                   },
                 ),
-                const Divider(height: 1),
+                Divider(height: 1, color: Theme.of(context).colorScheme.outlineVariant),
                 ListTile(
                   title: const Text('隐私政策'),
-                  trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                  trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   onTap: () {
                     SnackBarHelper.showSnackBar(
                       context,
@@ -112,10 +112,10 @@ class AboutScreen extends ConsumerWidget {
                     );
                   },
                 ),
-                const Divider(height: 1),
+                Divider(height: 1, color: Theme.of(context).colorScheme.outlineVariant),
                 ListTile(
                   title: const Text('用户协议'),
-                  trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                  trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   onTap: () {
                     SnackBarHelper.showSnackBar(
                       context,
@@ -123,10 +123,10 @@ class AboutScreen extends ConsumerWidget {
                     );
                   },
                 ),
-                const Divider(height: 1),
+                Divider(height: 1, color: Theme.of(context).colorScheme.outlineVariant),
                 ListTile(
                   title: const Text('联系我们'),
-                  trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                  trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
                   onTap: () {
                     _showContactDialog(context);
                   },
@@ -135,12 +135,12 @@ class AboutScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 32),
-          const Center(
+          Center(
             child: Text(
               '© 2024 云建管 版权所有',
               style: TextStyle(
                 fontSize: 12,
-                color: Color(0xFF747476),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ),

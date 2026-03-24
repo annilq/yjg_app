@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
 
 class TabComponent extends StatelessWidget {
   final List<TabItem> items;
@@ -23,12 +22,15 @@ class TabComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final backgroundColor = colorScheme.surfaceContainerHighest;
+
     return Container(
       margin: margin ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       height: height ?? 48,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius ?? 24),
-        color: AppTheme.lightGray,
+        color: backgroundColor,
       ),
       child: Row(
         children: List.generate(items.length, (index) {
@@ -113,6 +115,11 @@ class _TabItemWidgetState extends State<_TabItemWidget>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final primaryColor = colorScheme.primary;
+    final onSurfaceColor = colorScheme.onSurface;
+
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -139,7 +146,7 @@ class _TabItemWidgetState extends State<_TabItemWidget>
           padding: widget.padding,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: widget.isActive ? AppTheme.primaryColor : Colors.transparent,
+            color: widget.isActive ? primaryColor : Colors.transparent,
             borderRadius: BorderRadius.horizontal(
               left: widget.isFirst
                   ? Radius.circular(widget.borderRadius)
@@ -151,7 +158,7 @@ class _TabItemWidgetState extends State<_TabItemWidget>
             boxShadow: widget.isActive
                 ? [
                     BoxShadow(
-                      color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                      color: primaryColor.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -161,7 +168,7 @@ class _TabItemWidgetState extends State<_TabItemWidget>
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 200),
             style: TextStyle(
-              color: widget.isActive ? AppTheme.white : AppTheme.darkGray,
+              color: widget.isActive ? colorScheme.onPrimary : onSurfaceColor,
               fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w500,
               fontSize: 14,
               letterSpacing: widget.isActive ? 0.5 : 0,

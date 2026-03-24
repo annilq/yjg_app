@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/features/auth/providers/auth_providers.dart';
 import 'package:flutter_app/features/auth/models/account_model.dart';
 import 'package:flutter_app/shared/widgets/index.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
 
 class AccountsScreen extends ConsumerWidget {
   const AccountsScreen({super.key});
@@ -47,6 +47,7 @@ class _AccountsListContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final accountsAsync = ref.watch(accountsProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return accountsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -54,7 +55,10 @@ class _AccountsListContent extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('加载失败: $error'),
+            Text(
+              '加载失败: $error',
+              style: TextStyle(color: colorScheme.error),
+            ),
             const SizedBox(height: 16),
             ElevatedButton(onPressed: onRefresh, child: const Text('重试')),
           ],
@@ -69,7 +73,14 @@ class _AccountsListContent extends ConsumerWidget {
       children: [
         Expanded(
           child: accounts.isEmpty
-              ? const Center(child: Text('暂无账号'))
+              ? Center(
+                  child: Text(
+                    '暂无账号',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                )
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: accounts.length,
@@ -92,10 +103,8 @@ class _AccountsListContent extends ConsumerWidget {
   }
 
   void _handleSwitchAccount(BuildContext context, WidgetRef ref, Account account) {
-    if (account.selected) {
-      return;
-    }
-    
+    if (account.selected) return;
+
     final accountService = ref.read(accountServiceProvider);
     accountService.switchAccount(account.value).then((_) {
       ref.invalidate(accountsProvider);
@@ -106,6 +115,7 @@ class _AccountsListContent extends ConsumerWidget {
   }
 
   void _handleDeleteAccount(BuildContext context, WidgetRef ref, Account account) async {
+    final colorScheme = Theme.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -118,7 +128,9 @@ class _AccountsListContent extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(ctx).colorScheme.error,
+            ),
             child: const Text('删除'),
           ),
         ],
@@ -165,23 +177,34 @@ class _AccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppTheme.cardContainer(
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Container(
       margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 1,
+        ),
+      ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: account.disabled ? null : onTap,
-          borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
+          borderRadius: BorderRadius.circular(12),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
                   child: Text(
                     account.label.isNotEmpty ? account.label[0] : '?',
                     style: TextStyle(
-                      color: AppTheme.primaryColor,
+                      color: colorScheme.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -193,18 +216,14 @@ class _AccountCard extends StatelessWidget {
                     children: [
                       Text(
                         account.label,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: textTheme.titleMedium,
                       ),
                       if (account.tenantName != null && account.tenantName!.isNotEmpty) ...[
                         const SizedBox(height: 2),
                         Text(
                           account.tenantName!,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppTheme.mediumGray,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -212,9 +231,8 @@ class _AccountCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           '当前使用中',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppTheme.primaryColor,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.primary,
                           ),
                         ),
                       ],
@@ -223,13 +241,13 @@ class _AccountCard extends StatelessWidget {
                 ),
                 if (!account.selected && !account.disabled)
                   IconButton(
-                    icon: Icon(Icons.delete_outline, color: Colors.red[400]),
+                    icon: Icon(Icons.delete_outline, color: colorScheme.error),
                     onPressed: onDelete,
                   ),
                 if (account.selected)
-                  Icon(Icons.check_circle, color: AppTheme.primaryColor)
+                  Icon(Icons.check_circle, color: colorScheme.primary)
                 else if (!account.disabled)
-                  Icon(Icons.chevron_right, color: AppTheme.mediumGray),
+                  Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
               ],
             ),
           ),

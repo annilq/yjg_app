@@ -283,12 +283,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       },
     ];
 
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -296,7 +297,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ...menus.map((menu) {
               return ListTile(
                 title: Text(menu['label'] as String),
-                trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                trailing: Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
                 onTap: () {
                   if (menu['url'] != null && menu['url']!.isNotEmpty) {
                     context.push(menu['url'] as String);
@@ -304,7 +305,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 },
               );
             }),
-            const Divider(height: 1),
+            Divider(height: 1, color: colorScheme.outlineVariant),
             ListTile(
               title: Row(
                 children: [
@@ -317,9 +318,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const Text('联系我们'),
                 ],
               ),
-              subtitle: const Text(
+              subtitle: Text(
                 '欢迎咨询与反馈',
-                style: TextStyle(fontSize: 12, color: Color(0xFF747476)),
+                style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant),
               ),
               onTap: _showContactUsDialog,
             ),
@@ -330,6 +331,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildActionButtons() {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Column(
@@ -338,8 +340,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             width: double.infinity,
             child: ButtonComponent(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black87,
+                backgroundColor: colorScheme.surface,
+                foregroundColor: colorScheme.onSurface,
               ),
               onPressed: _showClearCacheDialog,
               text: '清除缓存',
@@ -350,8 +352,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             width: double.infinity,
             child: ButtonComponent(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.red,
+                backgroundColor: colorScheme.surfaceContainerHighest,
+                foregroundColor: colorScheme.error,
               ),
               onPressed: _showLogoutDialog,
               text: '解除绑定',

@@ -48,24 +48,25 @@ class SettingsScreen extends StatelessWidget {
     required IconData icon,
     required VoidCallback onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
-        leading: Icon(icon, color: Theme.of(context).primaryColor),
+        leading: Icon(icon, color: colorScheme.primary),
         title: Text(
           title,
-          style: const TextStyle(
-            color: Colors.black87,
+          style: TextStyle(
+            color: colorScheme.onSurface,
             fontWeight: FontWeight.normal,
           ),
         ),
-        trailing: const Icon(
+        trailing: Icon(
           CupertinoIcons.chevron_right,
-          color: Colors.grey,
+          color: colorScheme.onSurfaceVariant,
           size: 20,
         ),
         onTap: onTap,

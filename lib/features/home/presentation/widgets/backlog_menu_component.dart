@@ -15,11 +15,12 @@ class BacklogMenuComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.primaryColor,
         borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-        boxShadow: [AppTheme.cardShadow],
+        boxShadow: [isDark ? AppTheme.darkCardShadow : AppTheme.cardShadow],
       ),
       padding: EdgeInsets.all(AppTheme.cardPadding),
       child: GridView.builder(

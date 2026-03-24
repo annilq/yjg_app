@@ -40,7 +40,7 @@ class CommonAppsComponent extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('常用应用', style: AppTheme.titleStyle),
+              Text('常用应用', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
               GestureDetector(
                 onTap: () => _handleSettingTap(context),
                 child: Container(
@@ -63,7 +63,7 @@ class CommonAppsComponent extends ConsumerWidget {
                       ? Container(
                           height: 120,
                           child: Center(
-                            child: Text('暂无常用应用', style: AppTheme.smallStyle),
+                            child: Text('暂无常用应用', style: Theme.of(context).textTheme.bodySmall),
                           ),
                         )
                       : GridView.builder(
@@ -109,7 +109,7 @@ class CommonAppsComponent extends ConsumerWidget {
                 ),
                 error: (error, stack) => Container(
                   height: 120,
-                  child: Center(child: Text('加载失败', style: AppTheme.smallStyle)),
+                  child: Center(child: Text('加载失败', style: Theme.of(context).textTheme.bodySmall)),
                 ),
               );
             },
@@ -119,7 +119,7 @@ class CommonAppsComponent extends ConsumerWidget {
             ),
             error: (error, stack) => Container(
               height: 120,
-              child: Center(child: Text('加载失败', style: AppTheme.smallStyle)),
+              child: Center(child: Text('加载失败', style: Theme.of(context).textTheme.bodySmall)),
             ),
           ),
           SizedBox(height: 12),
