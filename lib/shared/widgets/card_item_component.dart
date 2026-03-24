@@ -30,12 +30,13 @@ class CardItemComponent extends StatefulWidget {
     return BusinessIcon(formKey: formKey, size: size);
   }
 
+  // Flat Design: countBadge padding 缩小, borderRadius: 8
   static Widget countBadge(int count) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: AppTheme.errorColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         '$count',
@@ -48,6 +49,7 @@ class CardItemComponent extends StatefulWidget {
     );
   }
 
+  // Flat Design: statusBadge padding 缩小, borderRadius: 6, fontSize 11
   static Widget statusBadge(String status) {
     Color color;
     String text;
@@ -68,15 +70,15 @@ class CardItemComponent extends StatefulWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: color.withAlpha(25),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 12,
+          fontSize: 11,
           color: color,
           fontWeight: FontWeight.w500,
         ),
@@ -95,9 +97,9 @@ class _CardItemComponentState extends State<CardItemComponent>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 80),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.98).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.985).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
   }
@@ -122,14 +124,10 @@ class _CardItemComponentState extends State<CardItemComponent>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
-    // 构建图标
     final icon = BusinessIcon(formKey: widget.formKey, size: 40);
-
-    // 构建footer
     final status = (widget.status != null
         ? CardItemComponent.statusBadge(widget.status!)
         : null);
@@ -143,27 +141,16 @@ class _CardItemComponentState extends State<CardItemComponent>
         margin: widget.margin,
         child: Material(
           color: colorScheme.surface,
-          borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
+          borderRadius: BorderRadius.circular(AppTheme.flatRadius),
           elevation: 0,
           child: InkWell(
             onTap: widget.onTap,
             onTapDown: _handleTapDown,
             onTapUp: _handleTapUp,
             onTapCancel: _handleTapCancel,
-            borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-            splashColor: colorScheme.primary.withValues(alpha: 0.1),
-            highlightColor: colorScheme.primary.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(AppTheme.flatRadius),
             child: Container(
-              padding: const EdgeInsets.all(AppTheme.cardPadding),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-                border: Border.all(
-                  color: isDark
-                      ? colorScheme.outline
-                      : colorScheme.outlineVariant,
-                  width: 1,
-                ),
-              ),
+              padding: const EdgeInsets.all(AppTheme.flatPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -178,7 +165,7 @@ class _CardItemComponentState extends State<CardItemComponent>
                               child: Text(
                                 widget.title,
                                 style: TextStyle(
-                                  fontSize: 18.0,
+                                  fontSize: 16.0,
                                   fontWeight: FontWeight.w600,
                                   color: colorScheme.onSurface,
                                 ),
@@ -209,7 +196,7 @@ class _CardItemComponentState extends State<CardItemComponent>
                     ],
                   ),
                   if (widget.content != null || status != null) ...[
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
                         if (widget.content != null) ...[
@@ -219,7 +206,7 @@ class _CardItemComponentState extends State<CardItemComponent>
                               style: TextStyle(
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.w400,
-                                color: colorScheme.onSurface,
+                                color: colorScheme.onSurfaceVariant,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -227,6 +214,7 @@ class _CardItemComponentState extends State<CardItemComponent>
                           ),
                         ],
                         if (status != null) ...[
+                          const SizedBox(width: 8),
                           status,
                         ],
                       ],

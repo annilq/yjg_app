@@ -48,7 +48,7 @@ class BusinessIcon extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: moduleColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8), // Flat Design: 8px 圆角
       ),
       child: _buildIcon(),
     );

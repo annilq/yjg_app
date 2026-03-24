@@ -17,29 +17,45 @@ class AppTheme {
 
   // ── Dark palette ────────────────────────────────────────────────
   // Material 3 OLED-friendly dark palette
-  static const Color darkBackground = Color(0xFF000000);      // 纯黑背景
-  static const Color darkSurface      = Color(0xFF121212);     // surface 层
-  static const Color darkSurface2     = Color(0xFF1C1C1E);     // elevated surface
-  static const Color darkCard         = Color(0xFF1F1F1F);     // card/container
+  static const Color darkBackground = Color(0xFF0D0D0D);      // 不再纯黑，避免刺眼
+  static const Color darkSurface      = Color(0xFF181818);     // surface 层
+  static const Color darkSurface2     = Color(0xFF222222);     // elevated surface
+  static const Color darkCard         = Color(0xFF1C1C1E);     // card/container
   static const Color darkBorder       = Color(0xFF2E2E30);     // 边框
   static const Color darkBorderLight  = Color(0xFF3A3A3C);     // 浅边框
   static const Color darkTextPrimary  = Color(0xFFE5E7EB);      // 主要文字
   static const Color darkTextSecondary = Color(0xFF9CA3AF);    // 次要文字
 
+  // ── Flat Design ──────────────────────────────────────────────
+  // 无阴影，通过边框和背景色差区分层次
+  static const double flatRadius = 8.0;
+  static const double flatRadiusLg = 12.0;
+  static const double flatPadding = 16.0;
+  static const double flatPaddingSm = 12.0;
+
+  // light 边框色
+  static const Color flatBorder = Color(0xFFE8E8E8);
+  static const Color flatBorderLight = Color(0xFFF0F0F0);
+
+  // dark 边框色
+  static const Color flatBorderDark = Color(0xFF2E2E30);
+
   // ── Shared constants ────────────────────────────────────────────
-  static const double cardBorderRadius = 12.0;
-  static const double cardPadding = 16.0;
+  // Flat Design: 所有圆角统一使用 flatRadius = 8.0
+  static const double cardBorderRadius = flatRadius;
+  static const double cardPadding = flatPadding;
   static const double cardMargin = 16.0;
 
+  // Flat Design: 移除阴影，使用边框
   static const BoxShadow cardShadow = BoxShadow(
-    color: Color(0x10000000),
-    blurRadius: 8.0,
-    spreadRadius: 0.0,
-    offset: Offset(0, 2),
+    color: Color(0x00000000), // flat design: 无阴影
+    blurRadius: 0,
+    spreadRadius: 0,
+    offset: Offset.zero,
   );
 
   static const BoxShadow darkCardShadow = BoxShadow(
-    color: Color(0x00000000), // dark mode 不使用阴影，用边框代替
+    color: Color(0x00000000), // flat design: 无阴影
     blurRadius: 0,
     spreadRadius: 0,
     offset: Offset.zero,
@@ -97,9 +113,9 @@ class AppTheme {
         outlineVariant: const Color(0xFFF3F4F6),
         surfaceContainerHighest: lightGray,
       ),
-      scaffoldBackgroundColor: const Color(0xFFF5F7FA), // 页面背景略灰蓝
+      scaffoldBackgroundColor: white, // Flat Design: 纯白背景
       cardColor: white,
-      dividerColor: const Color(0xFFE5E7EB),
+      dividerColor: flatBorder, // Flat Design: #E8E8E8
       textTheme: const TextTheme(
         titleLarge: titleStyle,
         bodyMedium: bodyStyle,
@@ -127,7 +143,7 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(cardBorderRadius),
-          side: BorderSide(color: const Color(0xFFE5E7EB), width: 1),
+          side: const BorderSide(color: flatBorder, width: 1),
         ),
       ),
       listTileTheme: const ListTileThemeData(
@@ -138,22 +154,22 @@ class AppTheme {
         filled: true,
         fillColor: white,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          borderRadius: BorderRadius.circular(flatRadius),
+          borderSide: const BorderSide(color: flatBorder),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          borderRadius: BorderRadius.circular(flatRadius),
+          borderSide: const BorderSide(color: flatBorder),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(flatRadius),
           borderSide: const BorderSide(color: primaryColor, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(flatRadius),
           borderSide: const BorderSide(color: errorColor),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) =>
@@ -167,8 +183,12 @@ class AppTheme {
           backgroundColor: primaryColor,
           foregroundColor: white,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(flatRadius),
+            side: const BorderSide(color: Colors.transparent),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
@@ -179,7 +199,11 @@ class AppTheme {
       snackBarTheme: SnackBarThemeData(
         backgroundColor: darkGray,
         contentTextStyle: const TextStyle(color: white),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(flatRadius),
+          side: BorderSide(color: flatBorder.withValues(alpha: 0.5), width: 0.5),
+        ),
         behavior: SnackBarBehavior.floating,
       ),
       dialogTheme: DialogThemeData(
@@ -212,7 +236,7 @@ class AppTheme {
         outlineVariant: darkBorderLight,
         surfaceContainerHighest: darkCard,
       ),
-      scaffoldBackgroundColor: darkBackground,
+      scaffoldBackgroundColor: darkBackground, // Flat Design: #0D0D0D
       cardColor: darkCard,
       dividerColor: darkBorder,
       textTheme: const TextTheme(
@@ -253,22 +277,22 @@ class AppTheme {
         filled: true,
         fillColor: darkCard,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(flatRadius),
           borderSide: const BorderSide(color: darkBorder),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(flatRadius),
           borderSide: const BorderSide(color: darkBorder),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(flatRadius),
           borderSide: const BorderSide(color: primaryColorDark, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(flatRadius),
           borderSide: const BorderSide(color: errorColor),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) =>
@@ -282,8 +306,12 @@ class AppTheme {
           backgroundColor: primaryColorDark,
           foregroundColor: darkBackground,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(flatRadius),
+            side: const BorderSide(color: Colors.transparent),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
@@ -309,6 +337,21 @@ class AppTheme {
         thickness: 1,
         space: 0,
       ),
+    );
+  }
+
+  // Flat button style（边框型按钮，用于 secondary actions）
+  static ButtonStyle flatButtonStyle(Color color, BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return ElevatedButton.styleFrom(
+      elevation: 0,
+      backgroundColor: isDark ? darkBorder : lightGray,
+      foregroundColor: color,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(flatRadius),
+        side: BorderSide(color: isDark ? darkBorder : lightGray),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
     );
   }
 
@@ -338,7 +381,7 @@ class AppTheme {
     ),
   );
 
-  // ── Card helpers（dark mode 用边框，light mode 用阴影）──────────
+  // ── Card helpers（Flat Design: 用边框，无阴影）──────────
   static Widget cardContainer({
     required Widget child,
     EdgeInsets padding = const EdgeInsets.all(cardPadding),
@@ -351,8 +394,6 @@ class AppTheme {
       decoration: BoxDecoration(
         color: color ?? (isDark ? darkCard : white),
         borderRadius: BorderRadius.circular(cardBorderRadius),
-        boxShadow: [isDark ? darkCardShadow : cardShadow],
-        border: isDark ? Border.all(color: darkBorder, width: 1) : null,
       ),
       child: child,
     );

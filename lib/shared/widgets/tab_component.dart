@@ -23,14 +23,13 @@ class TabComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final backgroundColor = colorScheme.surfaceContainerHighest;
 
     return Container(
       margin: margin ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      height: height ?? 48,
+      height: height ?? 44, // Flat Design: 更紧凑
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius ?? 24),
-        color: backgroundColor,
+        color: colorScheme.surfaceContainerHighest,
       ),
       child: Row(
         children: List.generate(items.length, (index) {
@@ -116,9 +115,7 @@ class _TabItemWidgetState extends State<_TabItemWidget>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
     final primaryColor = colorScheme.primary;
-    final onSurfaceColor = colorScheme.onSurface;
 
     return AnimatedBuilder(
       animation: _scaleAnimation,
@@ -146,6 +143,7 @@ class _TabItemWidgetState extends State<_TabItemWidget>
           padding: widget.padding,
           alignment: Alignment.center,
           decoration: BoxDecoration(
+            // Flat Design: 无 boxShadow，纯色背景
             color: widget.isActive ? primaryColor : Colors.transparent,
             borderRadius: BorderRadius.horizontal(
               left: widget.isFirst
@@ -155,21 +153,15 @@ class _TabItemWidgetState extends State<_TabItemWidget>
                   ? Radius.circular(widget.borderRadius)
                   : Radius.zero,
             ),
-            boxShadow: widget.isActive
-                ? [
-                    BoxShadow(
-                      color: primaryColor.withValues(alpha: 0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : null,
           ),
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 200),
             style: TextStyle(
-              color: widget.isActive ? colorScheme.onPrimary : onSurfaceColor,
-              fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w500,
+              color: widget.isActive
+                  ? colorScheme.onPrimary
+                  : colorScheme.onSurfaceVariant,
+              fontWeight:
+                  widget.isActive ? FontWeight.w600 : FontWeight.w500,
               fontSize: 14,
               letterSpacing: widget.isActive ? 0.5 : 0,
             ),

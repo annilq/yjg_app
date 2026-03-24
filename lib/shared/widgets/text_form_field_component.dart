@@ -104,33 +104,39 @@ class TextFormFieldComponent extends StatelessWidget {
   });
 
   /// 构建主题感知的 InputDecoration
+  /// Flat Design: 扁平边框，无阴影
   static InputDecoration buildDefaultDecoration(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final outlineColor = colorScheme.outline.withValues(alpha: 0.5);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark
+        ? const Color(0xFF2E2E30) // flatBorderDark
+        : const Color(0xFFE8E8E8); // flatBorder
 
     return InputDecoration(
+      filled: true,
+      fillColor: colorScheme.surface,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: outlineColor, width: 1.0),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: colorScheme.primary, width: 2.0),
+        borderSide: BorderSide(color: borderColor, width: 1),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: outlineColor, width: 1.0),
+        borderSide: BorderSide(color: borderColor, width: 1),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: BorderSide(color: colorScheme.primary, width: 2),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: colorScheme.error, width: 1.0),
+        borderSide: BorderSide(color: colorScheme.error, width: 1),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: BorderSide(color: colorScheme.error, width: 2.0),
+        borderSide: BorderSide(color: colorScheme.error, width: 2),
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
       hintStyle: textTheme.bodyMedium?.copyWith(
         color: colorScheme.onSurfaceVariant,
       ),

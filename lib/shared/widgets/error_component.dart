@@ -13,14 +13,14 @@ class ErrorComponent extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
-              size: 64,
-              color: colorScheme.error,
+              Icons.info_outline,
+              size: 40,
+              color: colorScheme.onSurfaceVariant,
             ),
             const SizedBox(height: 16),
             Text(
@@ -28,16 +28,22 @@ class ErrorComponent extends StatelessWidget {
               textAlign: TextAlign.center,
               style: textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
+                height: 1.5,
               ),
             ),
-            if (onRetry != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: ElevatedButton(
-                  onPressed: onRetry,
-                  child: const Text('重试'),
+            if (onRetry != null) ...[
+              const SizedBox(height: 24),
+              TextButton(
+                onPressed: onRetry,
+                child: Text(
+                  '重新加载',
+                  style: TextStyle(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
+            ],
           ],
         ),
       ),

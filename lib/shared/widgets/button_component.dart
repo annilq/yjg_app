@@ -17,13 +17,16 @@ class ButtonComponent extends ElevatedButton {
 
   static ButtonStyle get _defaultStyle {
     return ElevatedButton.styleFrom(
+      elevation: 0,
+      shadowColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
       textStyle: const TextStyle(
-        fontSize: 14.0,
+        fontSize: 15.0,
         fontWeight: FontWeight.w500,
+        letterSpacing: 0.2,
       ),
     );
   }

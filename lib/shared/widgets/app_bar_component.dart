@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_app/core/theme/app_theme.dart';
 
 class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
@@ -8,7 +8,6 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   final Function()? onSearchPressed;
   final List<Widget>? actions;
   final Color? backgroundColor;
-  final double? elevation;
   final bool automaticallyImplyLeading;
 
   const AppBarComponent({
@@ -18,42 +17,43 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
     this.onSearchPressed,
     this.actions,
     this.backgroundColor,
-    this.elevation,
     this.automaticallyImplyLeading = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = backgroundColor ?? (isDark ? AppTheme.primaryColorDark : AppTheme.primaryColor);
+    final onBgColor = AppTheme.white;
 
     return AppBar(
       title: title != null
           ? Text(
               title!,
               style: TextStyle(
-                color: colorScheme.onPrimary,
+                color: onBgColor,
                 fontWeight: FontWeight.w600,
+                fontSize: 17,
               ),
             )
           : null,
-      backgroundColor: backgroundColor ?? colorScheme.surface,
+      backgroundColor: bgColor,
+      surfaceTintColor: Colors.transparent,
       actions: [
         if (showSearch && onSearchPressed != null)
           IconButton(
-            icon: const Icon(CupertinoIcons.search),
-            color: colorScheme.onSurface,
+            icon: Icon(CupertinoIcons.search, color: onBgColor),
             onPressed: onSearchPressed,
           ),
         ...?actions,
       ],
-      elevation: elevation ?? 0,
+      elevation: 0,
+      scrolledUnderElevation: 0,
       centerTitle: true,
       automaticallyImplyLeading: automaticallyImplyLeading,
-      leading: automaticallyImplyLeading && GoRouter.of(context).canPop()
+      leading: automaticallyImplyLeading && Navigator.of(context).canPop()
           ? IconButton(
-              icon: const Icon(CupertinoIcons.chevron_left),
-              color: colorScheme.onSurface,
+              icon: Icon(CupertinoIcons.chevron_left, color: onBgColor),
               onPressed: () => Navigator.of(context).pop(),
             )
           : null,
