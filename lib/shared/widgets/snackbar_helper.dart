@@ -52,11 +52,21 @@ class SnackBarHelper {
     try {
       // 检查上下文是否仍然有效
       if (context.mounted) {
+        final colorScheme = Theme.of(context).colorScheme;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(message),
+            content: Text(
+              message,
+              style: TextStyle(color: colorScheme.onSurface),
+            ),
             duration: duration,
-            action: action,
+            action: action != null
+                ? SnackBarAction(
+                    label: action.label,
+                    textColor: colorScheme.primary,
+                    onPressed: action.onPressed,
+                  )
+                : null,
           ),
         );
       }
@@ -76,11 +86,21 @@ class SnackBarHelper {
             // 显示SnackBar
             Future.microtask(() {
               if (scaffoldMessengerKey.currentState != null) {
+                final colorScheme = Theme.of(context).colorScheme;
                 scaffoldMessengerKey.currentState!.showSnackBar(
                   SnackBar(
-                    content: Text(message),
+                    content: Text(
+                      message,
+                      style: TextStyle(color: colorScheme.onSurface),
+                    ),
                     duration: duration,
-                    action: action,
+                    action: action != null
+                        ? SnackBarAction(
+                            label: action.label,
+                            textColor: colorScheme.primary,
+                            onPressed: action.onPressed,
+                          )
+                        : null,
                   ),
                 );
                 

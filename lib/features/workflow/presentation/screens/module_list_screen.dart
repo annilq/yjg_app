@@ -10,17 +10,12 @@ import 'package:flutter_app/features/workflow/models/workflow_model.dart';
 class ModuleListScreen extends ConsumerWidget {
   final String moduleName;
 
-  const ModuleListScreen({
-    super.key,
-    required this.moduleName,
-  });
+  const ModuleListScreen({super.key, required this.moduleName});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBarComponent(
-        title: moduleName,
-      ),
+      appBar: AppBarComponent(title: moduleName),
       body: ModuleListContent(moduleName: moduleName),
     );
   }
@@ -29,10 +24,7 @@ class ModuleListScreen extends ConsumerWidget {
 class ModuleListContent extends ConsumerStatefulWidget {
   final String moduleName;
 
-  const ModuleListContent({
-    super.key,
-    required this.moduleName,
-  });
+  const ModuleListContent({super.key, required this.moduleName});
 
   @override
   ConsumerState<ModuleListContent> createState() => _ModuleListContentState();
@@ -59,19 +51,11 @@ class _ModuleListContentState extends ConsumerState<ModuleListContent> {
           _isLoading = false;
         });
       } else {
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
       }
     } catch (e) {
-      print('加载数据失败: $e');
-      setState(() {
-        _isLoading = false;
-      });
-      SnackBarHelper.showSnackBar(
-        context,
-        '加载数据失败，请稍后重试',
-      );
+      setState(() => _isLoading = false);
+      SnackBarHelper.showSnackBar(context, '加载数据失败，请稍后重试');
     }
   }
 
@@ -88,48 +72,56 @@ class _ModuleListContentState extends ConsumerState<ModuleListContent> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? const LoadingComponent(message: '加载中...')
-        : GridView.builder(
-            padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              childAspectRatio: 1,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-            ),
-            itemCount: _moduleItems.length,
-            itemBuilder: (context, index) {
-              var item = _moduleItems[index];
-              return GestureDetector(
-                onTap: () => _goFlowDetail(item),
-                child: Column(
-                  children: [
-                    Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withAlpha(25),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        CupertinoIcons.square_grid_2x2,
-                        color: AppTheme.primaryColor,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      item.text ?? '',
-                      style: AppTheme.smallStyle,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    if (_isLoading) {
+      return const LoadingComponent(message: '加载中...');
+    }
+
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        childAspectRatio: 1,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+      ),
+      itemCount: _moduleItems.length,
+      itemBuilder: (context, index) {
+        final item = _moduleItems[index];
+
+        return GestureDetector(
+          onTap: () => _goFlowDetail(item),
+          child: Column(
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              );
-            },
-          );
+                child: Icon(
+                  CupertinoIcons.square_grid_2x2,
+                  color: colorScheme.primary,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                item.text ?? '',
+                style: textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

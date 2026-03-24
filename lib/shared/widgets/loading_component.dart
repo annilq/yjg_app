@@ -7,15 +7,25 @@ class LoadingComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const CircularProgressIndicator(),
+          CircularProgressIndicator(
+            color: colorScheme.primary,
+          ),
           if (message != null)
             Padding(
               padding: const EdgeInsets.only(top: 16),
-              child: Text(message!),
+              child: Text(
+                message!,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
             ),
         ],
       ),

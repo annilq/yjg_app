@@ -122,7 +122,9 @@ class _CardItemComponentState extends State<CardItemComponent>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     // 构建图标
     final icon = BusinessIcon(formKey: widget.formKey, size: 40);
@@ -140,7 +142,7 @@ class _CardItemComponentState extends State<CardItemComponent>
       child: Container(
         margin: widget.margin,
         child: Material(
-          color: isDark ? AppTheme.darkGray : AppTheme.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
           elevation: 0,
           child: InkWell(
@@ -149,16 +151,16 @@ class _CardItemComponentState extends State<CardItemComponent>
             onTapUp: _handleTapUp,
             onTapCancel: _handleTapCancel,
             borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-            splashColor: AppTheme.primaryColor.withValues(alpha: 0.1),
-            highlightColor: AppTheme.primaryColor.withValues(alpha: 0.05),
+            splashColor: colorScheme.primary.withValues(alpha: 0.1),
+            highlightColor: colorScheme.primary.withValues(alpha: 0.05),
             child: Container(
               padding: const EdgeInsets.all(AppTheme.cardPadding),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
                 border: Border.all(
                   color: isDark
-                      ? Colors.white.withValues(alpha: 0.1)
-                      : AppTheme.lightGray,
+                      ? colorScheme.outline
+                      : colorScheme.outlineVariant,
                   width: 1,
                 ),
               ),
@@ -175,10 +177,10 @@ class _CardItemComponentState extends State<CardItemComponent>
                             Expanded(
                               child: Text(
                                 widget.title,
-                                style: AppTheme.titleStyle.copyWith(
-                                  color: isDark
-                                      ? AppTheme.white
-                                      : AppTheme.darkGray,
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurface,
                                 ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -188,12 +190,8 @@ class _CardItemComponentState extends State<CardItemComponent>
                               const SizedBox(width: 8),
                               Text(
                                 widget.extra!,
-                                style: AppTheme.smallStyle.copyWith(
-                                  color: isDark
-                                      ? AppTheme.mediumGray.withValues(
-                                          alpha: 0.8,
-                                        )
-                                      : AppTheme.mediumGray,
+                                style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant,
                                   fontSize: 12,
                                 ),
                                 maxLines: 1,
@@ -206,9 +204,7 @@ class _CardItemComponentState extends State<CardItemComponent>
                       Icon(
                         CupertinoIcons.chevron_right,
                         size: 16,
-                        color: isDark
-                            ? AppTheme.mediumGray
-                            : AppTheme.mediumGray,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ],
                   ),
@@ -220,10 +216,10 @@ class _CardItemComponentState extends State<CardItemComponent>
                           Expanded(
                             child: Text(
                               widget.content!,
-                              style: AppTheme.bodyStyle.copyWith(
-                                color: isDark
-                                    ? AppTheme.white.withValues(alpha: 0.9)
-                                    : AppTheme.darkGray,
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w400,
+                                color: colorScheme.onSurface,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,

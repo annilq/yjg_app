@@ -47,6 +47,9 @@ class BusinessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
     String formKey = item['img'] ?? '';
     Color moduleColor = Util.getModuleColor(formKey);
     
@@ -71,7 +74,7 @@ class BusinessCard extends StatelessWidget {
                   top: 0,
                   child: Icon(
                     isInUserList ? CupertinoIcons.delete : CupertinoIcons.add,
-                    color: isInUserList ? Colors.red : Colors.green,
+                    color: isInUserList ? colorScheme.error : colorScheme.primary,
                     size: 16,
                   ),
                 ),
@@ -80,7 +83,7 @@ class BusinessCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             item['text'] ?? '',
-            style: AppTheme.smallStyle,
+            style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

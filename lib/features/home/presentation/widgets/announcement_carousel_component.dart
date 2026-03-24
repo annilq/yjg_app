@@ -46,7 +46,12 @@ class _AnnouncementCarouselComponentState
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AppTheme.cardContainer(
+      isDark: isDark,
       child: Row(
         children: [
           Expanded(
@@ -76,7 +81,9 @@ class _AnnouncementCarouselComponentState
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           remind.title ?? '',
-                                          style: Theme.of(context).textTheme.bodyMedium,
+                                          style: textTheme.bodyMedium?.copyWith(
+                                            color: colorScheme.onSurface,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -93,7 +100,12 @@ class _AnnouncementCarouselComponentState
                       height: 40,
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text('暂无公告', style: Theme.of(context).textTheme.bodyMedium),
+                        child: Text(
+                          '暂无公告',
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
                       ),
                     ),
                 ],
@@ -104,7 +116,7 @@ class _AnnouncementCarouselComponentState
           IconButton(
             icon: Icon(
               CupertinoIcons.chevron_forward,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
             onPressed: () {
               context.push('/notices');
@@ -112,7 +124,6 @@ class _AnnouncementCarouselComponentState
           ),
         ],
       ),
-      margin: EdgeInsets.all(0),
     );
   }
 }

@@ -12,21 +12,38 @@ class FixedAppsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AppTheme.cardContainer(
+      isDark: isDark,
       child: Row(
         children: [
           // 左侧日期显示
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('${DateTime.now().month}月${DateTime.now().day}日', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
-                Text('$_getWeekday()', style: Theme.of(context).textTheme.bodySmall),
+                Text(
+                  '${DateTime.now().month}月${DateTime.now().day}日',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                Text(
+                  '$_getWeekday()',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ],
             ),
           ),
@@ -55,6 +72,7 @@ class FixedAppsComponent extends StatelessWidget {
                   onTap: () {
                     // 处理应用点击
                   },
+                  isDark: isDark,
                   child: Row(
                     children: [
                       Container(
@@ -67,7 +85,12 @@ class FixedAppsComponent extends StatelessWidget {
                         child: Icon(app['icon'], color: app['color'], size: 16),
                       ),
                       SizedBox(width: 8),
-                      Text(app['title'], style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        app['title'],
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
                     ],
                   ),
                   padding: EdgeInsets.all(10),
@@ -78,7 +101,6 @@ class FixedAppsComponent extends StatelessWidget {
           ),
         ],
       ),
-      margin: EdgeInsets.all(0),
     );
   }
 }

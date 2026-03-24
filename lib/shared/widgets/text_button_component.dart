@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
 
 class TextButtonComponent extends TextButton {
   TextButtonComponent({
@@ -18,7 +17,6 @@ class TextButtonComponent extends TextButton {
 
   static ButtonStyle get _defaultStyle {
     return TextButton.styleFrom(
-      foregroundColor: AppTheme.primaryColor,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       textStyle: const TextStyle(
         fontSize: 14.0,

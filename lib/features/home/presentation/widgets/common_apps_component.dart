@@ -30,24 +30,32 @@ class CommonAppsComponent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     final menusAsync = ref.watch(menusProvider);
     final userListAsync = ref.watch(userListProvider);
 
     return AppTheme.cardContainer(
+      isDark: isDark,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('常用应用', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+              Text(
+                '常用应用',
+                style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              ),
               GestureDetector(
                 onTap: () => _handleSettingTap(context),
                 child: Container(
                   padding: EdgeInsets.all(8),
                   child: Icon(
                     CupertinoIcons.settings,
-                    color: AppTheme.primaryColor,
+                    color: colorScheme.primary,
                     size: 20,
                   ),
                 ),
@@ -63,7 +71,12 @@ class CommonAppsComponent extends ConsumerWidget {
                       ? Container(
                           height: 120,
                           child: Center(
-                            child: Text('暂无常用应用', style: Theme.of(context).textTheme.bodySmall),
+                            child: Text(
+                              '暂无常用应用',
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
                           ),
                         )
                       : GridView.builder(
@@ -109,7 +122,14 @@ class CommonAppsComponent extends ConsumerWidget {
                 ),
                 error: (error, stack) => Container(
                   height: 120,
-                  child: Center(child: Text('加载失败', style: Theme.of(context).textTheme.bodySmall)),
+                  child: Center(
+                    child: Text(
+                      '加载失败',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
                 ),
               );
             },
@@ -119,13 +139,19 @@ class CommonAppsComponent extends ConsumerWidget {
             ),
             error: (error, stack) => Container(
               height: 120,
-              child: Center(child: Text('加载失败', style: Theme.of(context).textTheme.bodySmall)),
+              child: Center(
+                child: Text(
+                  '加载失败',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
             ),
           ),
           SizedBox(height: 12),
         ],
       ),
-      margin: EdgeInsets.all(0),
     );
   }
 }

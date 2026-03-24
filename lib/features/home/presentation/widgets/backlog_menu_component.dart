@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
 
 class BacklogMenuComponent extends StatelessWidget {
   final int backlogCount;
@@ -16,77 +15,178 @@ class BacklogMenuComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.primaryColor,
-        borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-        boxShadow: [isDark ? AppTheme.darkCardShadow : AppTheme.cardShadow],
-      ),
-      padding: EdgeInsets.all(AppTheme.cardPadding),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          childAspectRatio: 1,
-        ),
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          List<Map<String, dynamic>> menuItems = [
-            {
-              'title': '待处理',
-              'icon': CupertinoIcons.mail,
-              'count': backlogCount,
-            },
-            {'title': '已发起', 'icon': CupertinoIcons.paperplane, 'count': 0},
-            {'title': '提醒', 'icon': CupertinoIcons.bell, 'count': remindCount},
-            {'title': '发起', 'icon': CupertinoIcons.add_circled, 'count': 0},
-          ];
-          var item = menuItems[index];
-          return GestureDetector(
-            onTap: () {
-              if (index == 0) {
-                context.push('/office/backlog');
-              } else if (index == 1) {
-                context.push('/office/relatedtome');
-              } else if (index == 2) {
-                context.push('/notices');
-              }
-            },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(item['icon'], color: Colors.white, size: 24),
-                    SizedBox(height: 8),
-                    Text(
-                      item['title'],
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ],
+        color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: isDark
+            ? Border.all(color: const Color(0xFF2E2E30), width: 1)
+            : null,
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.06),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
-                if (item['count'] > 0)
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        '${item['count']}',
-                        style: TextStyle(color: Colors.white, fontSize: 10),
-                      ),
-                    ),
+              ],
+      ),
+      child: Column(
+        children: [
+          // ── 第一行：待处理 + 已发起 ─────────────────────────────
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                Expanded(
+                  child: _MenuItemCard(
+                    icon: CupertinoIcons.mail,
+                    iconColor: const Color(0xFFEF4444),    // 红 — 待处理
+                    title: '待处理',
+                    count: backlogCount,
+                    onTap: () => context.push('/office/backlog'),
                   ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _MenuItemCard(
+                    icon: CupertinoIcons.paperplane,
+                    iconColor: const Color(0xFF3B82F6),    // 蓝 — 已发起
+                    title: '已发起',
+                    count: 0,
+                    onTap: () => context.push('/office/relatedtome'),
+                  ),
+                ),
               ],
             ),
-          );
-        },
+          ),
+          const SizedBox(height: 12),
+          // ── 第二行：提醒 + 发起 ───────────────────────────────
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                Expanded(
+                  child: _MenuItemCard(
+                    icon: CupertinoIcons.bell,
+                    iconColor: const Color(0xFFF59E0B),    // 黄 — 提醒
+                    title: '提醒',
+                    count: remindCount,
+                    onTap: () => context.push('/notices'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _MenuItemCard(
+                    icon: CupertinoIcons.add_circled,
+                    iconColor: const Color(0xFF10B981),    // 绿 — 发起
+                    title: '发起',
+                    count: 0,
+                    onTap: () {},
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 单个菜单卡片
+class _MenuItemCard extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final int count;
+  final VoidCallback onTap;
+
+  const _MenuItemCard({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.count,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark
+        ? const Color(0xFF252525)
+        : const Color(0xFFF5F7FA);
+    final textColor = isDark
+        ? const Color(0xFFE5E7EB)
+        : const Color(0xFF1F2937);
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(12),
+          border: isDark
+              ? Border.all(color: const Color(0xFF2E2E30), width: 0.5)
+              : null,
+        ),
+        child: Row(
+          children: [
+            // 左侧图标
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                color: iconColor,
+                size: 18,
+              ),
+            ),
+            const SizedBox(width: 10),
+            // 中间文字
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
+                  ),
+                  if (count > 0) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      '$count 条待办',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: iconColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            // 右侧箭头
+            Icon(
+              CupertinoIcons.chevron_right,
+              size: 14,
+              color: isDark
+                  ? const Color(0xFF4B5563)
+                  : const Color(0xFF9CA3AF),
+            ),
+          ],
+        ),
       ),
     );
   }

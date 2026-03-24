@@ -21,9 +21,7 @@ class WorkflowListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBarComponent(
-        title: name,
-      ),
+      appBar: AppBarComponent(title: name),
       body: WorkflowListContent(
         workflowCode: workflowCode,
         dataId: dataId,
@@ -50,11 +48,6 @@ class WorkflowListContent extends ConsumerStatefulWidget {
 }
 
 class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   void _goDetail(dynamic item, Map<String, dynamic> config) {
     if (config.containsKey('formKey') && config.containsKey('formMode')) {
       final params = {
@@ -62,15 +55,10 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
         'processType': 'SEARCH',
         'url': config['formMode']['url'],
         'test': true,
-        'data': {
-          'id': item['id'],
-        },
+        'data': {'id': item['id']},
       };
 
-      context.push(
-        '/webview',
-        extra: params,
-      );
+      context.push('/webview', extra: params);
     }
   }
 
@@ -80,16 +68,21 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
 
     return state.when(
       loading: () => const LoadingComponent(message: '加载中...'),
-      error: (error, stack) => Center(child: Text('加载失败: $error')),
+      error: (error, stack) => Center(
+        child: Text('加载失败: $error'),
+      ),
       data: (data) {
         return RefreshIndicator(
-          onRefresh: () => ref.read(workflowListProvider(widget.dataId).notifier).refresh(),
+          onRefresh: () =>
+              ref.read(workflowListProvider(widget.dataId).notifier).refresh(),
           child: ListView.builder(
             itemCount: data.dataList.length + (data.hasMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index == data.dataList.length) {
                 if (data.hasMore) {
-                  ref.read(workflowListProvider(widget.dataId).notifier).loadMore();
+                  ref
+                      .read(workflowListProvider(widget.dataId).notifier)
+                      .loadMore();
                   return const LoadingComponent();
                 } else {
                   return const SizedBox.shrink();

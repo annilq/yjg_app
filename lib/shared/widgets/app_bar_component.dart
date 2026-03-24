@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
 
 class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
@@ -25,22 +24,25 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return AppBar(
       title: title != null
           ? Text(
               title!,
-              style: const TextStyle(
-                color: AppTheme.white,
+              style: TextStyle(
+                color: colorScheme.onPrimary,
                 fontWeight: FontWeight.w600,
               ),
             )
           : null,
-      backgroundColor: backgroundColor ?? AppTheme.primaryColor,
+      backgroundColor: backgroundColor ?? colorScheme.surface,
       actions: [
         if (showSearch && onSearchPressed != null)
           IconButton(
             icon: const Icon(CupertinoIcons.search),
-            color: AppTheme.white,
+            color: colorScheme.onSurface,
             onPressed: onSearchPressed,
           ),
         ...?actions,
@@ -51,7 +53,7 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
       leading: automaticallyImplyLeading && GoRouter.of(context).canPop()
           ? IconButton(
               icon: const Icon(CupertinoIcons.chevron_left),
-              color: AppTheme.white,
+              color: colorScheme.onSurface,
               onPressed: () => Navigator.of(context).pop(),
             )
           : null,

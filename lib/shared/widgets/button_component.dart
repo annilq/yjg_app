@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
 
 class ButtonComponent extends ElevatedButton {
   ButtonComponent({
@@ -18,8 +17,6 @@ class ButtonComponent extends ElevatedButton {
 
   static ButtonStyle get _defaultStyle {
     return ElevatedButton.styleFrom(
-      backgroundColor: AppTheme.primaryColor,
-      foregroundColor: AppTheme.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
