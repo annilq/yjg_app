@@ -38,7 +38,6 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colorScheme = Theme.of(context).colorScheme;
 
     // 默认颜色
     final bgColor = backgroundColor ?? (isDark ? DarkColors.surface : AppColors.primaryDark);
@@ -80,11 +79,19 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   /// 构建默认返回按钮
   Widget? _buildDefaultLeading(BuildContext context, Color color) {
     if (!automaticallyImplyLeading) return null;
-    if (!Navigator.of(context).canPop()) return null;
+    
+    // 检查是否可以返回
+    final canPop = Navigator.of(context).canPop();
+    if (!canPop) return null;
 
     return IconButton(
       icon: Icon(CupertinoIcons.chevron_left, color: color),
-      onPressed: () => Navigator.of(context).pop(),
+      onPressed: () {
+        // 安全地执行返回操作
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+      },
     );
   }
 
