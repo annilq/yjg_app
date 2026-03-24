@@ -347,7 +347,6 @@ class AppTheme {
     bool isDark = false,
   }) {
     return Container(
-      margin: margin,
       padding: padding,
       decoration: BoxDecoration(
         color: color ?? (isDark ? darkCard : white),

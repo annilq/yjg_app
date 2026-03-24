@@ -77,7 +77,6 @@ class HomeScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               const CommonAppsComponent(),
               const SizedBox(height: 16),
-              const SizedBox(height: 16),
               const FixedAppsComponent(),
               const SizedBox(height: 16),
               const CopyrightComponent(),
