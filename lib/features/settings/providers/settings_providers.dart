@@ -1,16 +1,55 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppThemeMode { light, dark, system }
 
+// ── SharedPreferences 异步初始化 ──────────────────────────────
+final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
+  throw UnimplementedError('SharedPreferences must be overridden in ProviderScope');
+});
+
+// ── ThemeMode Provider ────────────────────────────────────────
 final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, AppThemeMode>((ref) {
-  return ThemeModeNotifier();
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return ThemeModeNotifier(prefs);
 });
 
 class ThemeModeNotifier extends StateNotifier<AppThemeMode> {
-  ThemeModeNotifier() : super(AppThemeMode.system);
+  static const _key = 'app_theme_mode';
+  final SharedPreferences _prefs;
 
-  void setThemeMode(AppThemeMode mode) {
+  ThemeModeNotifier(this._prefs) : super(_load(_prefs));
+
+  static AppThemeMode _load(SharedPreferences prefs) {
+    final saved = prefs.getString(_key);
+    switch (saved) {
+      case 'light':
+        return AppThemeMode.light;
+      case 'dark':
+        return AppThemeMode.dark;
+      default:
+        return AppThemeMode.system;
+    }
+  }
+
+  Future<void> setThemeMode(AppThemeMode mode) async {
     state = mode;
+    await _prefs.setString(_key, mode.name);
+  }
+}
+
+// ── 将 AppThemeMode → Flutter ThemeMode ──────────────────────
+extension AppThemeModeX on AppThemeMode {
+  ThemeMode toFlutterThemeMode() {
+    switch (this) {
+      case AppThemeMode.light:
+        return ThemeMode.light;
+      case AppThemeMode.dark:
+        return ThemeMode.dark;
+      case AppThemeMode.system:
+        return ThemeMode.system;
+    }
   }
 }
 
