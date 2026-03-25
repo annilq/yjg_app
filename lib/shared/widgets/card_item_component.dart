@@ -147,94 +147,87 @@ class _CardItemComponentState extends State<CardItemComponent>
       builder: (context, child) {
         return Transform.scale(scale: _scaleAnimation.value, child: child);
       },
-      child: Container(
-        margin: widget.margin,
-        child: Material(
-          color: colorScheme.surface,
-          borderRadius: AppRadius.cardRadius,
-          elevation: 0,
-          child: InkWell(
-            onTap: widget.onTap,
-            onTapDown: _handleTapDown,
-            onTapUp: _handleTapUp,
-            onTapCancel: _handleTapCancel,
+      child: GestureDetector(
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
+        onTap: widget.onTap,
+        child: Container(
+          margin: widget.margin,
+          padding: AppSpacing.cardPaddingAll,
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            border: Border.all(
+              color: isDark ? DarkColors.border : LightColors.border,
+              width: 1,
+            ),
             borderRadius: AppRadius.cardRadius,
-            child: Container(
-              padding: AppSpacing.cardPaddingAll,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: isDark ? DarkColors.border : LightColors.border,
-                  width: 1,
-                ),
-                borderRadius: AppRadius.cardRadius,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      icon,
-                      SizedBox(width: AppSpacing.md),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                widget.title,
-                                style: AppTypography.titleMedium.copyWith(
-                                  color: colorScheme.onSurface,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            if (widget.extra != null) ...[
-                              SizedBox(width: AppSpacing.sm),
-                              Text(
-                                widget.extra!,
-                                style: AppTypography.bodySmall.copyWith(
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      Icon(
-                        CupertinoIcons.chevron_right,
-                        size: 16,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ],
-                  ),
-                  if (widget.content != null || status != null) ...[
-                    SizedBox(height: AppSpacing.sm),
-                    Row(
+                  icon,
+                  SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Row(
                       children: [
-                        if (widget.content != null) ...[
-                          Expanded(
-                            child: Text(
-                              widget.content!,
-                              style: AppTypography.bodyMedium.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                        Expanded(
+                          child: Text(
+                            widget.title,
+                            style: AppTypography.titleMedium.copyWith(
+                              color: colorScheme.onSurface,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ],
-                        if (status != null) ...[
+                        ),
+                        if (widget.extra != null) ...[
                           SizedBox(width: AppSpacing.sm),
-                          status,
+                          Text(
+                            widget.extra!,
+                            style: AppTypography.bodySmall.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ],
                     ),
-                  ],
+                  ),
+                  Icon(
+                    CupertinoIcons.chevron_right,
+                    size: 16,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ],
               ),
-            ),
+              if (widget.content != null || status != null) ...[
+                SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    if (widget.content != null) ...[
+                      Expanded(
+                        child: Text(
+                          widget.content!,
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                    if (status != null) ...[
+                      SizedBox(width: AppSpacing.sm),
+                      status,
+                    ],
+                  ],
+                ),
+              ],
+            ],
           ),
         ),
       ),

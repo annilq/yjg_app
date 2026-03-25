@@ -24,14 +24,8 @@ class BacklogMenuComponent extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: AppSpacing.cardPaddingAll,
       decoration: BoxDecoration(
         color: (isDark ? DarkColors.surface : LightColors.surface),
-        borderRadius: AppRadius.cardRadius,
-        border: Border.all(
-          color: isDark ? DarkColors.border : LightColors.border,
-          width: 1,
-        ),
       ),
       child: Column(
         children: [

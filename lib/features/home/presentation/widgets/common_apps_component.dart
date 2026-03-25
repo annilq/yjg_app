@@ -38,14 +38,9 @@ class CommonAppsComponent extends ConsumerWidget {
     final userListAsync = ref.watch(userListProvider);
 
     return Container(
-      padding: AppSpacing.cardPaddingAll,
       decoration: BoxDecoration(
         color: (isDark ? DarkColors.surface : LightColors.surface),
         borderRadius: AppRadius.cardRadius,
-        border: Border.all(
-          color: isDark ? DarkColors.border : LightColors.border,
-          width: 1,
-        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

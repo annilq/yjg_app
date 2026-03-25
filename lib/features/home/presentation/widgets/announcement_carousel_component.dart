@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/features/home/models/remind_model.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
 import 'package:flutter_app/shared/widgets/business_icon_component.dart';
 
@@ -48,11 +47,8 @@ class _AnnouncementCarouselComponentState
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return AppTheme.cardContainer(
-      isDark: isDark,
-      child: Row(
+    return  Row(
         children: [
           Expanded(
             child: SizedBox(
@@ -123,7 +119,6 @@ class _AnnouncementCarouselComponentState
             },
           ),
         ],
-      ),
-    );
+      );
   }
 }

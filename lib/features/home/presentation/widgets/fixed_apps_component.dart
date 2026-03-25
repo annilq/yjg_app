@@ -5,11 +5,6 @@ import 'package:flutter_app/core/theme/app_theme.dart';
 class FixedAppsComponent extends StatelessWidget {
   const FixedAppsComponent({super.key});
 
-  String _getWeekday() {
-    List<String> weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-    return weekdays[DateTime.now().weekday % 7];
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;

@@ -164,6 +164,14 @@ class AppTheme {
       ),
       // Scaffold
       scaffoldBackgroundColor: LightColors.background,
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // FLAT DESIGN - 禁用 Material 水波纹效果
+      // 使用 NoSplash.splashFactory 替代默认的 InkSplash
+      // ═══════════════════════════════════════════════════════════════════════════
+      splashFactory: NoSplash.splashFactory,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       // Card
       cardColor: LightColors.surface,
       cardTheme: CardThemeData(
@@ -284,6 +292,7 @@ class AppTheme {
           foregroundColor: AppColors.white,
           elevation: 0,
           shadowColor: AppColors.transparent,
+          splashFactory: NoSplash.splashFactory,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.buttonRadius,
           ),
@@ -295,6 +304,7 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppColors.primary,
+          splashFactory: NoSplash.splashFactory,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.buttonRadius,
           ),
@@ -307,6 +317,7 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.primary,
           side: const BorderSide(color: LightColors.border),
+          splashFactory: NoSplash.splashFactory,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.buttonRadius,
           ),
@@ -375,6 +386,7 @@ class AppTheme {
           borderRadius: AppRadius.dialogRadius,
           side: const BorderSide(color: LightColors.border, width: 1),
         ),
+        // Flat Design: 禁用对话框按钮的水波纹
       ),
       // Bottom Sheet
       bottomSheetTheme: BottomSheetThemeData(
@@ -471,6 +483,13 @@ class AppTheme {
       ),
       // Scaffold
       scaffoldBackgroundColor: DarkColors.background,
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // FLAT DESIGN - 禁用 Material 水波纹效果
+      // ═══════════════════════════════════════════════════════════════════════════
+      splashFactory: NoSplash.splashFactory,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       // Card
       cardColor: DarkColors.surface,
       cardTheme: CardThemeData(
@@ -591,6 +610,7 @@ class AppTheme {
           foregroundColor: DarkColors.background,
           elevation: 0,
           shadowColor: AppColors.transparent,
+          splashFactory: NoSplash.splashFactory,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.buttonRadius,
           ),
@@ -602,6 +622,7 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppColors.primaryLight,
+          splashFactory: NoSplash.splashFactory,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.buttonRadius,
           ),
@@ -614,6 +635,7 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.primaryLight,
           side: const BorderSide(color: DarkColors.border),
+          splashFactory: NoSplash.splashFactory,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.buttonRadius,
           ),
@@ -818,16 +840,8 @@ class AppTheme {
       // margin: margin ?? const EdgeInsets.all(AppSpacing.cardMargin),
       decoration: BoxDecoration(
         color: color ?? (isDark ? DarkColors.surface : LightColors.surface),
-        borderRadius: AppRadius.cardRadius,
-        border: Border.all(
-          color: isDark ? DarkColors.border : LightColors.border,
-          width: 1,
-        ),
       ),
-      child: Padding(
-        padding: padding ?? AppSpacing.cardPaddingAll,
-        child: child,
-      ),
+      child:child,
     );
   }
 

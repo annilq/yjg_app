@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/core/theme/tokens/tokens.dart';
-import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/backlog_menu_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/common_apps_component.dart';
 import 'package:flutter_app/features/home/presentation/widgets/announcement_carousel_component.dart';
@@ -12,8 +11,12 @@ import 'package:flutter_app/features/home/presentation/widgets/copyright_compone
 import 'package:flutter_app/features/home/providers/home_providers.dart';
 
 /// 首页 - Flat Design 风格
+///
+/// [onMenuTap] 左侧菜单按钮回调，用于打开侧边抽屉
 class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+  final VoidCallback? onMenuTap;
+
+  const HomeScreen({super.key, this.onMenuTap});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,16 +24,33 @@ class HomeScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBarComponent(
-        title: '首页',
+      backgroundColor: isDark ? DarkColors.background : LightColors.background,
+      appBar: AppBar(
+        backgroundColor: isDark ? DarkColors.surface : AppColors.primaryDark,
+        foregroundColor: AppColors.white,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        leading: onMenuTap != null
+            ? IconButton(
+                icon: const Icon(CupertinoIcons.bars, size: 24),
+                onPressed: onMenuTap,
+                tooltip: '菜单',
+              )
+            : null,
+        title: Text(
+          '首页',
+          style: AppTypography.headlineMedium.copyWith(
+            color: AppColors.white,
+            fontWeight: AppTypography.weightSemibold,
+          ),
+        ),
         actions: [
           Stack(
             children: [
               IconButton(
-                icon: const Icon(CupertinoIcons.bell),
-                onPressed: () {
-                  context.push('/notices');
-                },
+                icon: const Icon(CupertinoIcons.bell, size: 24),
+                onPressed: () => context.push('/notices'),
               ),
               homeState.when(
                 data: (data) => data.backlogCount > 0
@@ -63,6 +83,13 @@ class HomeScreen extends ConsumerWidget {
             ],
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            height: 1,
+            color: isDark ? DarkColors.border : LightColors.border,
+          ),
+        ),
       ),
       body: homeState.when(
         data: (data) => SingleChildScrollView(
