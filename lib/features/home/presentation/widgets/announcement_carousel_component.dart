@@ -52,21 +52,21 @@ class _AnnouncementCarouselComponentState
         children: [
           Expanded(
             child: SizedBox(
-              height: 40,
+              height: 30,
               child: Stack(
                 children: [
                   if (widget.reminds.isNotEmpty)
                     AnimatedPositioned(
                       duration: _animationDuration,
                       curve: Curves.easeInOut,
-                      top: _currentIndex * -40.0,
+                      top: _currentIndex * -30.0,
                       left: 0,
                       right: 0,
                       child: Column(
                         children: widget.reminds
                             .map(
                               (remind) => SizedBox(
-                                height: 40,
+                                height: 30,
                                 child: Row(
                                   children: [
                                     // 左侧图标
@@ -93,7 +93,7 @@ class _AnnouncementCarouselComponentState
                     )
                   else
                     SizedBox(
-                      height: 40,
+                      height: 30,
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(

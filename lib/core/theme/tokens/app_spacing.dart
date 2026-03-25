@@ -24,13 +24,13 @@ class AppSpacing {
   // Component Specific - 组件专用间距
 
   /// 卡片内边距
-  static const double cardPadding = lg;
+  static const double cardPadding = md;
 
   /// 卡片外边距
-  static const double cardMargin = lg;
+  static const double cardMargin = md;
 
   /// 区块间距
-  static const double sectionGap = lg;
+  static const double sectionGap = md;
 
   /// 元素间距
   static const double elementGap = md;

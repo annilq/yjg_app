@@ -1,80 +1,154 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_app/core/theme/app_theme.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
 
+/// 固定应用组件 - Flat Design 风格
+///
+/// 特点：
+/// - 无阴影，使用边框分隔
+/// - 2x2 网格布局
+/// - 语义化图标颜色
 class FixedAppsComponent extends StatelessWidget {
   const FixedAppsComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return AppTheme.cardContainer(
-      isDark: isDark,
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 2.5,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
+    return Column(
+      children: [
+        // 第一行：考勤打卡 + 签到
+        IntrinsicHeight(
+          child: Row(
+            children: [
+              Expanded(
+                child: _AppItemCard(
+                  icon: CupertinoIcons.time,
+                  iconColor: AppColors.error,
+                  title: '考勤打卡',
+                  onTap: () {
+                    // TODO: 跳转到考勤打卡
+                  },
+                ),
+              ),
+              SizedBox(width: AppSpacing.elementGap),
+              Expanded(
+                child: _AppItemCard(
+                  icon: CupertinoIcons.checkmark_circle,
+                  iconColor: AppColors.success,
+                  title: '签到',
+                  onTap: () {
+                    // TODO: 跳转到签到
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          List<Map<String, dynamic>> apps = [
-            {
-              'title': '考勤打卡',
-              'icon': CupertinoIcons.time,
-              'color': AppTheme.primaryColor,
-            },
-            {
-              'title': '签到',
-              'icon': CupertinoIcons.checkmark_circle,
-              'color': AppTheme.secondaryColor,
-            },
-            {
-              'title': '工作报告',
-              'icon': CupertinoIcons.pencil,
-              'color': AppTheme.warningColor,
-            },
-            {
-              'title': '工作任务',
-              'icon': CupertinoIcons.checkmark_seal,
-              'color': AppTheme.errorColor,
-            },
-          ];
-          var app = apps[index];
-          return AppTheme.cardWithTap(
-            onTap: () {
-              // 处理应用点击
-            },
-            isDark: isDark,
-            child: Row(
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: app['color'].withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(app['icon'], color: app['color'], size: 16),
+        SizedBox(height: AppSpacing.elementGap),
+        // 第二行：工作报告 + 工作任务
+        IntrinsicHeight(
+          child: Row(
+            children: [
+              Expanded(
+                child: _AppItemCard(
+                  icon: CupertinoIcons.pencil,
+                  iconColor: AppColors.warning,
+                  title: '工作报告',
+                  onTap: () {
+                    // TODO: 跳转到工作报告
+                  },
                 ),
-                SizedBox(width: 8),
-                Text(
-                  app['title'],
-                  style: textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
+              ),
+              SizedBox(width: AppSpacing.elementGap),
+              Expanded(
+                child: _AppItemCard(
+                  icon: CupertinoIcons.checkmark_seal,
+                  iconColor: AppColors.primary,
+                  title: '工作任务',
+                  onTap: () {
+                    // TODO: 跳转到工作任务
+                  },
                 ),
-              ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// 单个应用卡片 - Flat Design 风格
+class _AppItemCard extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final VoidCallback onTap;
+
+  const _AppItemCard({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.md,
+        ),
+        decoration: BoxDecoration(
+          color: isDark ? DarkColors.surfaceVariant : LightColors.surfaceVariant,
+          borderRadius: AppRadius.allSm,
+          border: Border.all(
+            color: isDark ? DarkColors.border : LightColors.borderLight,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            // 左侧图标
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: iconColor.withAlpha(38),
+                borderRadius: AppRadius.allSm,
+              ),
+              child: Icon(
+                icon,
+                color: iconColor,
+                size: 18,
+              ),
             ),
-            margin: EdgeInsets.all(0),
-          );
-        },
+            SizedBox(width: AppSpacing.sm),
+            // 中间文字
+            Expanded(
+              child: Text(
+                title,
+                style: AppTypography.bodySmall.copyWith(
+                  fontWeight: AppTypography.weightSemibold,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+            ),
+            // 右侧箭头
+            Icon(
+              CupertinoIcons.chevron_right,
+              size: 14,
+              color: isDark ? DarkColors.textTertiary : LightColors.textTertiary,
+            ),
+          ],
+        ),
       ),
     );
   }

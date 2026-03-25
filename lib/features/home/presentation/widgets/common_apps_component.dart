@@ -49,10 +49,13 @@ class CommonAppsComponent extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '常用应用',
-                style: AppTypography.titleMedium.copyWith(
-                  fontWeight: AppTypography.weightSemibold,
+              Padding(
+                padding: EdgeInsets.all(AppSpacing.md),
+                child: Text(
+                  '常用应用',
+                  style: AppTypography.titleMedium.copyWith(
+                    fontWeight: AppTypography.weightSemibold,
+                  ),
                 ),
               ),
               GestureDetector(
