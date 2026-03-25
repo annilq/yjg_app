@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_app/core/theme/tokens/app_colors.dart';
+import 'package:flutter_app/core/theme/tokens/app_spacing.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/features/home/models/remind_model.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
@@ -47,78 +49,93 @@ class _AnnouncementCarouselComponentState
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return  Row(
-        children: [
-          Expanded(
-            child: SizedBox(
-              height: 30,
-              child: Stack(
-                children: [
-                  if (widget.reminds.isNotEmpty)
-                    AnimatedPositioned(
-                      duration: _animationDuration,
-                      curve: Curves.easeInOut,
-                      top: _currentIndex * -30.0,
-                      left: 0,
-                      right: 0,
-                      child: Column(
-                        children: widget.reminds
-                            .map(
-                              (remind) => SizedBox(
-                                height: 30,
-                                child: Row(
-                                  children: [
-                                    // 左侧图标
-                                    BusinessIcon(formKey: remind.formKey??"",size: 24),
-                                    SizedBox(width: 12),
-                                    Expanded(
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          remind.title ?? '',
-                                          style: textTheme.bodyMedium?.copyWith(
-                                            color: colorScheme.onSurface,
+    return Container(
+      decoration: BoxDecoration(
+        color: (isDark ? DarkColors.surface : LightColors.surface),
+      ),
+      child: Padding(
+        padding: AppSpacing.allXs,
+        child: Row(
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 40,
+                child: Stack(
+                  children: [
+                    if (widget.reminds.isNotEmpty)
+                      AnimatedPositioned(
+                        duration: _animationDuration,
+                        curve: Curves.easeInOut,
+                        top: _currentIndex * -40.0,
+                        left: 0,
+                        right: 0,
+                        child: Column(
+                          children: widget.reminds
+                              .map(
+                                (remind) => SizedBox(
+                                  height: 40,
+                                  child: Row(
+                                    children: [
+                                      // 左侧图标
+                                      BusinessIcon(
+                                        formKey: remind.formKey ?? "",
+                                        size: 24,
+                                      ),
+                                      SizedBox(width: 12),
+                                      Expanded(
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            remind.title ?? '',
+                                            style: textTheme.bodyMedium
+                                                ?.copyWith(
+                                                  color: colorScheme.onSurface,
+                                                ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    CardItemComponent.countBadge(remind.count!),
-                                  ],
+                                      CardItemComponent.countBadge(
+                                        remind.count!,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    )
-                  else
-                    SizedBox(
-                      height: 30,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          '暂无公告',
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurface,
+                              )
+                              .toList(),
+                        ),
+                      )
+                    else
+                      SizedBox(
+                        height: 40,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '暂无公告',
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.onSurface,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          // 右侧箭头图标
-          IconButton(
-            icon: Icon(
-              CupertinoIcons.chevron_forward,
-              color: colorScheme.onSurfaceVariant,
+            // 右侧箭头图标
+            IconButton(
+              icon: Icon(
+                CupertinoIcons.chevron_forward,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              onPressed: () {
+                context.push('/notices');
+              },
             ),
-            onPressed: () {
-              context.push('/notices');
-            },
-          ),
-        ],
-      );
+          ],
+        ),
+      ),
+    );
   }
 }

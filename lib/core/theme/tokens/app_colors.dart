@@ -33,7 +33,9 @@ class LightColors {
   LightColors._();
 
   // Background - 背景色
-  static const Color background = Color(0xFFFFFFFF);
+  // 页面整体背景：柔和云雾灰，与白色卡片形成层级区分
+  static const Color background = Color(0xFFF5F6FA);
+  // 内容卡片背景：纯白
   static const Color surface = Color(0xFFFFFFFF);
   static const Color surfaceVariant = Color(0xFFF8F9FA);
   static const Color surfaceElevated = Color(0xFFF1F3F4);
@@ -46,9 +48,10 @@ class LightColors {
   static const Color textInverse = Color(0xFFFFFFFF);
 
   // Border - 边框色
-  static const Color border = Color(0xFFE5E7EB);
-  static const Color borderLight = Color(0xFFF3F4F6);
-  static const Color borderStrong = Color(0xFFD1D5DB);
+  // 主边框：在浅灰背景上的卡片边界
+  static const Color border = Color(0xFFEAECF0);
+  static const Color borderLight = Color(0xFFF0F1F3);
+  static const Color borderStrong = Color(0xFFCBD0D8);
 
   // Interactive - 交互色
   static const Color hover = Color(0xFFF3F4F6);

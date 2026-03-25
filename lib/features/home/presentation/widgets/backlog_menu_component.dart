@@ -27,62 +27,65 @@ class BacklogMenuComponent extends StatelessWidget {
       decoration: BoxDecoration(
         color: (isDark ? DarkColors.surface : LightColors.surface),
       ),
-      child: Column(
-        children: [
-          // 第一行：待处理 + 已发起
-          IntrinsicHeight(
-            child: Row(
-              children: [
-                Expanded(
-                  child: _MenuItemCard(
-                    icon: CupertinoIcons.mail,
-                    iconColor: AppColors.error,
-                    title: '待处理',
-                    count: backlogCount,
-                    onTap: () => context.push('/office/backlog'),
+      child: Padding(
+        padding: AppSpacing.allSm,
+        child: Column(
+          children: [
+            // 第一行：待处理 + 已发起
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _MenuItemCard(
+                      icon: CupertinoIcons.mail,
+                      iconColor: AppColors.error,
+                      title: '待处理',
+                      count: backlogCount,
+                      onTap: () => context.push('/office/backlog'),
+                    ),
                   ),
-                ),
-                SizedBox(width: AppSpacing.elementGap),
-                Expanded(
-                  child: _MenuItemCard(
-                    icon: CupertinoIcons.paperplane,
-                    iconColor: AppColors.primary,
-                    title: '已发起',
-                    count: 0,
-                    onTap: () => context.push('/office/relatedtome'),
+                  SizedBox(width: AppSpacing.elementGap),
+                  Expanded(
+                    child: _MenuItemCard(
+                      icon: CupertinoIcons.paperplane,
+                      iconColor: AppColors.primary,
+                      title: '已发起',
+                      count: 0,
+                      onTap: () => context.push('/office/relatedtome'),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: AppSpacing.elementGap),
-          // 第二行：提醒 + 发起
-          IntrinsicHeight(
-            child: Row(
-              children: [
-                Expanded(
-                  child: _MenuItemCard(
-                    icon: CupertinoIcons.bell,
-                    iconColor: AppColors.warning,
-                    title: '提醒',
-                    count: remindCount,
-                    onTap: () => context.push('/notices'),
+            SizedBox(height: AppSpacing.elementGap),
+            // 第二行：提醒 + 发起
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _MenuItemCard(
+                      icon: CupertinoIcons.bell,
+                      iconColor: AppColors.warning,
+                      title: '提醒',
+                      count: remindCount,
+                      onTap: () => context.push('/notices'),
+                    ),
                   ),
-                ),
-                SizedBox(width: AppSpacing.elementGap),
-                Expanded(
-                  child: _MenuItemCard(
-                    icon: CupertinoIcons.add_circled,
-                    iconColor: AppColors.success,
-                    title: '发起',
-                    count: 0,
-                    onTap: () => context.push('/start'),
+                  SizedBox(width: AppSpacing.elementGap),
+                  Expanded(
+                    child: _MenuItemCard(
+                      icon: CupertinoIcons.add_circled,
+                      iconColor: AppColors.success,
+                      title: '发起',
+                      count: 0,
+                      onTap: () => context.push('/start'),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -110,7 +113,9 @@ class _MenuItemCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     // 背景色
-    final bgColor = isDark ? DarkColors.surfaceVariant : LightColors.surfaceVariant;
+    final bgColor = isDark
+        ? DarkColors.surfaceVariant
+        : LightColors.surfaceVariant;
     final textColor = colorScheme.onSurface;
 
     return GestureDetector(
@@ -123,10 +128,6 @@ class _MenuItemCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: AppRadius.allSm,
-          border: Border.all(
-            color: isDark ? DarkColors.border : LightColors.borderLight,
-            width: 1,
-          ),
         ),
         child: Row(
           children: [
@@ -138,11 +139,7 @@ class _MenuItemCard extends StatelessWidget {
                 color: iconColor.withAlpha(38), // 15% opacity
                 borderRadius: AppRadius.allSm,
               ),
-              child: Icon(
-                icon,
-                color: iconColor,
-                size: 18,
-              ),
+              child: Icon(icon, color: iconColor, size: 18),
             ),
             SizedBox(width: AppSpacing.sm),
             // 中间文字
@@ -175,7 +172,9 @@ class _MenuItemCard extends StatelessWidget {
             Icon(
               CupertinoIcons.chevron_right,
               size: 14,
-              color: isDark ? DarkColors.textTertiary : LightColors.textTertiary,
+              color: isDark
+                  ? DarkColors.textTertiary
+                  : LightColors.textTertiary,
             ),
           ],
         ),

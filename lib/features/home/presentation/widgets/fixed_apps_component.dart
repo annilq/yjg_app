@@ -16,66 +16,74 @@ class FixedAppsComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Column(
-      children: [
-        // 第一行：考勤打卡 + 签到
-        IntrinsicHeight(
-          child: Row(
-            children: [
-              Expanded(
-                child: _AppItemCard(
-                  icon: CupertinoIcons.time,
-                  iconColor: AppColors.error,
-                  title: '考勤打卡',
-                  onTap: () {
-                    // TODO: 跳转到考勤打卡
-                  },
-                ),
+    return Container(
+      decoration: BoxDecoration(
+        color: (isDark ? DarkColors.surface : LightColors.surface),
+      ),
+      child: Padding(
+        padding: AppSpacing.allSm,
+        child: Column(
+          children: [
+            // 第一行：考勤打卡 + 签到
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _AppItemCard(
+                      icon: CupertinoIcons.time,
+                      iconColor: AppColors.error,
+                      title: '考勤打卡',
+                      onTap: () {
+                        // TODO: 跳转到考勤打卡
+                      },
+                    ),
+                  ),
+                  SizedBox(width: AppSpacing.elementGap),
+                  Expanded(
+                    child: _AppItemCard(
+                      icon: CupertinoIcons.checkmark_circle,
+                      iconColor: AppColors.success,
+                      title: '签到',
+                      onTap: () {
+                        // TODO: 跳转到签到
+                      },
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(width: AppSpacing.elementGap),
-              Expanded(
-                child: _AppItemCard(
-                  icon: CupertinoIcons.checkmark_circle,
-                  iconColor: AppColors.success,
-                  title: '签到',
-                  onTap: () {
-                    // TODO: 跳转到签到
-                  },
-                ),
+            ),
+            SizedBox(height: AppSpacing.elementGap),
+            // 第二行：工作报告 + 工作任务
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _AppItemCard(
+                      icon: CupertinoIcons.pencil,
+                      iconColor: AppColors.warning,
+                      title: '工作报告',
+                      onTap: () {
+                        // TODO: 跳转到工作报告
+                      },
+                    ),
+                  ),
+                  SizedBox(width: AppSpacing.elementGap),
+                  Expanded(
+                    child: _AppItemCard(
+                      icon: CupertinoIcons.checkmark_seal,
+                      iconColor: AppColors.primary,
+                      title: '工作任务',
+                      onTap: () {
+                        // TODO: 跳转到工作任务
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        SizedBox(height: AppSpacing.elementGap),
-        // 第二行：工作报告 + 工作任务
-        IntrinsicHeight(
-          child: Row(
-            children: [
-              Expanded(
-                child: _AppItemCard(
-                  icon: CupertinoIcons.pencil,
-                  iconColor: AppColors.warning,
-                  title: '工作报告',
-                  onTap: () {
-                    // TODO: 跳转到工作报告
-                  },
-                ),
-              ),
-              SizedBox(width: AppSpacing.elementGap),
-              Expanded(
-                child: _AppItemCard(
-                  icon: CupertinoIcons.checkmark_seal,
-                  iconColor: AppColors.primary,
-                  title: '工作任务',
-                  onTap: () {
-                    // TODO: 跳转到工作任务
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -107,7 +115,9 @@ class _AppItemCard extends StatelessWidget {
           vertical: AppSpacing.md,
         ),
         decoration: BoxDecoration(
-          color: isDark ? DarkColors.surfaceVariant : LightColors.surfaceVariant,
+          color: isDark
+              ? DarkColors.surfaceVariant
+              : LightColors.surfaceVariant,
           borderRadius: AppRadius.allSm,
           border: Border.all(
             color: isDark ? DarkColors.border : LightColors.borderLight,
@@ -124,11 +134,7 @@ class _AppItemCard extends StatelessWidget {
                 color: iconColor.withAlpha(38),
                 borderRadius: AppRadius.allSm,
               ),
-              child: Icon(
-                icon,
-                color: iconColor,
-                size: 18,
-              ),
+              child: Icon(icon, color: iconColor, size: 18),
             ),
             SizedBox(width: AppSpacing.sm),
             // 中间文字
@@ -145,7 +151,9 @@ class _AppItemCard extends StatelessWidget {
             Icon(
               CupertinoIcons.chevron_right,
               size: 14,
-              color: isDark ? DarkColors.textTertiary : LightColors.textTertiary,
+              color: isDark
+                  ? DarkColors.textTertiary
+                  : LightColors.textTertiary,
             ),
           ],
         ),
