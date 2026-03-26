@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_app/shared/widgets/app_bar_component.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
+import 'package:flutter_app/shared/widgets/index.dart';
 import 'package:flutter_app/features/settings/providers/settings_providers.dart';
 
 class NotificationSettingsScreen extends ConsumerWidget {
@@ -8,150 +10,147 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(notificationSettingsProvider);
+    final s = ref.watch(notificationSettingsProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? DarkColors.surface : LightColors.surface;
 
     return Scaffold(
-      appBar: const AppBarComponent(title: '通知设置'),
-      body: ListView(
-        children: [
-          const SizedBox(height: 16),
-          _buildSectionHeader(context, '推送设置'),
-          _buildSwitchTile(
-            context: context,
-            title: '接收推送',
-            subtitle: '开启后您将收到消息推送',
-            value: settings.pushEnabled,
-            onChanged: (value) {
-              ref.read(notificationSettingsProvider.notifier).togglePushEnabled(value);
-            },
-          ),
-          _buildSwitchTile(
-            context: context,
-            title: '声音',
-            subtitle: '收到通知时播放声音',
-            value: settings.soundEnabled,
-            onChanged: settings.pushEnabled
-                ? (value) {
-                    ref.read(notificationSettingsProvider.notifier).toggleSoundEnabled(value);
-                  }
-                : null,
-            enabled: settings.pushEnabled,
-          ),
-          _buildSwitchTile(
-            context: context,
-            title: '震动',
-            subtitle: '收到通知时震动',
-            value: settings.vibrationEnabled,
-            onChanged: settings.pushEnabled
-                ? (value) {
-                    ref.read(notificationSettingsProvider.notifier).toggleVibrationEnabled(value);
-                  }
-                : null,
-            enabled: settings.pushEnabled,
-          ),
-          const SizedBox(height: 16),
-          _buildSectionHeader(context, '通知类型'),
-          _buildSwitchTile(
-            context: context,
-            title: '流程通知',
-            subtitle: '审批通知、待办提醒等',
-            value: settings.workFlowNotification,
-            onChanged: settings.pushEnabled
-                ? (value) {
-                    ref.read(notificationSettingsProvider.notifier).toggleWorkFlowNotification(value);
-                  }
-                : null,
-            enabled: settings.pushEnabled,
-          ),
-          _buildSwitchTile(
-            context: context,
-            title: '公告通知',
-            subtitle: '系统公告、企业通知等',
-            value: settings.noticeNotification,
-            onChanged: settings.pushEnabled
-                ? (value) {
-                    ref.read(notificationSettingsProvider.notifier).toggleNoticeNotification(value);
-                  }
-                : null,
-            enabled: settings.pushEnabled,
-          ),
-          _buildSwitchTile(
-            context: context,
-            title: '消息通知',
-            subtitle: '私信、群聊消息等',
-            value: settings.messageNotification,
-            onChanged: settings.pushEnabled
-                ? (value) {
-                    ref.read(notificationSettingsProvider.notifier).toggleMessageNotification(value);
-                  }
-                : null,
-            enabled: settings.pushEnabled,
-          ),
-          const SizedBox(height: 32),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(BuildContext context, String title) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text(
-        title,
-        style: textTheme.labelLarge?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: colorScheme.onSurfaceVariant,
+      backgroundColor: isDark ? DarkColors.background : LightColors.background,
+      appBar: AppBarComponent(title: '通知设置'),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: AppSpacing.lg),
+            // 推送设置分组
+            Text('推送设置',
+                style: AppTypography.labelMedium.copyWith(
+                    color: isDark
+                        ? DarkColors.textSecondary
+                        : LightColors.textSecondary)),
+            const SizedBox(height: AppSpacing.sm),
+            Container(
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: AppRadius.allSm,
+              ),
+              child: Column(children: [
+                _switchRow(context, '接收推送', '开启后将收到消息推送',
+                    s.pushEnabled, (v) {
+                  ref
+                      .read(notificationSettingsProvider.notifier)
+                      .togglePushEnabled(v);
+                }),
+                _switchRow(context, '声音', '收到通知时播放声音',
+                    s.soundEnabled, s.pushEnabled ? (v) {
+                  ref
+                      .read(notificationSettingsProvider.notifier)
+                      .toggleSoundEnabled(v);
+                } : null,
+                    disabled: !s.pushEnabled),
+                _switchRow(context, '震动', '收到通知时震动',
+                    s.vibrationEnabled, s.pushEnabled ? (v) {
+                  ref
+                      .read(notificationSettingsProvider.notifier)
+                      .toggleVibrationEnabled(v);
+                } : null,
+                    disabled: !s.pushEnabled, isLast: true),
+              ]),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            // 通知类型分组
+            Text('通知类型',
+                style: AppTypography.labelMedium.copyWith(
+                    color: isDark
+                        ? DarkColors.textSecondary
+                        : LightColors.textSecondary)),
+            const SizedBox(height: AppSpacing.sm),
+            Container(
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: AppRadius.allSm,
+              ),
+              child: Column(children: [
+                _switchRow(context, '流程通知', '审批通知、待办提醒等',
+                    s.workFlowNotification, s.pushEnabled ? (v) {
+                  ref
+                      .read(notificationSettingsProvider.notifier)
+                      .toggleWorkFlowNotification(v);
+                } : null,
+                    disabled: !s.pushEnabled),
+                _switchRow(context, '公告通知', '系统公告、企业通知等',
+                    s.noticeNotification, s.pushEnabled ? (v) {
+                  ref
+                      .read(notificationSettingsProvider.notifier)
+                      .toggleNoticeNotification(v);
+                } : null,
+                    disabled: !s.pushEnabled),
+                _switchRow(context, '消息通知', '私信、群聊消息等',
+                    s.messageNotification, s.pushEnabled ? (v) {
+                  ref
+                      .read(notificationSettingsProvider.notifier)
+                      .toggleMessageNotification(v);
+                } : null,
+                    disabled: !s.pushEnabled, isLast: true),
+              ]),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildSwitchTile({
-    required BuildContext context,
-    required String title,
-    required String subtitle,
-    required bool value,
-    required ValueChanged<bool>? onChanged,
-    bool enabled = true,
+  Widget _switchRow(
+    BuildContext context,
+    String title,
+    String subtitle,
+    bool value,
+    ValueChanged<bool>? onChanged, {
+    bool disabled = false,
+    bool isLast = false,
   }) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primary = Theme.of(context).colorScheme.primary;
+    final textColor = disabled
+        ? (isDark ? DarkColors.textTertiary : LightColors.textTertiary)
+        : null;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md, vertical: AppSpacing.md),
       decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-          width: 1,
-        ),
+        border: isLast
+            ? null
+            : Border(
+                bottom: BorderSide(
+                    color: isDark ? DarkColors.border : LightColors.border,
+                    width: 0.5)),
       ),
-      child: ListTile(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        title: Text(
-          title,
-          style: textTheme.titleMedium?.copyWith(
-            color: enabled ? colorScheme.onSurface : colorScheme.onSurfaceVariant,
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: AppTypography.bodyMedium.copyWith(color: textColor)),
+                const SizedBox(height: 2),
+                Text(subtitle,
+                    style: AppTypography.caption.copyWith(
+                        color: isDark
+                            ? DarkColors.textTertiary
+                            : LightColors.textTertiary)),
+              ],
+            ),
           ),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: textTheme.bodySmall?.copyWith(
-            color: enabled ? colorScheme.onSurfaceVariant : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+          CupertinoSwitch(
+            value: value,
+            onChanged: onChanged,
+            activeColor: primary,
           ),
-        ),
-        trailing: Switch(
-          value: value,
-          onChanged: onChanged,
-          activeColor: colorScheme.primary,
-          activeTrackColor: colorScheme.primary.withValues(alpha: 0.4),
-        ),
+        ],
       ),
     );
   }

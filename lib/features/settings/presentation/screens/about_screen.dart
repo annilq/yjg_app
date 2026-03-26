@@ -2,119 +2,107 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_app/shared/widgets/app_bar_component.dart';
-import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
+import 'package:flutter_app/shared/widgets/index.dart';
 import 'package:flutter_app/core/constants/app_images.dart';
 
 class AboutScreen extends ConsumerWidget {
   const AboutScreen({super.key});
 
-
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? DarkColors.surface : LightColors.surface;
+
     return Scaffold(
-      appBar: const AppBarComponent(
-        title: '关于',
-      ),
-      body: ListView(
-        children: [
-          const SizedBox(height: 48),
-          Center(
-            child: Column(
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  ),
-                  child: Image.asset(
-                    AppImages.logo,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  '云建管',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '版本 1.0.0',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 48),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              children: [
-                ListTile(
-                  title: const Text('公司简介'),
-                  trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  onTap: () {
-                    _showCompanyInfo(context);
-                  },
-                ),
-                Divider(height: 1, color: Theme.of(context).colorScheme.outlineVariant),
-                ListTile(
-                  title: const Text('隐私政策'),
-                  trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  onTap: () {
-                    SnackBarHelper.showSnackBar(
-                      context,
-                      '隐私政策页面开发中',
-                    );
-                  },
-                ),
-                Divider(height: 1, color: Theme.of(context).colorScheme.outlineVariant),
-                ListTile(
-                  title: const Text('用户协议'),
-                  trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  onTap: () {
-                    SnackBarHelper.showSnackBar(
-                      context,
-                      '用户协议页面开发中',
-                    );
-                  },
-                ),
-                Divider(height: 1, color: Theme.of(context).colorScheme.outlineVariant),
-                ListTile(
-                  title: const Text('联系我们'),
-                  trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  onTap: () {
-                    _showContactDialog(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 32),
-          Center(
-            child: Text(
-              '© 2024 云建管 版权所有',
-              style: TextStyle(
-                fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+      backgroundColor: isDark ? DarkColors.background : LightColors.background,
+      appBar: AppBarComponent(title: '关于'),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        child: Column(
+          children: [
+            const SizedBox(height: AppSpacing.xxxxl),
+            // Logo
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: AppRadius.allMd,
               ),
+              alignment: Alignment.center,
+              child: Image.asset(AppImages.logo, width: 48, height: 48),
             ),
-          ),
-          const SizedBox(height: 16),
-        ],
+            const SizedBox(height: AppSpacing.md),
+            Text('云建管',
+                style: AppTypography.headlineSmall.copyWith(
+                    fontWeight: AppTypography.weightBold)),
+            const SizedBox(height: AppSpacing.xs),
+            Text('版本 1.0.0',
+                style: AppTypography.bodySmall.copyWith(
+                    color: isDark
+                        ? DarkColors.textSecondary
+                        : LightColors.textSecondary)),
+            const SizedBox(height: AppSpacing.xxl),
+            // 菜单色块
+            Container(
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: AppRadius.allSm,
+              ),
+              child: Column(children: [
+                _menuRow(context, CupertinoIcons.building_2_fill, '公司简介',
+                    () => _showCompanyInfo(context)),
+                _menuRow(context, CupertinoIcons.doc_text, '隐私政策',
+                    () => SnackBarHelper.showSnackBar(context, '开发中')),
+                _menuRow(context, CupertinoIcons.doc, '用户协议',
+                    () => SnackBarHelper.showSnackBar(context, '开发中')),
+                _menuRow(context, CupertinoIcons.phone, '联系我们',
+                    () => _showContactDialog(context), isLast: true),
+              ]),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+            Text('© 2024 云建管 版权所有',
+                style: AppTypography.caption.copyWith(
+                    color: isDark
+                        ? DarkColors.textTertiary
+                        : LightColors.textTertiary)),
+            const SizedBox(height: AppSpacing.lg),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _menuRow(BuildContext context, IconData icon, String label,
+      VoidCallback onTap,
+      {bool isLast = false}) {
+    final primary = Theme.of(context).colorScheme.primary;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md, vertical: AppSpacing.md),
+        decoration: BoxDecoration(
+          border: isLast
+              ? null
+              : Border(
+                  bottom: BorderSide(
+                      color: isDark ? DarkColors.border : LightColors.border,
+                      width: 0.5)),
+        ),
+        child: Row(children: [
+          Icon(icon, size: 18, color: primary),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(child: Text(label, style: AppTypography.bodyMedium)),
+          Icon(CupertinoIcons.chevron_right,
+              size: 14,
+              color: isDark
+                  ? DarkColors.textTertiary
+                  : LightColors.textTertiary),
+        ]),
       ),
     );
   }
@@ -122,24 +110,16 @@ class AboutScreen extends ConsumerWidget {
   void _showCompanyInfo(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('公司简介'),
-          content: const SingleChildScrollView(
-            child: Text(
-              '云建管是一款专注于建筑行业的企业管理平台，提供项目管理、人员管理、流程审批等功能，帮助企业实现数字化转型。\n\n我们致力于为建筑行业提供最优质的信息化服务，让管理更高效，让协作更便捷。',
-            ),
-          ),
-          actions: [
-            TextButton(
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text('公司简介'),
+        content: const Text(
+            '云建管是一款专注于建筑行业的企业管理平台，提供项目管理、人员管理、流程审批等功能，帮助企业实现数字化转型。'),
+        actions: [
+          CupertinoDialogAction(
               child: const Text('关闭'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+              onPressed: () => Navigator.of(ctx).pop()),
+        ],
+      ),
     );
   }
 
@@ -148,28 +128,19 @@ class AboutScreen extends ConsumerWidget {
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
         title: const Text('联系我们'),
-        content: const Text('欢迎拨打云建管人工客服热线：400-006-3359，我们将竭诚为您服务。'),
+        content: const Text('客服热线：400-006-3359'),
         actions: [
           CupertinoDialogAction(
-            child: const Text('取消'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
+              child: const Text('取消'),
+              onPressed: () => Navigator.of(ctx).pop()),
           CupertinoDialogAction(
-            child: const Text('立即拨号'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              _makePhoneCall('4000063359');
-            },
-          ),
+              child: const Text('立即拨号'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                launchUrl(Uri(scheme: 'tel', path: '4000063359'));
+              }),
         ],
       ),
     );
-  }
-
-  Future<void> _makePhoneCall(String phoneNumber) async {
-    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
-    if (await canLaunchUrl(phoneUri)) {
-      await launchUrl(phoneUri);
-    }
   }
 }

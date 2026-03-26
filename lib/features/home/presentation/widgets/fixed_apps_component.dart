@@ -120,10 +120,6 @@ class _AppItemCard extends StatelessWidget {
               ? DarkColors.surfaceVariant
               : LightColors.surfaceVariant,
           borderRadius: AppRadius.allSm,
-          border: Border.all(
-            color: isDark ? DarkColors.border : LightColors.borderLight,
-            width: 1,
-          ),
         ),
         child: Row(
           children: [
