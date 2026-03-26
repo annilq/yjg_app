@@ -52,38 +52,54 @@ class SnackBarHelper {
   ) {
     if (!context.mounted) return;
 
-    final colorScheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final borderColor = isDark
-        ? const Color(0xFF3A3A3C) // darkBorderLight
-        : const Color(0xFFE8E8E8).withValues(alpha: 0.5);
+    try {
+      final colorScheme = Theme.of(context).colorScheme;
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      final borderColor = isDark
+          ? const Color(0xFF3A3A3C) // darkBorderLight
+          : const Color(0xFFE8E8E8).withValues(alpha: 0.5);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(
-            color: colorScheme.onInverseSurface,
-            fontSize: 14,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: TextStyle(
+              color: colorScheme.onInverseSurface,
+              fontSize: 14,
+            ),
           ),
+          duration: duration,
+          elevation: 0,
+          backgroundColor: colorScheme.inverseSurface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(color: borderColor, width: 0.5),
+          ),
+          behavior: SnackBarBehavior.floating,
+          action: action != null
+              ? SnackBarAction(
+                  label: action.label,
+                  textColor: colorScheme.primary,
+                  onPressed: action.onPressed,
+                )
+              : null,
         ),
-        duration: duration,
-        elevation: 0,
-        backgroundColor: colorScheme.inverseSurface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(color: borderColor, width: 0.5),
+      );
+    } catch (e) {
+      // 如果没有找到 ScaffoldMessenger，使用对话框作为备选方案
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('确定'),
+            ),
+          ],
         ),
-        behavior: SnackBarBehavior.floating,
-        action: action != null
-            ? SnackBarAction(
-                label: action.label,
-                textColor: colorScheme.primary,
-                onPressed: action.onPressed,
-              )
-            : null,
-      ),
-    );
+      );
+    }
   }
 
   /// 通过GlobalKey显示SnackBar
