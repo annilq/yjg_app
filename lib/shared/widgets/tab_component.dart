@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/core/theme/tokens/tokens.dart';
 
-/// 标签组件 - iOS Segmented Control 风格
+/// 标签组件 - Flat Design 风格
 ///
 /// 特点：
-/// - 灰色背景 + 白色滑块
+/// - 选中态：主色背景 + 白字
 /// - 滑块跟随选中项平滑移动
-/// - 选中黑字，未选中灰字
 /// - 无 border，纯色块
 class TabComponent extends StatelessWidget {
   final List<TabItem> items;
@@ -25,8 +24,8 @@ class TabComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? DarkColors.surfaceVariant : LightColors.surfaceVariant;
-    final sliderColor = isDark ? DarkColors.surface : LightColors.surface;
+    final bgColor = isDark ? DarkColors.surface : LightColors.surface;
+    final primary = Theme.of(context).colorScheme.primary;
 
     return Container(
       margin: margin ?? AppSpacing.horizontalLg,
@@ -44,17 +43,17 @@ class TabComponent extends StatelessWidget {
 
           return Stack(
             children: [
-              // 滑块
+              // 滑块 - 主色背景
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeInOut,
-                left: activeIndex * itemWidth,
+                left: activeIndex * itemWidth + 3,
                 top: 3,
                 bottom: 3,
-                width: itemWidth,
+                width: itemWidth - 6,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: sliderColor,
+                    color: primary,
                     borderRadius: AppRadius.allSm,
                   ),
                 ),
@@ -73,8 +72,10 @@ class TabComponent extends StatelessWidget {
                           duration: const Duration(milliseconds: 200),
                           style: AppTypography.bodyMedium.copyWith(
                             color: isActive
-                                ? Theme.of(context).colorScheme.primary
-                                : (isDark ? DarkColors.textTertiary : LightColors.textTertiary),
+                                ? AppColors.white
+                                : (isDark
+                                    ? DarkColors.textSecondary
+                                    : LightColors.textSecondary),
                             fontWeight: isActive
                                 ? AppTypography.weightSemibold
                                 : AppTypography.weightMedium,

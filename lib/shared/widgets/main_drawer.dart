@@ -49,6 +49,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
 
     String userName = '用户';
     String accountName = '';
+    String? avatarUrl;
 
     // 从 AuthNotifier 中获取用户信息
     authState.when(
@@ -56,6 +57,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
         if (loginResponse != null && loginResponse.userInfo != null) {
           userName = loginResponse.userInfo?.name ?? '用户';
           accountName = loginResponse.userInfo?.username ?? '';
+          avatarUrl = loginResponse.userInfo?.avatar;
         }
       },
       loading: () {},
@@ -73,7 +75,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
         children: [
           Row(
             children: [
-              _buildAvatar(),
+              _buildAvatar(avatarUrl),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
@@ -103,7 +105,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
     );
   }
 
-  Widget _buildAvatar() {
+  Widget _buildAvatar(String? avatarUrl) {
     return GestureDetector(
       onTap: _pickAvatar,
       child: Container(
@@ -114,7 +116,9 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
           border: Border.all(color: AppColors.white, width: 2),
         ),
         child: ClipOval(
-          child: Image.asset(AppImages.avatar, fit: BoxFit.cover),
+          child: avatarUrl != null && avatarUrl.isNotEmpty
+              ? Image.network(avatarUrl, fit: BoxFit.cover)
+              : Image.asset(AppImages.avatar, fit: BoxFit.cover),
         ),
       ),
     );
@@ -149,7 +153,10 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final (icon, nextMode) = switch (currentMode) {
-      AppThemeMode.system => (Icons.brightness_auto_outlined, AppThemeMode.light),
+      AppThemeMode.system => (
+        Icons.brightness_auto_outlined,
+        AppThemeMode.light,
+      ),
       AppThemeMode.light => (Icons.light_mode_outlined, AppThemeMode.dark),
       AppThemeMode.dark => (Icons.dark_mode_outlined, AppThemeMode.system),
     };
@@ -198,7 +205,11 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
       {'icon': CupertinoIcons.book, 'label': '通讯录', 'url': '/contact'},
       {'icon': CupertinoIcons.lock, 'label': '修改密码', 'url': '/update-password'},
       {'icon': CupertinoIcons.person_2, 'label': '多账号管理', 'url': '/accounts'},
-      {'icon': CupertinoIcons.info_circle, 'label': '关于', 'url': '/settings/about'},
+      {
+        'icon': CupertinoIcons.info_circle,
+        'label': '关于',
+        'url': '/settings/about',
+      },
       {'icon': CupertinoIcons.settings, 'label': '设置', 'url': '/settings'},
     ];
 
@@ -244,8 +255,6 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
       SnackBarHelper.showSnackBar(context, '头像上传成功');
     }
   }
-
-
 
   /// 退出登陆
   Future<void> _showLogoutDialog() async {
@@ -324,7 +333,9 @@ class _DrawerMenuItem extends StatelessWidget {
             Icon(
               CupertinoIcons.chevron_right,
               size: 14,
-              color: isDark ? DarkColors.textTertiary : LightColors.textTertiary,
+              color: isDark
+                  ? DarkColors.textTertiary
+                  : LightColors.textTertiary,
             ),
           ],
         ),

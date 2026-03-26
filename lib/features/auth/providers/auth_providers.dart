@@ -32,7 +32,19 @@ class AuthNotifier extends AsyncNotifier<LoginResponse?> {
 
   Future<Map<String, dynamic>> login(String accountName, String userName, String password) async {
     final response = await _authService.getUserToken(accountName, userName, password);
-    state = AsyncValue.data(null);
+    // 创建一个包含用户信息的LoginResponse
+    final loginResponse = LoginResponse(
+      token: response['token'],
+      userInfo: UserInfo(
+        id: response['userId'].toString(),
+        username: response['accountFullName'],
+        name: response['userName'],
+        email: response['email'],
+        phone: response['phone'],
+        avatar: response['imgUrl'],
+      ),
+    );
+    state = AsyncValue.data(loginResponse);
     return response;
   }
 
