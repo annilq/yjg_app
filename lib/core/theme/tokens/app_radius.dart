@@ -137,7 +137,7 @@ class AppRadius {
   );
 
   /// 卡片默认圆角
-  static const BorderRadius cardRadius = allMd;
+  static const BorderRadius cardRadius = allSm;
 
   /// 按钮默认圆角
   static const BorderRadius buttonRadius = allSm;
@@ -146,7 +146,7 @@ class AppRadius {
   static const BorderRadius inputRadius = allSm;
 
   /// 对话框默认圆角
-  static const BorderRadius dialogRadius = allLg;
+  static const BorderRadius dialogRadius = allMd;
 }
 
 /// 圆角扩展

@@ -19,6 +19,7 @@ class FixedAppsComponent extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: (isDark ? DarkColors.surface : LightColors.surface),
+        borderRadius: AppRadius.cardRadius,
       ),
       child: Padding(
         padding: AppSpacing.allSm,

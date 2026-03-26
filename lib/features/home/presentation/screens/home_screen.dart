@@ -46,41 +46,9 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
         actions: [
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(CupertinoIcons.bell, size: 24),
-                onPressed: () => context.push('/notices'),
-              ),
-              homeState.when(
-                data: (data) => data.backlogCount > 0
-                    ? Positioned(
-                        right: AppSpacing.sm,
-                        top: AppSpacing.sm,
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: AppColors.error,
-                            borderRadius: AppRadius.allFull,
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 16,
-                            minHeight: 16,
-                          ),
-                          child: Text(
-                            '${data.backlogCount}',
-                            style: AppTypography.overline.copyWith(
-                              color: AppColors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
-                loading: () => const SizedBox(),
-                error: (error, stack) => const SizedBox(),
-              ),
-            ],
+          IconButton(
+            icon: const Icon(CupertinoIcons.add, size: 24),
+            onPressed: () => context.push('/start'),
           ),
         ],
         bottom: PreferredSize(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/core/theme/tokens/app_colors.dart';
+import 'package:flutter_app/core/theme/tokens/app_radius.dart';
 import 'package:flutter_app/core/theme/tokens/app_spacing.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/features/home/models/remind_model.dart';
@@ -54,9 +55,10 @@ class _AnnouncementCarouselComponentState
     return Container(
       decoration: BoxDecoration(
         color: (isDark ? DarkColors.surface : LightColors.surface),
+        borderRadius: AppRadius.cardRadius,
       ),
       child: Padding(
-        padding: AppSpacing.allXs,
+        padding: AppSpacing.horizontalSm,
         child: Row(
           children: [
             Expanded(
