@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_app/core/theme/tokens/tokens.dart';
 import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
 import 'package:flutter_app/core/constants/app_images.dart';
+import 'package:flutter_app/features/auth/providers/auth_providers.dart';
 import 'package:flutter_app/features/profile/providers/profile_providers.dart';
 import 'package:flutter_app/features/settings/providers/settings_providers.dart';
 
@@ -44,6 +45,22 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
   /// 头部
   Widget _buildHeader(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final authState = ref.watch(authProvider);
+
+    String userName = '用户';
+    String accountName = '';
+
+    // 从 AuthNotifier 中获取用户信息
+    authState.when(
+      data: (loginResponse) {
+        if (loginResponse != null && loginResponse.userInfo != null) {
+          userName = loginResponse.userInfo?.name ?? '用户';
+          accountName = loginResponse.userInfo?.username ?? '';
+        }
+      },
+      loading: () {},
+      error: (_, __) {},
+    );
 
     return Container(
       width: double.infinity,
@@ -63,7 +80,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '用户',
+                      userName,
                       style: AppTypography.titleMedium.copyWith(
                         color: AppColors.white,
                         fontWeight: AppTypography.weightBold,
@@ -71,7 +88,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '',
+                      accountName,
                       style: AppTypography.bodySmall.copyWith(
                         color: AppColors.white.withAlpha(179),
                       ),
@@ -181,7 +198,6 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
       {'icon': CupertinoIcons.book, 'label': '通讯录', 'url': '/contact'},
       {'icon': CupertinoIcons.lock, 'label': '修改密码', 'url': '/update-password'},
       {'icon': CupertinoIcons.person_2, 'label': '多账号管理', 'url': '/accounts'},
-      {'icon': CupertinoIcons.trash, 'label': '清除缓存', 'action': 'clearCache'},
       {'icon': CupertinoIcons.info_circle, 'label': '关于', 'url': '/settings/about'},
       {'icon': CupertinoIcons.settings, 'label': '设置', 'url': '/settings'},
     ];
@@ -205,9 +221,6 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
                       if (menu['url'] != null) {
                         Navigator.pop(context);
                         context.push(menu['url'] as String);
-                      } else if (menu['action'] == 'clearCache') {
-                        Navigator.pop(context);
-                        _showClearCacheDialog();
                       }
                     },
                   ),
@@ -232,38 +245,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
     }
   }
 
-    /// 清除缓存
-  Future<void> _showClearCacheDialog() async {
-    showDialog(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('提示'),
-        content: const Text('是否清除缓存'),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('取消'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
-          CupertinoDialogAction(
-            child: const Text('确定'),
-            onPressed: () async {
-              Navigator.of(ctx).pop();
-              try {
-                await ref.read(profileProvider.notifier).clearCache();
-                if (mounted) {
-                  SnackBarHelper.showSnackBar(context, '清除缓存成功');
-                }
-              } catch (e) {
-                if (mounted) {
-                  SnackBarHelper.showSnackBar(context, '清除缓存失败: $e');
-                }
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
+
 
   /// 退出登陆
   Future<void> _showLogoutDialog() async {

@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/core/theme/tokens/tokens.dart';
 
-/// 标签组件 - Flat Design 风格
+/// 标签组件 - iOS Segmented Control 风格
 ///
 /// 特点：
-/// - 无阴影，纯色背景
-/// - 统一圆角和间距
-/// - 点击缩放动画
+/// - 灰色背景 + 白色滑块
+/// - 滑块跟随选中项平滑移动
+/// - 选中黑字，未选中灰字
+/// - 无 border，纯色块
 class TabComponent extends StatelessWidget {
   final List<TabItem> items;
   final int activeIndex;
   final double? height;
   final EdgeInsets? margin;
-  final EdgeInsets? padding;
-  final double? borderRadius;
-  final bool showRipple;
 
   const TabComponent({
     super.key,
@@ -22,165 +20,75 @@ class TabComponent extends StatelessWidget {
     required this.activeIndex,
     this.height,
     this.margin,
-    this.padding,
-    this.borderRadius,
-    this.showRipple = true,
   });
 
   @override
   Widget build(BuildContext context) {
-
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? DarkColors.surfaceVariant : LightColors.surfaceVariant;
+    final sliderColor = isDark ? DarkColors.surface : LightColors.surface;
 
     return Container(
       margin: margin ?? AppSpacing.horizontalLg,
       height: height ?? 44,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius ?? 24),
-        color: isDark ? DarkColors.surfaceVariant : LightColors.surfaceVariant,
+        color: bgColor,
+        borderRadius: AppRadius.allSm,
       ),
-      child: Row(
-        children: List.generate(items.length, (index) {
-          final item = items[index];
-          final bool isActive = activeIndex == index;
-          return Expanded(
-            child: _TabItemWidget(
-              item: item,
-              isActive: isActive,
-              isFirst: index == 0,
-              isLast: index == items.length - 1,
-              borderRadius: borderRadius ?? 24,
-              padding:
-                  padding ??
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-              showRipple: showRipple,
-            ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final count = items.length;
+          if (count == 0) return const SizedBox.shrink();
+
+          final itemWidth = constraints.maxWidth / count;
+
+          return Stack(
+            children: [
+              // 滑块
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+                left: activeIndex * itemWidth,
+                top: 3,
+                bottom: 3,
+                width: itemWidth,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: sliderColor,
+                    borderRadius: AppRadius.allSm,
+                  ),
+                ),
+              ),
+              // 选项
+              Row(
+                children: List.generate(count, (index) {
+                  final item = items[index];
+                  final isActive = activeIndex == index;
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: item.onTap,
+                      behavior: HitTestBehavior.opaque,
+                      child: Center(
+                        child: AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 200),
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: isActive
+                                ? Theme.of(context).colorScheme.primary
+                                : (isDark ? DarkColors.textTertiary : LightColors.textTertiary),
+                            fontWeight: isActive
+                                ? AppTypography.weightSemibold
+                                : AppTypography.weightMedium,
+                          ),
+                          child: Text(item.text),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ],
           );
-        }),
-      ),
-    );
-  }
-}
-
-class _TabItemWidget extends StatefulWidget {
-  final TabItem item;
-  final bool isActive;
-  final bool isFirst;
-  final bool isLast;
-  final double borderRadius;
-  final EdgeInsets padding;
-  final bool showRipple;
-
-  const _TabItemWidget({
-    required this.item,
-    required this.isActive,
-    required this.isFirst,
-    required this.isLast,
-    required this.borderRadius,
-    required this.padding,
-    required this.showRipple,
-  });
-
-  @override
-  State<_TabItemWidget> createState() => _TabItemWidgetState();
-}
-
-class _TabItemWidgetState extends State<_TabItemWidget>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void didUpdateWidget(_TabItemWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.isActive != oldWidget.isActive) {
-      if (widget.isActive) {
-        _animationController.forward().then((_) {
-          _animationController.reverse();
-        });
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) {
-        return Transform.scale(scale: _scaleAnimation.value, child: child);
-      },
-      child: GestureDetector(
-        onTapDown: (_) {
-          if (widget.showRipple) {
-            _animationController.forward();
-          }
         },
-        onTapUp: (_) {
-          if (widget.showRipple) {
-            _animationController.reverse();
-          }
-        },
-        onTapCancel: () {
-          if (widget.showRipple) {
-            _animationController.reverse();
-          }
-        },
-        onTap: widget.item.onTap,
-        child: Container(
-          padding: widget.padding,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: widget.isActive 
-                ? (isDark ? AppColors.primaryLight : AppColors.primary) 
-                : Colors.transparent,
-            borderRadius: BorderRadius.horizontal(
-              left:
-                  widget.isFirst
-                      ? Radius.circular(widget.borderRadius)
-                      : Radius.zero,
-              right:
-                  widget.isLast
-                      ? Radius.circular(widget.borderRadius)
-                      : Radius.zero,
-            ),
-          ),
-          child: AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 200),
-            style: AppTypography.bodyMedium.copyWith(
-              color:
-                  widget.isActive
-                      ? (isDark ? DarkColors.background : AppColors.white)
-                      : (isDark ? DarkColors.textSecondary : LightColors.textSecondary),
-              fontWeight:
-                  widget.isActive
-                      ? AppTypography.weightSemibold
-                      : AppTypography.weightMedium,
-              letterSpacing: widget.isActive ? 0.5 : 0,
-            ),
-            child: Text(widget.item.text),
-          ),
-        ),
       ),
     );
   }
@@ -188,7 +96,7 @@ class _TabItemWidgetState extends State<_TabItemWidget>
 
 class TabItem {
   final String text;
-  final Function() onTap;
+  final VoidCallback onTap;
 
   const TabItem({required this.text, required this.onTap});
 }

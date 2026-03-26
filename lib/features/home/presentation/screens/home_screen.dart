@@ -86,7 +86,9 @@ class HomeScreen extends ConsumerWidget {
           child: Text(
             '加载失败: $error',
             style: AppTypography.bodyMedium.copyWith(
-              color: isDark ? DarkColors.textSecondary : LightColors.textSecondary,
+              color: isDark
+                  ? DarkColors.textSecondary
+                  : LightColors.textSecondary,
             ),
           ),
         ),
