@@ -15,12 +15,6 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _buildSettingsItem(
             context,
-            title: '主题设置',
-            icon: Icons.palette_outlined,
-            onTap: () => context.push('/settings/theme'),
-          ),
-          _buildSettingsItem(
-            context,
             title: '语言切换',
             icon: Icons.language_outlined,
             onTap: () => context.push('/settings/language'),

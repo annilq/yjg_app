@@ -19,7 +19,7 @@ import 'package:flutter_app/features/start/presentation/screens/start_screen.dar
 import 'package:flutter_app/features/webview/presentation/screens/webview_screen.dart';
 import 'package:flutter_app/features/contact/presentation/screens/contact_screen.dart';
 import 'package:flutter_app/features/settings/presentation/screens/settings_screen.dart';
-import 'package:flutter_app/features/settings/presentation/screens/theme_settings_screen.dart';
+
 import 'package:flutter_app/features/settings/presentation/screens/language_settings_screen.dart';
 import 'package:flutter_app/features/settings/presentation/screens/notification_settings_screen.dart';
 import 'package:flutter_app/features/settings/presentation/screens/about_screen.dart';
@@ -98,10 +98,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/contact-detail',
         builder: (context, state) => const ContactDetailScreen(),
-      ),
-      GoRoute(
-        path: '/settings/theme',
-        builder: (context, state) => const ThemeSettingsScreen(),
       ),
       GoRoute(
         path: '/settings/language',

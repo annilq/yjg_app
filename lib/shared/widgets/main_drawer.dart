@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_app/core/theme/tokens/tokens.dart';
 import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
 import 'package:flutter_app/core/constants/app_images.dart';
 import 'package:flutter_app/features/profile/providers/profile_providers.dart';
+import 'package:flutter_app/features/settings/providers/settings_providers.dart';
 
-/// 侧边抽屉内容组件 - 包含用户信息和菜单
-///
-/// 用于 MainScreen 的 Drawer，展示个人信息和快捷操作
+/// 侧边抽屉内容组件
 class MainDrawer extends ConsumerStatefulWidget {
   const MainDrawer({super.key});
 
@@ -24,39 +24,28 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Drawer(
-      width: 240,
+      width: 260,
       backgroundColor: colorScheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-      ),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context, isDark),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: AppSpacing.md),
-                    _buildMenuSection(context),
-                    const SizedBox(height: AppSpacing.md),
-                    _buildLogoutSection(context),
-                  ],
-                ),
-              ),
-            ),
+            _buildHeader(context),
+            Expanded(child: _buildMenuSection(context)),
+            _buildBottomBar(context),
           ],
         ),
       ),
     );
   }
 
-  /// 头部 - 用户信息
-  Widget _buildHeader(BuildContext context, bool isDark) {
+  /// 头部
+  Widget _buildHeader(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -93,20 +82,6 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
-          Row(
-            children: [
-              const SizedBox(width: AppSpacing.md),
-              _buildMenuItem(
-                icon: CupertinoIcons.settings,
-                label: '设置',
-                onTap: () {
-                  Navigator.pop(context);
-                  context.push('/settings');
-                },
-              ),
-            ],
-          ),
         ],
       ),
     );
@@ -129,30 +104,70 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
     );
   }
 
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) {
+  /// 底部栏：左侧主题按钮 + 右侧退出
+  Widget _buildBottomBar(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark ? DarkColors.border : LightColors.border;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.md,
+      ),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: borderColor, width: 1)),
+      ),
+      child: Row(
+        children: [
+          _buildThemeToggle(context),
+          const Spacer(),
+          _buildLogoutButton(context),
+        ],
+      ),
+    );
+  }
+
+  /// 主题切换按钮 — 单按钮循环切换
+  Widget _buildThemeToggle(BuildContext context) {
+    final currentMode = ref.watch(themeModeProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final (icon, nextMode) = switch (currentMode) {
+      AppThemeMode.system => (Icons.brightness_auto_outlined, AppThemeMode.light),
+      AppThemeMode.light => (Icons.light_mode_outlined, AppThemeMode.dark),
+      AppThemeMode.dark => (Icons.dark_mode_outlined, AppThemeMode.system),
+    };
+
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.xs,
-        ),
-        decoration: BoxDecoration(color: AppColors.white.withAlpha(26)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 14, color: AppColors.white),
-            const SizedBox(width: AppSpacing.xs),
-            Text(
-              label,
-              style: AppTypography.labelSmall.copyWith(color: AppColors.white),
-            ),
-          ],
-        ),
+      onTap: () => ref.read(themeModeProvider.notifier).setThemeMode(nextMode),
+      child: Icon(
+        icon,
+        size: 22,
+        color: isDark ? DarkColors.textSecondary : LightColors.textSecondary,
+      ),
+    );
+  }
+
+  /// 退出按钮
+  Widget _buildLogoutButton(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return GestureDetector(
+      onTap: _showLogoutDialog,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            CupertinoIcons.square_arrow_right,
+            size: 16,
+            color: colorScheme.error,
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            '退出登陆',
+            style: AppTypography.bodySmall.copyWith(color: colorScheme.error),
+          ),
+        ],
       ),
     );
   }
@@ -168,55 +183,44 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
       {'icon': CupertinoIcons.lock, 'label': '修改密码', 'url': '/update-password'},
       {'icon': CupertinoIcons.person_2, 'label': '多账号管理', 'url': '/accounts'},
       {'icon': CupertinoIcons.trash, 'label': '清除缓存', 'action': 'clearCache'},
+      {'icon': CupertinoIcons.phone, 'label': '联系我们', 'action': 'contact'},
+      {'icon': CupertinoIcons.settings, 'label': '设置', 'url': '/settings'},
     ];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      child: Container(
-        decoration: BoxDecoration(color: colorScheme.surface),
-        child: Column(
-          children: menus.asMap().entries.map((entry) {
-            final index = entry.key;
-            final menu = entry.value;
-            return Column(
-              children: [
-                _DrawerMenuItem(
-                  icon: menu['icon'] as IconData,
-                  label: menu['label'] as String,
-                  onTap: () {
-                    if (menu['url'] != null) {
-                      Navigator.pop(context);
-                      context.push(menu['url'] as String);
-                    } else if (menu['action'] == 'clearCache') {
-                      Navigator.pop(context);
-                      _showClearCacheDialog();
-                    }
-                  },
-                ),
-                if (index < menus.length - 1)
-                  Divider(height: 1, color: borderColor, indent: 56),
-              ],
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-
-  /// 底部退出区域
-  Widget _buildLogoutSection(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(color: colorScheme.surface),
-        child: _DrawerMenuItem(
-          icon: CupertinoIcons.square_arrow_right,
-          label: '退出登陆',
-          labelColor: colorScheme.error,
-          onTap: _showLogoutDialog,
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        child: Container(
+          decoration: BoxDecoration(color: colorScheme.surface),
+          child: Column(
+            children: menus.asMap().entries.map((entry) {
+              final index = entry.key;
+              final menu = entry.value;
+              return Column(
+                children: [
+                  _DrawerMenuItem(
+                    icon: menu['icon'] as IconData,
+                    label: menu['label'] as String,
+                    onTap: () {
+                      if (menu['url'] != null) {
+                        Navigator.pop(context);
+                        context.push(menu['url'] as String);
+                      } else if (menu['action'] == 'clearCache') {
+                        Navigator.pop(context);
+                        _showClearCacheDialog();
+                      } else if (menu['action'] == 'contact') {
+                        Navigator.pop(context);
+                        _showContactDialog();
+                      }
+                    },
+                  ),
+                  if (index < menus.length - 1)
+                    Divider(height: 1, color: borderColor, indent: 56),
+                ],
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -230,6 +234,40 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
     if (image != null && mounted) {
       SnackBarHelper.showSnackBar(context, '头像上传成功');
     }
+  }
+
+  /// 拨打客服热线
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    // ignore: deprecated_member_use
+    if (await canLaunchUrl(phoneUri)) {
+      // ignore: deprecated_member_use
+      await launchUrl(phoneUri);
+    }
+  }
+
+  /// 联系我们
+  Future<void> _showContactDialog() async {
+    showDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text('联系我们'),
+        content: const Text('欢迎拨打云建管人工客服热线：400-006-3359，我们将竭诚为您服务。'),
+        actions: [
+          CupertinoDialogAction(
+            child: const Text('取消'),
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+          CupertinoDialogAction(
+            child: const Text('立即拨号'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              _makePhoneCall('4000063359');
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   /// 清除缓存
@@ -250,9 +288,13 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
               Navigator.of(ctx).pop();
               try {
                 await ref.read(profileProvider.notifier).clearCache();
-                if (mounted) SnackBarHelper.showSnackBar(context, '清除缓存成功');
+                if (mounted) {
+                  SnackBarHelper.showSnackBar(context, '清除缓存成功');
+                }
               } catch (e) {
-                if (mounted) SnackBarHelper.showSnackBar(context, '清除缓存失败: $e');
+                if (mounted) {
+                  SnackBarHelper.showSnackBar(context, '清除缓存失败: $e');
+                }
               }
             },
           ),
@@ -261,7 +303,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
     );
   }
 
-  /// 解除绑定
+  /// 退出登陆
   Future<void> _showLogoutDialog() async {
     showDialog(
       context: context,
@@ -277,12 +319,14 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
             child: const Text('确定'),
             onPressed: () async {
               Navigator.of(ctx).pop();
-              Navigator.pop(context); // 关闭 drawer
+              Navigator.pop(context);
               try {
                 await ref.read(profileProvider.notifier).logout();
                 if (mounted) context.go('/');
               } catch (e) {
-                if (mounted) SnackBarHelper.showSnackBar(context, '退出登陆失败: $e');
+                if (mounted) {
+                  SnackBarHelper.showSnackBar(context, '退出登陆失败: $e');
+                }
               }
             },
           ),
@@ -296,56 +340,47 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
 class _DrawerMenuItem extends StatelessWidget {
   final IconData icon;
   final String label;
-  final Color? labelColor;
   final VoidCallback onTap;
 
   const _DrawerMenuItem({
     required this.icon,
     required this.label,
-    this.labelColor,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final effectiveLabelColor = labelColor ?? colorScheme.onSurface;
-    final iconColor = labelColor ?? colorScheme.primary;
+    final primaryColor = Theme.of(context).colorScheme.primary;
 
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          // horizontal: AppSpacing.md,
-          vertical: AppSpacing.md,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         child: Row(
           children: [
             Container(
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: iconColor.withAlpha(26),
+                color: primaryColor.withAlpha(26),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(icon, size: 16, color: iconColor),
+              child: Icon(icon, size: 16, color: primaryColor),
             ),
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Text(
                 label,
                 style: AppTypography.bodyMedium.copyWith(
-                  color: effectiveLabelColor,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
             Icon(
               CupertinoIcons.chevron_right,
               size: 14,
-              color: isDark
-                  ? DarkColors.textTertiary
-                  : LightColors.textTertiary,
+              color: isDark ? DarkColors.textTertiary : LightColors.textTertiary,
             ),
           ],
         ),

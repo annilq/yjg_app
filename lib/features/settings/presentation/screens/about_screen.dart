@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
 import 'package:flutter_app/core/constants/app_images.dart';
@@ -8,39 +7,7 @@ import 'package:flutter_app/core/constants/app_images.dart';
 class AboutScreen extends ConsumerWidget {
   const AboutScreen({super.key});
 
-  Future<void> _makePhoneCall(String phoneNumber) async {
-    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
-    if (await canLaunchUrl(phoneUri)) {
-      await launchUrl(phoneUri);
-    }
-  }
 
-  Future<void> _showContactDialog(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('联系我们'),
-          content: const Text('欢迎拨打云建管人工客服热线：400-006-3359，我们将竭诚为您服务。'),
-          actions: [
-            TextButton(
-              child: const Text('取消'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('立即拨号'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _makePhoneCall('4000063359');
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -121,14 +88,6 @@ class AboutScreen extends ConsumerWidget {
                       context,
                       '用户协议页面开发中',
                     );
-                  },
-                ),
-                Divider(height: 1, color: Theme.of(context).colorScheme.outlineVariant),
-                ListTile(
-                  title: const Text('联系我们'),
-                  trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  onTap: () {
-                    _showContactDialog(context);
                   },
                 ),
               ],
