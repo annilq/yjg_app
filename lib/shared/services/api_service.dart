@@ -445,4 +445,12 @@ class ApiService {
     var response = await _networkService.post('public/get-left-days', authInfo);
     return response.data;
   }
+
+  Future<void> unbindWxLogin() async {
+    Map<String, dynamic>? authInfo = await _networkService.getAuthenticationInfo();
+    if (authInfo == null) {
+      throw Exception('未登录');
+    }
+    await _networkService.post('unbind-wx-login', authInfo);
+  }
 }

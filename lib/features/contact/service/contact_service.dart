@@ -1,4 +1,4 @@
-import 'package:flutter_app/network/api_service.dart';
+import 'package:flutter_app/shared/services/api_service.dart';
 import 'package:flutter_app/features/contact/models/address_book_model.dart';
 
 class ContactService {

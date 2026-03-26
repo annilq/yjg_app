@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_app/network/api_service.dart';
+import 'package:flutter_app/shared/services/api_service.dart';
 import 'package:flutter_app/features/workflow/service/workflow_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

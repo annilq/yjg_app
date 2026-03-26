@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_app/network/api_service.dart';
+import 'package:flutter_app/shared/services/api_service.dart';
 import 'package:flutter_app/features/auth/models/account_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
