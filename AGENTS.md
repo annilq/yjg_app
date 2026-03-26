@@ -55,6 +55,13 @@ lib/
 - 利用技能指南中的代码模板和示例
 - 定期更新技能指南，保持与 Flutter 最新版本同步
 
+### 2.1 代码生成流程
+- 使用 `build_runner` 执行代码生成
+- 当修改了使用 `freezed` 或 `json_serializable` 注解的文件时，需要重新生成代码
+- 执行命令：`dart run build_runner build`
+- 开发过程中可以使用 watch 模式：`dart run build_runner watch`
+- 提交代码前确保已执行代码生成，避免因代码生成不完整导致的编译错误
+
 ## 3. 测试规范
 
 ### 3.1 单元测试

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/core/theme/tokens/app_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
@@ -73,6 +74,7 @@ class _RelatedToMeListScreenState extends ConsumerState<RelatedToMeListScreen> {
                           title: item?.title ?? '',
                           extra: ' ${item?.createTime ?? ''}',
                           content: item?.title ?? '',
+                          margin: AppSpacing.listItemPadding,
                           onTap: () {},
                         );
                       },

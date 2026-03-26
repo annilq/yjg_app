@@ -7,10 +7,11 @@ part 'notice_model.g.dart';
 class NoticeModel with _$NoticeModel {
   const factory NoticeModel({
     String? id,
+    String? formKey,
     String? title,
     String? content,
     String? time,
-    bool? isRead,
+    int? count,
   }) = _NoticeModel;
 
   factory NoticeModel.fromJson(Map<String, dynamic> json) => _$NoticeModelFromJson(json);

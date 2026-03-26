@@ -9,19 +9,21 @@ part of 'notice_model.dart';
 _$NoticeModelImpl _$$NoticeModelImplFromJson(Map<String, dynamic> json) =>
     _$NoticeModelImpl(
       id: json['id'] as String?,
+      formKey: json['formKey'] as String?,
       title: json['title'] as String?,
       content: json['content'] as String?,
       time: json['time'] as String?,
-      isRead: json['isRead'] as bool?,
+      count: (json['count'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$NoticeModelImplToJson(_$NoticeModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'formKey': instance.formKey,
       'title': instance.title,
       'content': instance.content,
       'time': instance.time,
-      'isRead': instance.isRead,
+      'count': instance.count,
     };
 
 _$NoticeListDataImpl _$$NoticeListDataImplFromJson(Map<String, dynamic> json) =>

@@ -6,8 +6,8 @@ import 'package:flutter_app/shared/widgets/business_icon_component.dart';
 /// 卡片项组件 - Flat Design 风格
 ///
 /// 特点：
-/// - 无阴影，使用边框分隔
-/// - 统一圆角和间距
+/// - 纯色块背景，无 border
+/// - 统一 Token
 /// - 点击缩放动画
 class CardItemComponent extends StatefulWidget {
   final String formKey;
@@ -36,7 +36,7 @@ class CardItemComponent extends StatefulWidget {
     return BusinessIcon(formKey: formKey, size: size);
   }
 
-  /// 数量徽章 - Flat Design 风格
+  /// 数量徽章
   static Widget countBadge(int count) {
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -57,7 +57,7 @@ class CardItemComponent extends StatefulWidget {
     );
   }
 
-  /// 状态徽章 - Flat Design 风格
+  /// 状态徽章
   static Widget statusBadge(String status) {
     Color color;
     String text;
@@ -99,129 +99,113 @@ class CardItemComponent extends StatefulWidget {
 
 class _CardItemComponentState extends State<CardItemComponent>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController;
-  late final Animation<double> _scaleAnimation;
+  late final AnimationController _controller;
+  late final Animation<double> _scale;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
+    _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 80),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.985).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    _scale = Tween<double>(begin: 1.0, end: 0.985).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _controller.dispose();
     super.dispose();
-  }
-
-  void _handleTapDown(TapDownDetails details) {
-    _animationController.forward();
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    _animationController.reverse();
-  }
-
-  void _handleTapCancel() {
-    _animationController.reverse();
   }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primary = Theme.of(context).colorScheme.primary;
 
-    final icon = BusinessIcon(formKey: widget.formKey, size: 40);
-    final status = (widget.status != null
+    final status = widget.status != null
         ? CardItemComponent.statusBadge(widget.status!)
-        : null);
+        : null;
 
     return AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) {
-        return Transform.scale(scale: _scaleAnimation.value, child: child);
-      },
+      animation: _scale,
+      builder: (context, child) => Transform.scale(scale: _scale.value, child: child),
       child: GestureDetector(
-        onTapDown: _handleTapDown,
-        onTapUp: _handleTapUp,
-        onTapCancel: _handleTapCancel,
+        onTapDown: (_) => _controller.forward(),
+        onTapUp: (_) => _controller.reverse(),
+        onTapCancel: () => _controller.reverse(),
         onTap: widget.onTap,
         child: Container(
           margin: widget.margin,
-          padding: AppSpacing.cardPaddingAll,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.md,
+          ),
           decoration: BoxDecoration(
-            color: colorScheme.surface,
-            border: Border.all(
-              color: isDark ? DarkColors.border : LightColors.border,
-              width: 1,
-            ),
-            borderRadius: AppRadius.cardRadius,
+            color: isDark ? DarkColors.surface : LightColors.surface,
+            borderRadius: AppRadius.allSm,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  icon,
-                  SizedBox(width: AppSpacing.md),
+                  BusinessIcon(formKey: widget.formKey, size: 36),
+                  const SizedBox(width: AppSpacing.sm),
                   Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            widget.title,
-                            style: AppTypography.titleMedium.copyWith(
-                              color: colorScheme.onSurface,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (widget.extra != null) ...[
-                          SizedBox(width: AppSpacing.sm),
-                          Text(
-                            widget.extra!,
-                            style: AppTypography.bodySmall.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ],
+                    child: Text(
+                      widget.title,
+                      style: AppTypography.bodyMedium.copyWith(
+                        fontWeight: AppTypography.weightMedium,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  if (widget.extra != null) ...[
+                    const SizedBox(width: AppSpacing.sm),
+                    Text(
+                      widget.extra!,
+                      style: AppTypography.caption.copyWith(
+                        color: isDark
+                            ? DarkColors.textSecondary
+                            : LightColors.textSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                  const SizedBox(width: AppSpacing.xs),
                   Icon(
                     CupertinoIcons.chevron_right,
-                    size: 16,
-                    color: colorScheme.onSurfaceVariant,
+                    size: 14,
+                    color: isDark
+                        ? DarkColors.textTertiary
+                        : LightColors.textTertiary,
                   ),
                 ],
               ),
               if (widget.content != null || status != null) ...[
-                SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.sm),
                 Row(
                   children: [
-                    if (widget.content != null) ...[
+                    if (widget.content != null)
                       Expanded(
                         child: Text(
                           widget.content!,
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: colorScheme.onSurfaceVariant,
+                          style: AppTypography.caption.copyWith(
+                            color: isDark
+                                ? DarkColors.textSecondary
+                                : LightColors.textSecondary,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ],
                     if (status != null) ...[
-                      SizedBox(width: AppSpacing.sm),
+                      const SizedBox(width: AppSpacing.sm),
                       status,
                     ],
                   ],

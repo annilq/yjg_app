@@ -22,10 +22,11 @@ NoticeModel _$NoticeModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$NoticeModel {
   String? get id => throw _privateConstructorUsedError;
+  String? get formKey => throw _privateConstructorUsedError;
   String? get title => throw _privateConstructorUsedError;
   String? get content => throw _privateConstructorUsedError;
   String? get time => throw _privateConstructorUsedError;
-  bool? get isRead => throw _privateConstructorUsedError;
+  int? get count => throw _privateConstructorUsedError;
 
   /// Serializes this NoticeModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,10 +47,11 @@ abstract class $NoticeModelCopyWith<$Res> {
   @useResult
   $Res call({
     String? id,
+    String? formKey,
     String? title,
     String? content,
     String? time,
-    bool? isRead,
+    int? count,
   });
 }
 
@@ -69,16 +71,21 @@ class _$NoticeModelCopyWithImpl<$Res, $Val extends NoticeModel>
   @override
   $Res call({
     Object? id = freezed,
+    Object? formKey = freezed,
     Object? title = freezed,
     Object? content = freezed,
     Object? time = freezed,
-    Object? isRead = freezed,
+    Object? count = freezed,
   }) {
     return _then(
       _value.copyWith(
             id: freezed == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            formKey: freezed == formKey
+                ? _value.formKey
+                : formKey // ignore: cast_nullable_to_non_nullable
                       as String?,
             title: freezed == title
                 ? _value.title
@@ -92,10 +99,10 @@ class _$NoticeModelCopyWithImpl<$Res, $Val extends NoticeModel>
                 ? _value.time
                 : time // ignore: cast_nullable_to_non_nullable
                       as String?,
-            isRead: freezed == isRead
-                ? _value.isRead
-                : isRead // ignore: cast_nullable_to_non_nullable
-                      as bool?,
+            count: freezed == count
+                ? _value.count
+                : count // ignore: cast_nullable_to_non_nullable
+                      as int?,
           )
           as $Val,
     );
@@ -113,10 +120,11 @@ abstract class _$$NoticeModelImplCopyWith<$Res>
   @useResult
   $Res call({
     String? id,
+    String? formKey,
     String? title,
     String? content,
     String? time,
-    bool? isRead,
+    int? count,
   });
 }
 
@@ -135,16 +143,21 @@ class __$$NoticeModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
+    Object? formKey = freezed,
     Object? title = freezed,
     Object? content = freezed,
     Object? time = freezed,
-    Object? isRead = freezed,
+    Object? count = freezed,
   }) {
     return _then(
       _$NoticeModelImpl(
         id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        formKey: freezed == formKey
+            ? _value.formKey
+            : formKey // ignore: cast_nullable_to_non_nullable
                   as String?,
         title: freezed == title
             ? _value.title
@@ -158,10 +171,10 @@ class __$$NoticeModelImplCopyWithImpl<$Res>
             ? _value.time
             : time // ignore: cast_nullable_to_non_nullable
                   as String?,
-        isRead: freezed == isRead
-            ? _value.isRead
-            : isRead // ignore: cast_nullable_to_non_nullable
-                  as bool?,
+        count: freezed == count
+            ? _value.count
+            : count // ignore: cast_nullable_to_non_nullable
+                  as int?,
       ),
     );
   }
@@ -172,10 +185,11 @@ class __$$NoticeModelImplCopyWithImpl<$Res>
 class _$NoticeModelImpl implements _NoticeModel {
   const _$NoticeModelImpl({
     this.id,
+    this.formKey,
     this.title,
     this.content,
     this.time,
-    this.isRead,
+    this.count,
   });
 
   factory _$NoticeModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -184,17 +198,19 @@ class _$NoticeModelImpl implements _NoticeModel {
   @override
   final String? id;
   @override
+  final String? formKey;
+  @override
   final String? title;
   @override
   final String? content;
   @override
   final String? time;
   @override
-  final bool? isRead;
+  final int? count;
 
   @override
   String toString() {
-    return 'NoticeModel(id: $id, title: $title, content: $content, time: $time, isRead: $isRead)';
+    return 'NoticeModel(id: $id, formKey: $formKey, title: $title, content: $content, time: $time, count: $count)';
   }
 
   @override
@@ -203,16 +219,17 @@ class _$NoticeModelImpl implements _NoticeModel {
         (other.runtimeType == runtimeType &&
             other is _$NoticeModelImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.formKey, formKey) || other.formKey == formKey) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.time, time) || other.time == time) &&
-            (identical(other.isRead, isRead) || other.isRead == isRead));
+            (identical(other.count, count) || other.count == count));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, title, content, time, isRead);
+      Object.hash(runtimeType, id, formKey, title, content, time, count);
 
   /// Create a copy of NoticeModel
   /// with the given fields replaced by the non-null parameter values.
@@ -231,10 +248,11 @@ class _$NoticeModelImpl implements _NoticeModel {
 abstract class _NoticeModel implements NoticeModel {
   const factory _NoticeModel({
     final String? id,
+    final String? formKey,
     final String? title,
     final String? content,
     final String? time,
-    final bool? isRead,
+    final int? count,
   }) = _$NoticeModelImpl;
 
   factory _NoticeModel.fromJson(Map<String, dynamic> json) =
@@ -243,13 +261,15 @@ abstract class _NoticeModel implements NoticeModel {
   @override
   String? get id;
   @override
+  String? get formKey;
+  @override
   String? get title;
   @override
   String? get content;
   @override
   String? get time;
   @override
-  bool? get isRead;
+  int? get count;
 
   /// Create a copy of NoticeModel
   /// with the given fields replaced by the non-null parameter values.

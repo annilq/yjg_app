@@ -127,7 +127,7 @@ class AppSpacing {
   /// 列表项默认内边距
   static const EdgeInsets listItemPadding = EdgeInsets.symmetric(
     horizontal: lg,
-    vertical: md,
+    vertical: sm,
   );
 }
 
