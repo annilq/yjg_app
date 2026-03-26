@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_app/core/theme/tokens/tokens.dart';
 import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
@@ -183,7 +182,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
       {'icon': CupertinoIcons.lock, 'label': '修改密码', 'url': '/update-password'},
       {'icon': CupertinoIcons.person_2, 'label': '多账号管理', 'url': '/accounts'},
       {'icon': CupertinoIcons.trash, 'label': '清除缓存', 'action': 'clearCache'},
-      {'icon': CupertinoIcons.phone, 'label': '联系我们', 'action': 'contact'},
+      {'icon': CupertinoIcons.info_circle, 'label': '关于', 'url': '/settings/about'},
       {'icon': CupertinoIcons.settings, 'label': '设置', 'url': '/settings'},
     ];
 
@@ -209,9 +208,6 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
                       } else if (menu['action'] == 'clearCache') {
                         Navigator.pop(context);
                         _showClearCacheDialog();
-                      } else if (menu['action'] == 'contact') {
-                        Navigator.pop(context);
-                        _showContactDialog();
                       }
                     },
                   ),
@@ -236,41 +232,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
     }
   }
 
-  /// 拨打客服热线
-  Future<void> _makePhoneCall(String phoneNumber) async {
-    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
-    // ignore: deprecated_member_use
-    if (await canLaunchUrl(phoneUri)) {
-      // ignore: deprecated_member_use
-      await launchUrl(phoneUri);
-    }
-  }
-
-  /// 联系我们
-  Future<void> _showContactDialog() async {
-    showDialog(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('联系我们'),
-        content: const Text('欢迎拨打云建管人工客服热线：400-006-3359，我们将竭诚为您服务。'),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('取消'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
-          CupertinoDialogAction(
-            child: const Text('立即拨号'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              _makePhoneCall('4000063359');
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 清除缓存
+    /// 清除缓存
   Future<void> _showClearCacheDialog() async {
     showDialog(
       context: context,

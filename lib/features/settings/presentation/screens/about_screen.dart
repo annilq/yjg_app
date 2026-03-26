@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/snackbar_helper.dart';
 import 'package:flutter_app/core/constants/app_images.dart';
@@ -90,6 +92,14 @@ class AboutScreen extends ConsumerWidget {
                     );
                   },
                 ),
+                Divider(height: 1, color: Theme.of(context).colorScheme.outlineVariant),
+                ListTile(
+                  title: const Text('联系我们'),
+                  trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  onTap: () {
+                    _showContactDialog(context);
+                  },
+                ),
               ],
             ),
           ),
@@ -131,5 +141,35 @@ class AboutScreen extends ConsumerWidget {
         );
       },
     );
+  }
+
+  void _showContactDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text('联系我们'),
+        content: const Text('欢迎拨打云建管人工客服热线：400-006-3359，我们将竭诚为您服务。'),
+        actions: [
+          CupertinoDialogAction(
+            child: const Text('取消'),
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+          CupertinoDialogAction(
+            child: const Text('立即拨号'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              _makePhoneCall('4000063359');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(phoneUri)) {
+      await launchUrl(phoneUri);
+    }
   }
 }
