@@ -30,11 +30,10 @@ class AuthNotifier extends AsyncNotifier<LoginResponse?> {
     return null;
   }
 
-  Future<LoginResponse> login(String accountName, String userName, String password) async {
-    final response = await _authService.login(accountName, userName, password);
-    final loginResponse = LoginResponse.fromJson(response);
-    state = AsyncValue.data(loginResponse);
-    return loginResponse;
+  Future<Map<String, dynamic>> login(String accountName, String userName, String password) async {
+    final response = await _authService.getUserToken(accountName, userName, password);
+    state = AsyncValue.data(null);
+    return response;
   }
 
   Future<void> resetPassword(Map<String, dynamic> params) async {

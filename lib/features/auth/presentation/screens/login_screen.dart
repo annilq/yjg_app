@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_app/shared/services/api_service.dart';
+import 'package:flutter_app/features/auth/providers/auth_providers.dart';
 import 'package:flutter_app/shared/models/login_response_model.dart';
 import 'package:flutter_app/shared/widgets/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
@@ -113,7 +115,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       });
 
       try {
-        var response = await ApiService().getUserToken(
+        var response = await ref.read(authProvider.notifier).login(
           _accountNameController.text,
           _userNameController.text,
           _passwordController.text,
@@ -127,16 +129,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         await prefs.setString('accountName', model.accountName!);
         await prefs.setString('lastUpdateTime', model.lastUpdateTime!);
 
-        context.pushReplacement('/main');
+        if (mounted) {
+          context.pushReplacement('/main');
+        }
       } catch (e) {
-        SnackBarHelper.showSnackBar(
-          context,
-          '登录失败: $e',
-        );
+        if (mounted) {
+          SnackBarHelper.showSnackBar(
+            context,
+            '登录失败: $e',
+          );
+        }
       } finally {
-        setState(() {
-          _isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
     }
   }

@@ -9,6 +9,10 @@ class AuthService {
     return await _apiService.login(accountName, userName, password);
   }
 
+  Future<Map<String, dynamic>> getUserToken(String accountName, String userName, String password) async {
+    return await _apiService.getUserToken(accountName, userName, password);
+  }
+
   Future<Map<String, dynamic>> resetPassword(Map<String, dynamic> params) async {
     return await _apiService.resetPassword(params);
   }
