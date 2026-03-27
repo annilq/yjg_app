@@ -62,7 +62,7 @@ class AppTypography {
   /// Display Small - 小标题
   static const TextStyle displaySmall = TextStyle(
     fontSize: size2xl,
-    fontWeight: weightSemibold,
+    fontWeight: weightBold,
     height: leadingTight,
     letterSpacing: trackingNormal,
   );
@@ -70,7 +70,7 @@ class AppTypography {
   /// Headline Large - 页面大标题
   static const TextStyle headlineLarge = TextStyle(
     fontSize: size2xl,
-    fontWeight: weightSemibold,
+    fontWeight: weightBold,
     height: leadingSnug,
     letterSpacing: trackingNormal,
   );
@@ -78,7 +78,7 @@ class AppTypography {
   /// Headline Medium - 页面标题
   static const TextStyle headlineMedium = TextStyle(
     fontSize: sizeXl,
-    fontWeight: weightSemibold,
+    fontWeight: weightBold,
     height: leadingSnug,
     letterSpacing: trackingNormal,
   );
@@ -94,7 +94,7 @@ class AppTypography {
   /// Title Large - 卡片/区块标题
   static const TextStyle titleLarge = TextStyle(
     fontSize: sizeLg,
-    fontWeight: weightSemibold,
+    fontWeight: weightBold,
     height: leadingNormal,
     letterSpacing: trackingNormal,
   );
@@ -110,7 +110,7 @@ class AppTypography {
   /// Title Small - 小标题/标签
   static const TextStyle titleSmall = TextStyle(
     fontSize: sizeSm,
-    fontWeight: weightMedium,
+    fontWeight: weightSemibold,
     height: leadingNormal,
     letterSpacing: trackingWide,
   );
@@ -135,7 +135,7 @@ class AppTypography {
   static const TextStyle bodySmall = TextStyle(
     fontSize: sizeSm,
     fontWeight: weightNormal,
-    height: leadingNormal,
+    height: leadingRelaxed,
     letterSpacing: trackingNormal,
   );
 

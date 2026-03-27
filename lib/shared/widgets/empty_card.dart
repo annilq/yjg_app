@@ -9,12 +9,20 @@ import 'package:flutter_app/core/theme/tokens/tokens.dart';
 /// - 极简设计，通用 empty 图标 + 文字说明
 /// - 无边框，纯色块
 /// - 可选操作按钮
+/// - 可选图标颜色（用于不同场景）
 class EmptyCard extends StatelessWidget {
   final String? message;
   final String? actionText;
   final VoidCallback? onAction;
+  final Color? iconColor;
 
-  const EmptyCard({super.key, this.message, this.actionText, this.onAction});
+  const EmptyCard({
+    super.key,
+    this.message,
+    this.actionText,
+    this.onAction,
+    this.iconColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +33,9 @@ class EmptyCard extends StatelessWidget {
         : LightColors.textSecondary;
     final cardBg = isDark ? DarkColors.surface : LightColors.surface;
 
+    // 使用传入的颜色，或默认使用主色
+    final displayIconColor = iconColor ?? primary;
+
     return Container(
       decoration: BoxDecoration(color: cardBg, borderRadius: AppRadius.allSm),
       child: Column(
@@ -32,9 +43,23 @@ class EmptyCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // 图标区域 - 主色浅底圆形
-          Icon(CupertinoIcons.tray, size: 32, color: primary.withAlpha(180)),
-          const SizedBox(height: AppSpacing.sm),
+          // 图标区域 - 浅底圆形
+          Container(
+            width: 64,
+            height: 64,
+            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxxl),
+            decoration: BoxDecoration(
+              color: displayIconColor.withAlpha(isDark ? 30 : 15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            alignment: Alignment.center,
+            child: Icon(
+              CupertinoIcons.tray,
+              size: 32,
+              color: displayIconColor.withAlpha(200),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
           // 文字说明
           Text(
             message ?? '暂无数据',
@@ -55,6 +80,7 @@ class EmptyCard extends StatelessWidget {
                   color: primary,
                   fontWeight: AppTypography.weightSemibold,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
           ],

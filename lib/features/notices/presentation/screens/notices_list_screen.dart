@@ -1,104 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_app/shared/widgets/app_bar_component.dart';
-import 'package:flutter_app/shared/widgets/empty_card.dart';
-import 'package:flutter_app/features/notices/presentation/widgets/notice_item_widget.dart';
+import 'package:flutter_app/core/theme/tokens/app_spacing.dart';
+import 'package:flutter_app/shared/widgets/paginated_list_screen.dart';
+import 'package:flutter_app/shared/widgets/card_item_component.dart';
+import 'package:flutter_app/features/notices/models/notice_model.dart';
 import 'package:flutter_app/features/notices/providers/notice_provider.dart';
 
-class NoticesListScreen extends ConsumerStatefulWidget {
+/// 提醒列表页面
+class NoticesListScreen extends ConsumerWidget {
   const NoticesListScreen({super.key});
 
   @override
-  ConsumerState<NoticesListScreen> createState() => _NoticesListScreenState();
-}
-
-class _NoticesListScreenState extends ConsumerState<NoticesListScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void _onSearch(String keyword) {
-    ref.read(noticeProvider.notifier).refresh(keyword: keyword);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final noticeState = ref.watch(noticeProvider);
-
-    return Scaffold(
-      appBar: AppBarComponent(
-        title: '提醒',
-        showSearch: true,
-        onSearchPressed: () {
-          showSearch(
-            context: context,
-            delegate: NoticeSearchDelegate(_onSearch),
-          );
-        },
-      ),
-      body: noticeState.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('加载失败: $error')),
-        data: (data) {
-          final notices = data.notices ?? [];
-          if (notices.isEmpty) {
-            return const EmptyCard(message: '暂无提醒');
-          }
-          return RefreshIndicator(
-            onRefresh: () => ref.read(noticeProvider.notifier).refresh(),
-            child: ListView.builder(
-              itemCount: notices.length,
-              itemBuilder: (context, index) {
-                return NoticeItemWidget(
-                  item: notices[index],
-                );
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class NoticeSearchDelegate extends SearchDelegate {
-  final Function(String) onSearch;
-
-  NoticeSearchDelegate(this.onSearch);
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(CupertinoIcons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(CupertinoIcons.back),
-      onPressed: () {
-        close(context, null);
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PaginatedListScreen<NoticeModel, NoticeListData>(
+      title: '提醒',
+      provider: noticeProvider,
+      extractItems: (state) => state.notices ?? [],
+      onRefresh: (ref) => ref.read(noticeProvider.notifier).refresh(),
+      emptyMessage: '暂无提醒',
+      enableSearch: true,
+      onSearch: (ref, keyword) =>
+          ref.read(noticeProvider.notifier).refresh(keyword: keyword),
+      itemBuilder: (context, item, index) {
+        return CardItemComponent(
+          formKey: item.formKey ?? '',
+          extra: item.count?.toString() ?? '',
+          title: item.title ?? '',
+          margin: AppSpacing.listItemPadding,
+          onTap: () {
+            // TODO: 跳转到提醒详情
+          },
+        );
       },
     );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    onSearch(query);
-    close(context, null);
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Container();
   }
 }

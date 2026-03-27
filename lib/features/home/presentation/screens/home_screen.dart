@@ -26,7 +26,23 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: isDark ? DarkColors.background : LightColors.background,
       appBar: AppBar(
-        backgroundColor: isDark ? DarkColors.surface : AppColors.primaryDark,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: isDark
+                  ? [
+                      DarkColors.surface,
+                      DarkColors.surface,
+                    ]
+                  : [
+                      AppColors.primaryDark,
+                      AppColors.primary,
+                    ],
+            ),
+          ),
+        ),
         foregroundColor: AppColors.white,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
@@ -40,9 +56,9 @@ class HomeScreen extends ConsumerWidget {
             : null,
         title: Text(
           '首页',
-          style: AppTypography.headlineMedium.copyWith(
+          style: AppTypography.headlineLarge.copyWith(
             color: AppColors.white,
-            fontWeight: AppTypography.weightSemibold,
+            fontWeight: AppTypography.weightBold,
           ),
         ),
         actions: [

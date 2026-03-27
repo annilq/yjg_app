@@ -29,8 +29,8 @@ class AppSpacing {
   /// 卡片外边距
   static const double cardMargin = md;
 
-  /// 区块间距
-  static const double sectionGap = md;
+  /// 区块间距 - 增强视觉分组
+  static const double sectionGap = xxl;
 
   /// 元素间距
   static const double elementGap = md;

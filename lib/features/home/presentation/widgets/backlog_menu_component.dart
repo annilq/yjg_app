@@ -24,7 +24,7 @@ class BacklogMenuComponent extends StatelessWidget {
         borderRadius: AppRadius.cardRadius,
       ),
       child: Padding(
-        padding: AppSpacing.allSm,
+        padding: AppSpacing.allMd,
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -38,7 +38,7 @@ class BacklogMenuComponent extends StatelessWidget {
                 onTap: () => context.push('/office/backlog'),
               ),
             ),
-            SizedBox(width: AppSpacing.elementGap),
+            SizedBox(width: AppSpacing.md),
             Expanded(
               child: _MenuItemCard(
                 icon: CupertinoIcons.paperplane,
@@ -48,7 +48,7 @@ class BacklogMenuComponent extends StatelessWidget {
                 onTap: () => context.push('/office/relatedtome'),
               ),
             ),
-            SizedBox(width: AppSpacing.elementGap),
+            SizedBox(width: AppSpacing.md),
             Expanded(
               child: _MenuItemCard(
                 icon: CupertinoIcons.bell,
@@ -95,7 +95,7 @@ class _MenuItemCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
+          horizontal: AppSpacing.lg,
           vertical: AppSpacing.md,
         ),
         decoration: BoxDecoration(
@@ -104,27 +104,30 @@ class _MenuItemCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, color: iconColor, size: 20),
-            const SizedBox(width: AppSpacing.sm),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  title,
-                  style: AppTypography.bodySmall.copyWith(
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-                if (count > 0)
+            Icon(icon, color: iconColor, size: 22),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
                   Text(
-                    '$count',
-                    style: AppTypography.caption.copyWith(
-                      color: iconColor,
+                    title,
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: colorScheme.onSurface,
                       fontWeight: AppTypography.weightMedium,
                     ),
-                  )
-              ],
+                  ),
+                  if (count > 0)
+                    Text(
+                      '$count',
+                      style: AppTypography.titleLarge.copyWith(
+                        color: iconColor,
+                        fontWeight: AppTypography.weightBold,
+                      ),
+                    )
+                ],
+              ),
             ),
           ],
         ),

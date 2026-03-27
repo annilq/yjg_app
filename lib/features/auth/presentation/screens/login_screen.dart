@@ -131,30 +131,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         children: [
                           // Logo - 简洁的圆形
                           Container(
-                            width: 56,
-                            height: 56,
+                            width: 64,
+                            height: 64,
                             decoration: BoxDecoration(
                               color: primary.withAlpha(20),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(14),
                             ),
                             alignment: Alignment.center,
                             child: Text(
                               '云',
                               style: TextStyle(
-                                fontSize: 28,
+                                fontSize: 32,
                                 fontWeight: FontWeight.w700,
                                 color: primary,
                                 letterSpacing: -0.5,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           // 应用名称
                           Text(
                             '云建管',
                             style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 32,
+                              fontWeight: FontWeight.w700,
                               color: isDark
                                   ? DarkColors.textPrimary
                                   : LightColors.textPrimary,
@@ -166,7 +166,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           Text(
                             '企业管理平台',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 15,
                               fontWeight: FontWeight.w400,
                               color: isDark
                                   ? DarkColors.textSecondary
@@ -233,7 +233,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         // 登录按钮 - 主色，全宽
                         SizedBox(
                           width: double.infinity,
-                          height: 48,
+                          height: 52,
                           child: ElevatedButton(
                             onPressed: _isLoading ? null : _login,
                             style: ElevatedButton.styleFrom(
@@ -241,16 +241,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               foregroundColor: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               disabledBackgroundColor: primary.withAlpha(128),
                             ),
                             child: Text(
                               _isLoading ? '登录中...' : '登录',
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 17,
                                 fontWeight: FontWeight.w600,
-                                letterSpacing: 0.5,
+                                letterSpacing: 0.3,
                               ),
                             ),
                           ),

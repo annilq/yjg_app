@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/core/theme/tokens/app_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_app/shared/widgets/app_bar_component.dart';
+import 'package:flutter_app/shared/widgets/paginated_list_screen.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
-import 'package:flutter_app/shared/widgets/empty_card.dart';
-import 'package:flutter_app/shared/widgets/app_search_delegate.dart';
+import 'package:flutter_app/features/office/models/backlog_model.dart';
 import 'package:flutter_app/features/office/presentation/widgets/backlog_tab_widget.dart';
 import 'package:flutter_app/features/office/providers/backlog_provider.dart';
 
+/// 我的待办列表页面
 class BacklogListScreen extends ConsumerStatefulWidget {
   const BacklogListScreen({super.key});
 
@@ -19,79 +19,38 @@ class _BacklogListScreenState extends ConsumerState<BacklogListScreen> {
   int _currentTabIndex = 0;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  void _onSearch(String keyword) {
-    ref.read(backlogProvider.notifier).onSearch(keyword);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final state = ref.watch(backlogProvider);
-
-    return Scaffold(
-      appBar: AppBarComponent(
-        title: '我的待办',
-        showSearch: true,
-        onSearchPressed: () {
-          showSearch(
-            context: context,
-            delegate: AppSearchDelegate(_onSearch),
-          );
+    return PaginatedListScreen<BacklogItem, BacklogListData>(
+      title: '我的待办',
+      provider: backlogProvider,
+      extractItems: (state) => state.items ?? [],
+      hasMore: (state) => state.hasMore ?? false,
+      onRefresh: (ref) => ref.read(backlogProvider.notifier).refresh(),
+      onLoadMore: (ref) => ref.read(backlogProvider.notifier).loadMore(),
+      emptyMessage: '暂无待办事项',
+      enableSearch: true,
+      onSearch: (ref, keyword) =>
+          ref.read(backlogProvider.notifier).onSearch(keyword),
+      tabWidget: BacklogTabWidget(
+        currentIndex: _currentTabIndex,
+        onTabChanged: (index) {
+          setState(() => _currentTabIndex = index);
+          ref.read(backlogProvider.notifier).onTabChanged(index);
         },
       ),
-      body: Column(
-        children: [
-          BacklogTabWidget(
-            currentIndex: _currentTabIndex,
-            onTabChanged: (index) {
-              _currentTabIndex = index;
-              ref.read(backlogProvider.notifier).onTabChanged(index);
-            },
-          ),
-          Expanded(
-            child: state.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(child: Text('加载失败: $error')),
-              data: (data) {
-                final items = data.items ?? [];
-                if (items.isEmpty) {
-                  return const EmptyCard(message: '暂无待办事项');
-                }
-                return RefreshIndicator(
-                  onRefresh: () => ref.read(backlogProvider.notifier).refresh(),
-                  child: NotificationListener<ScrollEndNotification>(
-                    onNotification: (notification) {
-                      if (notification.metrics.pixels ==
-                          notification.metrics.maxScrollExtent) {
-                        ref.read(backlogProvider.notifier).loadMore();
-                      }
-                      return false;
-                    },
-                    child: ListView.builder(
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        final item = items[index];
-                        return CardItemComponent(
-                          formKey: item?.id ?? '',
-                          status: item?.status ?? '',
-                          title: item?.title ?? '',
-                          extra: ' ${item?.createTime ?? ''}',
-                          content: item?.title ?? '',
-                          margin: AppSpacing.listItemPadding,
-                          onTap: () {},
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+      itemBuilder: (context, item, index) {
+        return CardItemComponent(
+          formKey: item.id ?? '',
+          status: item.status ?? '',
+          title: item.title ?? '',
+          extra: ' ${item.createTime ?? ''}',
+          content: item.title ?? '',
+          margin: AppSpacing.listItemPadding,
+          onTap: () {
+            // TODO: 跳转到待办详情
+          },
+        );
+      },
     );
   }
 }
