@@ -24,7 +24,7 @@ class BacklogMenuComponent extends StatelessWidget {
         borderRadius: AppRadius.cardRadius,
       ),
       child: Padding(
-        padding: AppSpacing.allMd,
+        padding: AppSpacing.allSm,
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -95,7 +95,7 @@ class _MenuItemCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
+          horizontal: AppSpacing.sm,
           vertical: AppSpacing.md,
         ),
         decoration: BoxDecoration(
