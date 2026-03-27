@@ -25,8 +25,10 @@ class BacklogMenuComponent extends StatelessWidget {
       ),
       child: Padding(
         padding: AppSpacing.allSm,
-        child: Row(
-          children: [
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
             Expanded(
               child: _MenuItemCard(
                 icon: CupertinoIcons.mail,
@@ -57,6 +59,7 @@ class BacklogMenuComponent extends StatelessWidget {
               ),
             ),
           ],
+          ),
         ),
       ),
     );

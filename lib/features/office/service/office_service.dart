@@ -9,7 +9,7 @@ class OfficeService {
     return await _apiService.getBacklogList(tabIndex, keyword, page, rows);
   }
 
-  Future<Map<String, dynamic>> getRelatedToMeList(int tabIndex, String? keyword, int page, int rows) async {
+  Future<Map<String, dynamic>?> getRelatedToMeList(int tabIndex, String? keyword, int page, int rows) async {
     return await _apiService.getRelatedToMeList(tabIndex, keyword, page, rows);
   }
 }

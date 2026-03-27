@@ -123,7 +123,6 @@ class _CardItemComponentState extends State<CardItemComponent>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primary = Theme.of(context).colorScheme.primary;
 
     final status = widget.status != null
         ? CardItemComponent.statusBadge(widget.status!)
@@ -187,11 +186,11 @@ class _CardItemComponentState extends State<CardItemComponent>
                   ),
                 ],
               ),
-              if (widget.content != null || status != null) ...[
+              if ((widget.content != null && widget.content != "") || status != null) ...[
                 const SizedBox(height: AppSpacing.sm),
                 Row(
                   children: [
-                    if (widget.content != null)
+                    if (widget.content != null && widget.content != "")
                       Expanded(
                         child: Text(
                           widget.content!,

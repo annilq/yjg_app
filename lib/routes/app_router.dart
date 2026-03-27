@@ -13,8 +13,6 @@ import 'package:flutter_app/features/office/presentation/screens/backlog_list_sc
 import 'package:flutter_app/features/office/presentation/screens/relatedtome_list_screen.dart';
 import 'package:flutter_app/features/workflow/presentation/screens/workflow_list_screen.dart';
 import 'package:flutter_app/features/workflow/presentation/screens/workflow_setting_screen.dart';
-import 'package:flutter_app/features/workflow/presentation/screens/module_list_screen.dart';
-import 'package:flutter_app/features/workflow/presentation/screens/module_setting_screen.dart';
 import 'package:flutter_app/features/start/presentation/screens/start_screen.dart';
 import 'package:flutter_app/features/webview/presentation/screens/webview_screen.dart';
 import 'package:flutter_app/features/contact/presentation/screens/contact_screen.dart';
@@ -72,17 +70,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/workflow/setting',
         builder: (context, state) => WorkflowSettingScreen(),
-      ),
-      GoRoute(
-        path: '/workflow/moduleList',
-        builder: (context, state) {
-          final args = state.extra as Map<String, dynamic>?;
-          return ModuleListScreen(moduleName: args?['moduleName'] ?? '');
-        },
-      ),
-      GoRoute(
-        path: '/workflow/moduleSetting',
-        builder: (context, state) => ModuleSettingScreen(),
       ),
       GoRoute(
         path: '/webview',

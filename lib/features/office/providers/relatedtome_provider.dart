@@ -32,8 +32,9 @@ class RelatedToMeNotifier extends AsyncNotifier<BacklogListData> {
       _rows,
     );
 
-    final items = List<BacklogItem>.from((response['rows'] ?? []).map((item) => BacklogItem.fromJson(item)));
-    final hasMore = !(response['last'] ?? true);
+    final rows = response?['rows'] as List<dynamic>?;
+    final items = List<BacklogItem>.from((rows ?? []).map((item) => BacklogItem.fromJson(item)));
+    final hasMore = !(response?['last'] ?? true);
 
     if (!refresh) {
       final currentState = await future;

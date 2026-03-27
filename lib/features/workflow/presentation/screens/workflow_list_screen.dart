@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/core/theme/tokens/app_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
@@ -96,6 +97,7 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
                 title: item['title'] ?? '',
                 extra: item['date'] ?? '',
                 content: item['name'] ?? '',
+                margin: AppSpacing.listItemPadding,
                 onTap: () => _goDetail(item, data.config),
               );
             },

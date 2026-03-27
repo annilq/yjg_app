@@ -337,7 +337,7 @@ class ApiService {
     return response.data;
   }
 
-  Future<Map<String, dynamic>> getRelatedToMeList(
+  Future<Map<String, dynamic>?> getRelatedToMeList(
     int status,
     String? keyword,
     int page,
@@ -358,7 +358,7 @@ class ApiService {
       'workflow/relatedtome/list/$status',
       authInfo,
     );
-    return response.data;
+    return response.data as Map<String, dynamic>?;
   }
 
   Future<Map<String, dynamic>> getDataList(
