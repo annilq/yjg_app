@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
+import 'package:flutter_app/shared/widgets/empty_card.dart';
 import 'package:flutter_app/features/notices/presentation/widgets/notice_item_widget.dart';
 import 'package:flutter_app/features/notices/providers/notice_provider.dart';
 
@@ -41,13 +42,17 @@ class _NoticesListScreenState extends ConsumerState<NoticesListScreen> {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(child: Text('加载失败: $error')),
         data: (data) {
+          final notices = data.notices ?? [];
+          if (notices.isEmpty) {
+            return const EmptyCard(message: '暂无提醒');
+          }
           return RefreshIndicator(
             onRefresh: () => ref.read(noticeProvider.notifier).refresh(),
             child: ListView.builder(
-              itemCount: data.notices?.length ?? 0,
+              itemCount: notices.length,
               itemBuilder: (context, index) {
                 return NoticeItemWidget(
-                  item: data.notices?[index],
+                  item: notices[index],
                 );
               },
             ),

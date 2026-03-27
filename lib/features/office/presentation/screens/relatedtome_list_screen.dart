@@ -3,6 +3,7 @@ import 'package:flutter_app/core/theme/tokens/app_spacing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
+import 'package:flutter_app/shared/widgets/empty_card.dart';
 import 'package:flutter_app/shared/widgets/app_search_delegate.dart';
 import 'package:flutter_app/features/office/presentation/widgets/relatedtome_tab_widget.dart';
 import 'package:flutter_app/features/office/providers/relatedtome_provider.dart';
@@ -55,6 +56,10 @@ class _RelatedToMeListScreenState extends ConsumerState<RelatedToMeListScreen> {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Center(child: Text('加载失败: $error')),
               data: (data) {
+                final items = data.items ?? [];
+                if (items.isEmpty) {
+                  return const EmptyCard(message: '暂无记录');
+                }
                 return RefreshIndicator(
                   onRefresh: () => ref.read(relatedToMeProvider.notifier).refresh(),
                   child: NotificationListener<ScrollEndNotification>(
@@ -65,9 +70,9 @@ class _RelatedToMeListScreenState extends ConsumerState<RelatedToMeListScreen> {
                       return false;
                     },
                     child: ListView.builder(
-                      itemCount: data.items?.length ?? 0,
+                      itemCount: items.length,
                       itemBuilder: (context, index) {
-                        final item = data.items?[index];
+                        final item = items[index];
                         return CardItemComponent(
                           formKey: item?.id ?? '',
                           status: item?.status ?? '',

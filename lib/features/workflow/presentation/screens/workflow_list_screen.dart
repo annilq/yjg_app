@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_app/shared/widgets/app_bar_component.dart';
 import 'package:flutter_app/shared/widgets/loading_component.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
+import 'package:flutter_app/shared/widgets/empty_card.dart';
 import 'package:flutter_app/features/workflow/providers/workflow_list_provider.dart';
 
 class WorkflowListScreen extends ConsumerWidget {
@@ -73,13 +74,17 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
         child: Text('加载失败: $error'),
       ),
       data: (data) {
+        final dataList = data.dataList;
+        if (dataList.isEmpty) {
+          return const EmptyCard(message: '暂无数据');
+        }
         return RefreshIndicator(
           onRefresh: () =>
               ref.read(workflowListProvider(widget.dataId).notifier).refresh(),
           child: ListView.builder(
-            itemCount: data.dataList.length + (data.hasMore ? 1 : 0),
+            itemCount: dataList.length + (data.hasMore ? 1 : 0),
             itemBuilder: (context, index) {
-              if (index == data.dataList.length) {
+              if (index == dataList.length) {
                 if (data.hasMore) {
                   ref
                       .read(workflowListProvider(widget.dataId).notifier)
@@ -90,7 +95,7 @@ class _WorkflowListContentState extends ConsumerState<WorkflowListContent> {
                 }
               }
 
-              var item = data.dataList[index];
+              var item = dataList[index];
               return CardItemComponent(
                 formKey: item['img'] ?? '',
                 status: item['status']?.toString(),
