@@ -154,7 +154,7 @@ class _MainDrawerState extends ConsumerState<MainDrawer> {
 
     final (icon, nextMode) = switch (currentMode) {
       AppThemeMode.system => (
-        Icons.brightness_auto_outlined,
+        Icons.desktop_mac_outlined,
         AppThemeMode.light,
       ),
       AppThemeMode.light => (Icons.light_mode_outlined, AppThemeMode.dark),
