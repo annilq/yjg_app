@@ -1,100 +1,161 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_app/core/theme/tokens/tokens.dart';
 
-/// SnackBar 工具类，提供显示SnackBar的通用方法
-/// Flat Design: 使用 inverseSurface + 扁平边框，无阴影
+/// SnackBar 工具类 - Flat Design 风格
 ///
-/// 提供以下功能：
-/// 1. 通过BuildContext显示SnackBar
-/// 2. 通过GlobalKey<ScaffoldMessengerState>显示SnackBar
-/// 3. 显示成功和错误类型的SnackBar
+/// 特点：
+/// - 统一的视觉风格，符合项目设计理念
+/// - 成功/错误/信息类型区分
+/// - 图标 + 文字，提升信息传达效率
+/// - 平滑动画，自然减速
 ///
 /// 使用示例：
 /// ```dart
-/// // 通过BuildContext显示普通SnackBar
-/// SnackBarHelper.showSnackBar(context, '操作成功');
+/// // 普通 SnackBar
+/// SnackBarHelper.show(context, '操作成功');
 ///
-/// // 通过GlobalKey显示SnackBar
-/// final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
-/// SnackBarHelper.showSnackBarWithKey(_scaffoldMessengerKey, '操作成功');
+/// // 成功 SnackBar
+/// SnackBarHelper.success(context, '保存成功');
 ///
-/// // 显示成功SnackBar
-/// SnackBarHelper.showSuccessSnackBar(context, '操作成功');
+/// // 错误 SnackBar
+/// SnackBarHelper.error(context, '网络连接失败');
 ///
-/// // 显示错误SnackBar
-/// SnackBarHelper.showErrorSnackBar(context, '操作失败');
-///
-/// // 自定义SnackBar，添加操作按钮
-/// SnackBarHelper.showSnackBar(
-///   context,
-///   '是否确认操作？',
-///   action: SnackBarAction(
-///     label: '确认',
-///     onPressed: () {
-///       // 执行确认操作
-///     },
-///   ),
-/// );
+/// // 信息 SnackBar
+/// SnackBarHelper.info(context, '正在同步数据...');
 /// ```
 class SnackBarHelper {
-  /// 显示SnackBar
-  ///
-  /// [context] 上下文，用于获取ScaffoldMessenger
-  /// [message] 显示的消息内容
-  /// [duration] 显示持续时间，默认3秒
-  /// [action] 可选的操作按钮
-  static void showSnackBar(
+  SnackBarHelper._();
+
+  /// 显示普通 SnackBar
+  static void show(
     BuildContext context,
-    String message,
-    {
-      Duration duration = const Duration(seconds: 3),
-      SnackBarAction? action
-    }
-  ) {
+    String message, {
+    Duration duration = const Duration(seconds: 3),
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) {
+    _showSnackBar(context, message, duration: duration, actionLabel: actionLabel, onAction: onAction);
+  }
+
+  /// 显示成功 SnackBar
+  static void success(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 3),
+    String actionLabel = '好的',
+    VoidCallback? onAction,
+  }) {
+    _showSnackBar(
+      context,
+      message,
+      type: SnackBarType.success,
+      duration: duration,
+      actionLabel: actionLabel,
+      onAction: onAction,
+    );
+  }
+
+  /// 显示错误 SnackBar
+  static void error(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 4),
+    String actionLabel = '关闭',
+    VoidCallback? onAction,
+  }) {
+    _showSnackBar(
+      context,
+      message,
+      type: SnackBarType.error,
+      duration: duration,
+      actionLabel: actionLabel,
+      onAction: onAction,
+    );
+  }
+
+  /// 显示信息 SnackBar
+  static void info(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 3),
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) {
+    _showSnackBar(
+      context,
+      message,
+      type: SnackBarType.info,
+      duration: duration,
+      actionLabel: actionLabel,
+      onAction: onAction,
+    );
+  }
+
+  static void _showSnackBar(
+    BuildContext context,
+    String message, {
+    SnackBarType type = SnackBarType.info,
+    required Duration duration,
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) {
     if (!context.mounted) return;
 
     try {
-      final colorScheme = Theme.of(context).colorScheme;
       final isDark = Theme.of(context).brightness == Brightness.dark;
-      final borderColor = isDark
-          ? const Color(0xFF3A3A3C) // darkBorderLight
-          : const Color(0xFFE8E8E8).withValues(alpha: 0.5);
+
+      // 根据类型确定颜色
+      final (bgColor, textColor, iconColor, iconData) = _getColorsAndIcon(type, isDark);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            message,
-            style: TextStyle(
-              color: colorScheme.onInverseSurface,
-              fontSize: 14,
-            ),
+          content: Row(
+            children: [
+              Icon(iconData, size: 18, color: iconColor),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  message,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: textColor,
+                    fontWeight: AppTypography.weightMedium,
+                  ),
+                ),
+              ),
+            ],
           ),
           duration: duration,
           elevation: 0,
-          backgroundColor: colorScheme.inverseSurface,
+          backgroundColor: bgColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: BorderSide(color: borderColor, width: 0.5),
+            borderRadius: BorderRadius.circular(10),
           ),
           behavior: SnackBarBehavior.floating,
-          action: action != null
+          margin: const EdgeInsets.all(AppSpacing.lg),
+          animation: CurvedAnimation(
+            parent: ModalRoute.of(context)?.animation ?? const AlwaysStoppedAnimation(1),
+            curve: Curves.easeOutCubic,
+          ),
+          action: actionLabel != null
               ? SnackBarAction(
-                  label: action.label,
-                  textColor: colorScheme.primary,
-                  onPressed: action.onPressed,
+                  label: actionLabel,
+                  textColor: iconColor,
+                  onPressed: onAction ?? () {},
                 )
               : null,
         ),
       );
     } catch (e) {
-      // 如果没有找到 ScaffoldMessenger，使用对话框作为备选方案
-      showDialog(
+      // 备选方案：使用 CupertinoAlertDialog
+      showCupertinoDialog(
         context: context,
-        builder: (ctx) => AlertDialog(
+        builder: (ctx) => CupertinoAlertDialog(
           content: Text(message),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
+            CupertinoDialogAction(
               child: const Text('确定'),
+              onPressed: () => Navigator.of(ctx).pop(),
             ),
           ],
         ),
@@ -102,20 +163,58 @@ class SnackBarHelper {
     }
   }
 
-  /// 通过GlobalKey显示SnackBar
-  ///
-  /// [scaffoldMessengerKey] ScaffoldMessenger的GlobalKey
-  /// [message] 显示的消息内容
-  /// [duration] 显示持续时间，默认3秒
-  /// [action] 可选的操作按钮
+  /// 获取颜色和图标
+  static (Color, Color, Color, IconData) _getColorsAndIcon(SnackBarType type, bool isDark) {
+    switch (type) {
+      case SnackBarType.success:
+        return (
+          isDark ? DarkColors.successBg : LightColors.successBg,
+          isDark ? DarkColors.textPrimary : LightColors.textPrimary,
+          AppColors.success,
+          CupertinoIcons.checkmark_circle_fill,
+        );
+      case SnackBarType.error:
+        return (
+          isDark ? DarkColors.errorBg : LightColors.errorBg,
+          isDark ? DarkColors.textPrimary : LightColors.textPrimary,
+          AppColors.error,
+          CupertinoIcons.xmark_circle_fill,
+        );
+      case SnackBarType.info:
+      default:
+        return (
+          isDark ? DarkColors.infoBg : LightColors.infoBg,
+          isDark ? DarkColors.textPrimary : LightColors.textPrimary,
+          AppColors.info,
+          CupertinoIcons.info_circle_fill,
+        );
+    }
+  }
+
+  // 兼容旧接口
+  @Deprecated('Use show() instead')
+  static void showSnackBar(
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 3),
+    SnackBarAction? action,
+  }) {
+    show(
+      context,
+      message,
+      duration: duration,
+      actionLabel: action?.label,
+      onAction: action?.onPressed,
+    );
+  }
+
+  /// 通过GlobalKey显示SnackBar（兼容旧接口）
   static void showSnackBarWithKey(
     GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey,
-    String message,
-    {
-      Duration duration = const Duration(seconds: 3),
-      SnackBarAction? action
-    }
-  ) {
+    String message, {
+    Duration duration = const Duration(seconds: 3),
+    SnackBarAction? action,
+  }) {
     scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
         content: Text(message),
@@ -125,39 +224,20 @@ class SnackBarHelper {
     );
   }
 
-  /// 显示成功SnackBar
-  ///
-  /// [context] 上下文，用于获取ScaffoldMessenger
-  /// [message] 显示的消息内容
-  static void showSuccessSnackBar(
-    BuildContext context,
-    String message,
-  ) {
-    showSnackBar(
-      context,
-      message,
-      action: SnackBarAction(
-        label: '确定',
-        onPressed: () {},
-      ),
-    );
+  @Deprecated('Use success() instead')
+  static void showSuccessSnackBar(BuildContext context, String message) {
+    success(context, message);
   }
 
-  /// 显示错误SnackBar
-  ///
-  /// [context] 上下文，用于获取ScaffoldMessenger
-  /// [message] 显示的消息内容
-  static void showErrorSnackBar(
-    BuildContext context,
-    String message,
-  ) {
-    showSnackBar(
-      context,
-      message,
-      action: SnackBarAction(
-        label: '关闭',
-        onPressed: () {},
-      ),
-    );
+  @Deprecated('Use error() instead')
+  static void showErrorSnackBar(BuildContext context, String message) {
+    error(context, message);
   }
+}
+
+/// SnackBar 类型
+enum SnackBarType {
+  info,
+  success,
+  error,
 }

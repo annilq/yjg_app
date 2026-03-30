@@ -47,13 +47,13 @@ class ButtonComponent extends StatelessWidget {
     return ButtonComponent(
       key: key,
       onPressed: onPressed,
-      child: child,
       text: text,
       variant: ButtonVariant.filled,
       size: size,
       isLoading: isLoading,
       isFullWidth: isFullWidth,
       icon: icon,
+      child: child,
     );
   }
 
@@ -71,13 +71,13 @@ class ButtonComponent extends StatelessWidget {
     return ButtonComponent(
       key: key,
       onPressed: onPressed,
-      child: child,
       text: text,
       variant: ButtonVariant.outlined,
       size: size,
       isLoading: isLoading,
       isFullWidth: isFullWidth,
       icon: icon,
+      child: child,
     );
   }
 
@@ -95,13 +95,13 @@ class ButtonComponent extends StatelessWidget {
     return ButtonComponent(
       key: key,
       onPressed: onPressed,
-      child: child,
       text: text,
       variant: ButtonVariant.text,
       size: size,
       isLoading: isLoading,
       isFullWidth: isFullWidth,
       icon: icon,
+      child: child,
     );
   }
 
@@ -119,13 +119,13 @@ class ButtonComponent extends StatelessWidget {
     return ButtonComponent(
       key: key,
       onPressed: onPressed,
-      child: child,
       text: text,
       variant: ButtonVariant.ghost,
       size: size,
       isLoading: isLoading,
       isFullWidth: isFullWidth,
       icon: icon,
+      child: child,
     );
   }
 
@@ -141,7 +141,7 @@ class ButtonComponent extends StatelessWidget {
     if (isFullWidth) {
       buttonChild = SizedBox(
         width: double.infinity,
-        child: buttonChild,
+        child: Center(child: buttonChild),
       );
     }
 
