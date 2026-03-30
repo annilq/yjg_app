@@ -24,7 +24,6 @@ class ProfileNotifier extends AsyncNotifier<LoginResponseModel?> {
   }
 
   Future<void> logout() async {
-    await _profileService.unbind();
     state = const AsyncValue.data(null);
   }
 }

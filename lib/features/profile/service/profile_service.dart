@@ -10,10 +10,6 @@ class ProfileService {
     await _apiService.cleanMainMenus();
   }
 
-  Future<void> unbind() async {
-    await _apiService.unbindWxLogin();
-  }
-
   Future<String> updateAvatar(File image) async {
     return await _apiService.uploadAvatar(image);
   }
