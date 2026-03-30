@@ -25,20 +25,19 @@ final contactDetailProvider = AsyncNotifierProvider.family<ContactDetailNotifier
 );
 
 class ContactDetailNotifier extends FamilyAsyncNotifier<ContactModel, String> {
-  late final ContactService _contactService;
-
   @override
   Future<ContactModel> build(String userId) async {
-    _contactService = ref.read(contactServiceProvider);
+    final contactService = ref.read(contactServiceProvider);
     
-    final response = await _contactService.getAddressBookUserDetail(userId);
+    final response = await contactService.getAddressBookUserDetail(userId);
     return ContactModel.fromJson(response);
   }
 
   Future<void> toggleFrequent() async {
     final currentState = await future;
     try {
-      await _contactService.setAddressBookContactFrequent(arg, !(currentState.fc ?? false));
+      final contactService = ref.read(contactServiceProvider);
+      await contactService.setAddressBookContactFrequent(arg, !(currentState.fc ?? false));
       // 重新加载数据以更新状态
       ref.invalidateSelf();
     } catch (e) {
