@@ -60,6 +60,7 @@ class BacklogNotifier extends AsyncNotifier<BacklogListData> {
   }
 
   Future<void> refresh() async {
+    state = const AsyncValue.loading();
     state = await AsyncValue.guard(() => loadBacklogList(refresh: true));
   }
 

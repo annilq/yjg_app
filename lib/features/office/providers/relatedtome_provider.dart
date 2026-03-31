@@ -58,6 +58,7 @@ class RelatedToMeNotifier extends AsyncNotifier<BacklogListData> {
   }
 
   Future<void> refresh() async {
+    state = const AsyncValue.loading();
     state = await AsyncValue.guard(() => loadRelatedToMeList(refresh: true));
   }
 
