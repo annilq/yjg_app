@@ -21,19 +21,19 @@ class WorkflowListData {
   });
 }
 
-final workflowListProvider = AsyncNotifierProviderFamily<WorkflowListNotifier, WorkflowListData, String>(
+final workflowListProvider = AsyncNotifierProviderFamily<WorkflowListNotifier, WorkflowListData, int>(
   WorkflowListNotifier.new,
 );
 
-class WorkflowListNotifier extends FamilyAsyncNotifier<WorkflowListData, String> {
-  late final String _dataId;
+class WorkflowListNotifier extends FamilyAsyncNotifier<WorkflowListData, int> {
+  late final int _dataId;
   int _page = 1;
   final int _rows = 10;
   Map<String, dynamic> _searchForm = {};
   Map<String, dynamic> _pickerParams = {};
 
   @override
-  Future<WorkflowListData> build(String dataId) async {
+  Future<WorkflowListData> build(int dataId) async {
     _dataId = dataId;
     _page = 1;
     _searchForm = {};

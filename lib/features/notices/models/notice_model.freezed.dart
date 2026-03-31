@@ -26,6 +26,7 @@ mixin _$NoticeModel {
   String? get title => throw _privateConstructorUsedError;
   String? get content => throw _privateConstructorUsedError;
   String? get time => throw _privateConstructorUsedError;
+  int? get functionId => throw _privateConstructorUsedError;
   int? get count => throw _privateConstructorUsedError;
 
   /// Serializes this NoticeModel to a JSON map.
@@ -51,6 +52,7 @@ abstract class $NoticeModelCopyWith<$Res> {
     String? title,
     String? content,
     String? time,
+    int? functionId,
     int? count,
   });
 }
@@ -75,6 +77,7 @@ class _$NoticeModelCopyWithImpl<$Res, $Val extends NoticeModel>
     Object? title = freezed,
     Object? content = freezed,
     Object? time = freezed,
+    Object? functionId = freezed,
     Object? count = freezed,
   }) {
     return _then(
@@ -99,6 +102,10 @@ class _$NoticeModelCopyWithImpl<$Res, $Val extends NoticeModel>
                 ? _value.time
                 : time // ignore: cast_nullable_to_non_nullable
                       as String?,
+            functionId: freezed == functionId
+                ? _value.functionId
+                : functionId // ignore: cast_nullable_to_non_nullable
+                      as int?,
             count: freezed == count
                 ? _value.count
                 : count // ignore: cast_nullable_to_non_nullable
@@ -124,6 +131,7 @@ abstract class _$$NoticeModelImplCopyWith<$Res>
     String? title,
     String? content,
     String? time,
+    int? functionId,
     int? count,
   });
 }
@@ -147,6 +155,7 @@ class __$$NoticeModelImplCopyWithImpl<$Res>
     Object? title = freezed,
     Object? content = freezed,
     Object? time = freezed,
+    Object? functionId = freezed,
     Object? count = freezed,
   }) {
     return _then(
@@ -171,6 +180,10 @@ class __$$NoticeModelImplCopyWithImpl<$Res>
             ? _value.time
             : time // ignore: cast_nullable_to_non_nullable
                   as String?,
+        functionId: freezed == functionId
+            ? _value.functionId
+            : functionId // ignore: cast_nullable_to_non_nullable
+                  as int?,
         count: freezed == count
             ? _value.count
             : count // ignore: cast_nullable_to_non_nullable
@@ -189,6 +202,7 @@ class _$NoticeModelImpl implements _NoticeModel {
     this.title,
     this.content,
     this.time,
+    this.functionId,
     this.count,
   });
 
@@ -206,11 +220,13 @@ class _$NoticeModelImpl implements _NoticeModel {
   @override
   final String? time;
   @override
+  final int? functionId;
+  @override
   final int? count;
 
   @override
   String toString() {
-    return 'NoticeModel(id: $id, formKey: $formKey, title: $title, content: $content, time: $time, count: $count)';
+    return 'NoticeModel(id: $id, formKey: $formKey, title: $title, content: $content, time: $time, functionId: $functionId, count: $count)';
   }
 
   @override
@@ -223,13 +239,23 @@ class _$NoticeModelImpl implements _NoticeModel {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.time, time) || other.time == time) &&
+            (identical(other.functionId, functionId) ||
+                other.functionId == functionId) &&
             (identical(other.count, count) || other.count == count));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, formKey, title, content, time, count);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    formKey,
+    title,
+    content,
+    time,
+    functionId,
+    count,
+  );
 
   /// Create a copy of NoticeModel
   /// with the given fields replaced by the non-null parameter values.
@@ -252,6 +278,7 @@ abstract class _NoticeModel implements NoticeModel {
     final String? title,
     final String? content,
     final String? time,
+    final int? functionId,
     final int? count,
   }) = _$NoticeModelImpl;
 
@@ -268,6 +295,8 @@ abstract class _NoticeModel implements NoticeModel {
   String? get content;
   @override
   String? get time;
+  @override
+  int? get functionId;
   @override
   int? get count;
 

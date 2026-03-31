@@ -11,7 +11,7 @@ class WorkflowService {
   }
 
   Future<Map<String, dynamic>> getDataList(
-    String dataId,
+    int dataId,
     Map<String, dynamic> params,
     int page,
     int rows,

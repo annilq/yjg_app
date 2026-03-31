@@ -62,7 +62,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           final args = state.extra as Map<String, dynamic>?;
           return WorkflowListScreen(
             workflowCode: args?['workflowCode']?.toString() ?? '',
-            dataId: args?['dataId']?.toString() ?? '',
+            dataId: args?['dataId']?.toInt() ?? 0,
             name: args?['name'] ?? '',
           );
         },

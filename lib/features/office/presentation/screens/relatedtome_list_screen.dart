@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/core/theme/tokens/app_spacing.dart';
+import 'package:flutter_app/core/utils/navigation_utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_app/shared/widgets/paginated_list_screen.dart';
 import 'package:flutter_app/shared/widgets/card_item_component.dart';
@@ -46,9 +47,7 @@ class _RelatedToMeListScreenState extends ConsumerState<RelatedToMeListScreen> {
           extra: ' ${item.createTime ?? ''}',
           content: item.title ?? '',
           margin: AppSpacing.listItemPadding,
-          onTap: () {
-            // TODO: 跳转到详情
-          },
+          onTap: () => NavigationUtils.goToDetail(context, ref, item, 'relatedtome'),
         );
       },
     );

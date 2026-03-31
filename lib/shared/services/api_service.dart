@@ -362,7 +362,7 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> getDataList(
-    String dataId,
+    int dataId,
     Map<String, dynamic>? filterDict,
     int page,
     int rows,

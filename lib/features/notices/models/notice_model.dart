@@ -11,6 +11,7 @@ class NoticeModel with _$NoticeModel {
     String? title,
     String? content,
     String? time,
+    int? functionId,
     int? count,
   }) = _NoticeModel;
 
