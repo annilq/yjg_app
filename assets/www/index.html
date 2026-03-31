@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval'
+                127.0.0.1:*
+                http://*.baidu.com/
+                https://*.baidu.com/
+                http://res.wx.qq.com/
+                https://res.wx.qq.com/
+                http://*.map.bdimg.com;
+    img-src *;
+    style-src  'self' 'unsafe-inline'
+               127.0.0.1
+               http://*.map.bdimg.com
+               https://*.map.bdimg.com
+               https://*.baidu.com/"
+               > -->
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="stylesheet" href="styles/index.css?v=1774938372046">
+    <!-- 引入原生的资源文件 -->
+    <!-- <script src="//res.wx.qq.com/open/js/jweixin-1.3.2.js?v=1774938372046"></script> -->
+    <script type="text/javascript" src="map.js?v=1774938372046"></script>
+    <script type="text/javascript" src="native.js?v=1774938372046"></script>
+    <!-- <script type="text/javascript" src="wechat.js?v=1774938372046"></script> -->
+  </head>
+
+  <body ng-class="{nofooter:nofooter}">
+    <!-- Add your site or application content here -->
+    <div ng-view=""></div>
+    <div masker-directive></div>
+    <script src="scripts/common.js?v=1774938372046"></script>
+  </body>
+</html>

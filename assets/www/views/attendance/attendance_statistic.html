@@ -1,0 +1,1 @@
+<div class=header> <back-btn></back-btn> 考勤统计 </div> <div class=container> <div class=list> <div class="list-item icon_more lh50 celled" ng-repeat="item in attendanceStatistic.lists" ng-click=attendanceStatistic.goDetail(item)> {{item.name}}年{{item.text}}月考勤统计 </div> <div class="mt10 tc" ng-show="attendanceStatistic.lists.length<1"> 没有考勤信息 </div> </div> </div> 
