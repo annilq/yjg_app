@@ -181,8 +181,7 @@ class SnackBarHelper {
           CupertinoIcons.xmark_circle_fill,
         );
       case SnackBarType.info:
-      default:
-        return (
+      return (
           isDark ? DarkColors.infoBg : LightColors.infoBg,
           isDark ? DarkColors.textPrimary : LightColors.textPrimary,
           AppColors.info,

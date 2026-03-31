@@ -179,7 +179,6 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.cardRadius,
-          side: const BorderSide(color: LightColors.border, width: 1),
         ),
         margin: const EdgeInsets.all(AppSpacing.cardMargin),
       ),
@@ -225,9 +224,6 @@ class AppTheme {
           color: LightColors.textPrimary,
           size: 24,
         ),
-        shape: const Border(
-          bottom: BorderSide(color: LightColors.border, width: 1),
-        ),
       ),
       // Bottom Navigation
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -250,26 +246,26 @@ class AppTheme {
       // Input Decoration
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: LightColors.surface,
+        fillColor: LightColors.surfaceVariant,
         border: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: const BorderSide(color: LightColors.border, width: 1),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: const BorderSide(color: LightColors.border, width: 1),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+          borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: const BorderSide(color: AppColors.error, width: 1),
+          borderSide: BorderSide.none,
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: const BorderSide(color: AppColors.error, width: 2),
+          borderSide: BorderSide.none,
         ),
         contentPadding: AppSpacing.inputPadding,
         hintStyle: AppTypography.bodyMedium.copyWith(
@@ -316,7 +312,8 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.primary,
-          side: const BorderSide(color: LightColors.border),
+          backgroundColor: LightColors.surfaceVariant,
+          side: BorderSide.none,
           splashFactory: NoSplash.splashFactory,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.buttonRadius,
@@ -384,7 +381,6 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.dialogRadius,
-          side: const BorderSide(color: LightColors.border, width: 1),
         ),
         // Flat Design: 禁用对话框按钮的水波纹
       ),
@@ -425,7 +421,6 @@ class AppTheme {
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.chip),
-          side: const BorderSide(color: LightColors.border),
         ),
       ),
       // TabBar
@@ -497,7 +492,6 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.cardRadius,
-          side: const BorderSide(color: DarkColors.border, width: 1),
         ),
         margin: const EdgeInsets.all(AppSpacing.cardMargin),
       ),
@@ -543,9 +537,6 @@ class AppTheme {
           color: DarkColors.textPrimary,
           size: 24,
         ),
-        shape: const Border(
-          bottom: BorderSide(color: DarkColors.border, width: 1),
-        ),
       ),
       // Bottom Navigation
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -568,26 +559,26 @@ class AppTheme {
       // Input Decoration
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: DarkColors.surface,
+        fillColor: DarkColors.surfaceVariant,
         border: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: const BorderSide(color: DarkColors.border, width: 1),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: const BorderSide(color: DarkColors.border, width: 1),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: const BorderSide(color: AppColors.primaryLight, width: 2),
+          borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: const BorderSide(color: AppColors.error, width: 1),
+          borderSide: BorderSide.none,
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: AppRadius.inputRadius,
-          borderSide: const BorderSide(color: AppColors.error, width: 2),
+          borderSide: BorderSide.none,
         ),
         contentPadding: AppSpacing.inputPadding,
         hintStyle: AppTypography.bodyMedium.copyWith(
@@ -634,7 +625,8 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.primaryLight,
-          side: const BorderSide(color: DarkColors.border),
+          backgroundColor: DarkColors.surfaceVariant,
+          side: BorderSide.none,
           splashFactory: NoSplash.splashFactory,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.buttonRadius,
@@ -703,7 +695,6 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.dialogRadius,
-          side: const BorderSide(color: DarkColors.border, width: 1),
         ),
       ),
       // Bottom Sheet
@@ -746,7 +737,6 @@ class AppTheme {
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.chip),
-          side: const BorderSide(color: DarkColors.border),
         ),
       ),
       // TabBar

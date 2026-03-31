@@ -1,105 +1,75 @@
-# 云建管 Flutter 项目开发规则
+# 云建管 Flutter 项目 - 智能体导航地图
 
-## 1. 项目架构
+## 项目概览
 
-### 1.1 目录结构 (Feature-First 架构)
+云建管 Flutter 项目采用 Feature-First 架构，旨在提供高效、可靠的建筑管理系统。本文件是智能体的导航地图，提供项目的基本信息和指向详细文档的链接。
+
+## 核心架构
+
+### 目录结构
 
 ```
 lib/
 ├── main.dart       # 应用入口
 ├── app.dart        # 应用配置
 ├── core/           # 核心功能
-│   ├── constants/  # 常量定义
-│   ├── theme/      # 主题配置
-│   ├── utils/      # 工具类
-│   └── errors/     # 错误处理
 ├── features/       # 功能模块
-│   ├── auth/       # 认证模块
-│   │   ├── service/        # 数据服务（合并datasources和repositories）
-│   │   ├── models/          # 实体
-│   │   ├── presentation/    # 表示层
-│   │   │   ├── screens/     # 页面
-│   │   │   └── widgets/     # 组件
-│   │   └── providers/       # 状态管理
-│   ├── home/       # 主页模块
-│   ├── notices/    # 通知模块
-│   ├── office/     # 办公模块
-│   ├── workflow/   # 工作流模块
-│   └── webview/    # WebView 模块
 ├── shared/         # 共享资源
-│   ├── widgets/    # 通用组件
-│   ├── services/   # 通用服务
-│   └── models/     # 通用模型
 └── routes/         # 路由配置
-    └── app_router.dart
 ```
 
-### 1.2 技术栈
+### 技术栈
 
 - Flutter SDK: ^3.8.1
 - 网络请求: dio ^5.5.0
-- 存储: shared_preferences ^2.2.3, hive_flutter ^1.1.0
-- 加密: crypto ^3.0.3
-- 图片选择: image_picker ^1.1.1
-- 跨平台组件: flutter_platform_widgets ^10.0.0
-- 本地国际化: flutter_localizations
-- WebView: webview_flutter ^4.13.1
-- 状态管理: flutter_riverpod ^2.5.0 (推荐) 或 bloc ^8.x
-- 导航: go_router ^14.0.0
-- 代码生成: freezed ^2.5.0, json_serializable ^6.8.0
+- 存储: shared_preferences, hive_flutter
+- 状态管理: flutter_riverpod (推荐) 或 bloc
+- 导航: go_router
+- 代码生成: freezed, json_serializable
 
+## 智能体工作流程
 
-## 2. 开发规范
-- 在开发新功能前，参考相关技能指南,技能目录`./agents/skills/`
-- 遵循技能指南中的最佳实践
-- 利用技能指南中的代码模板和示例
-- 定期更新技能指南，保持与 Flutter 最新版本同步
+1. **任务理解**: 智能体应首先理解任务需求，确定需要修改的文件和模块。
 
-### 2.1 代码生成流程
-- 使用 `build_runner` 执行代码生成
-- 当修改了使用 `freezed` 或 `json_serializable` 注解的文件时，需要重新生成代码
-- 执行命令：`dart run build_runner build`
-- 开发过程中可以使用 watch 模式：`dart run build_runner watch`
-- 提交代码前确保已执行代码生成，避免因代码生成不完整导致的编译错误
+2. **上下文收集**: 智能体应收集相关的代码和文档，了解当前的实现和约束。
 
-## 3. 测试规范
+3. **方案设计**: 智能体应设计实现方案，确保符合项目的架构和规范。
 
-### 3.1 单元测试
+4. **代码生成**: 智能体应生成高质量的代码，包括功能实现、测试和文档。
 
-- 对关键功能进行单元测试
-- 测试文件放在 `test` 目录中，按功能模块组织
-- 测试文件命名为 `xxx_test.dart`
-- 测试用例应覆盖正常流程和异常情况
-- 使用 `flutter_test` 框架进行测试
+5. **自我审查**: 智能体应审查自己的代码，识别和修复问题。
 
-### 3.2 集成测试
+6. **测试验证**: 智能体应运行测试，确保代码的正确性和质量。
 
-- 对主要业务流程进行集成测试
-- 测试文件放在 `test/integration_test` 目录中
-- 测试用例应模拟真实用户操作
-- 使用 `integration_test` 包进行测试
+7. **提交请求**: 智能体应创建 Pull Request，等待审查和合并。
 
-### 3.3 Widget 测试
+## 关键文档
 
-- 对 UI 组件进行测试
-- 测试文件放在 `test/widget_test` 目录中
-- 测试用例应验证组件的渲染和交互
-- 使用 `flutter_test` 框架进行测试
+- **架构文档**: `docs/architecture.md` - 详细的项目架构说明
+- **设计文档**: `docs/design.md` - 项目设计原则和规范
+- **开发指南**: `docs/development_guide.md` - 详细的开发指南和最佳实践
+- **决策日志**: `docs/decision_log.md` - 项目决策记录
+- **技能文档**: `.agents/skills/` - 项目相关技能指南
 
-### 3.4 测试覆盖率
+## 重要规则
 
-- 关键功能的测试覆盖率应达到 80% 以上
-- 使用 `flutter test --coverage` 生成测试覆盖率报告
-- 分析测试覆盖率，补充缺失的测试用例
+1. **智能体优先**: 所有代码和工具都应由智能体生成和维护。
 
+2. **环境设计**: 创建清晰、结构化的环境，使智能体能够有效工作。
 
-## 4. 其他规范
+3. **明确意图**: 通过清晰的提示和文档传达开发目标。
 
-### 4.1 工具使用
+4. **反馈回路**: 建立自动化的测试、验证和审查机制。
 
-- 使用 `flutter_lints` 进行代码检查
-- 使用 `flutter format` 格式化代码
-- 使用 `flutter analyze` 分析代码
-- 使用 `flutter devtools` 进行性能分析
-- 运行项目时使用 `flutter run -d macos` 命令
-- 提交代码前运行 `flutter analyze` 确保没有语法问题
+5. **渐进式披露**: 从简单的切入点开始，逐步提供更多上下文。
+
+## 工具和技能
+
+- **代码生成**: 使用 `build_runner` 执行代码生成
+- **测试**: 使用 `flutter_test` 进行单元测试和 Widget 测试
+- **代码质量**: 使用 `flutter_lints` 进行代码检查
+- **性能分析**: 使用 `flutter devtools` 进行性能分析
+
+## 联系和支持
+
+如有问题或需要帮助，请参考详细文档或联系项目团队。

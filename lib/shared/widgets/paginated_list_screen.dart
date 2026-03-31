@@ -81,7 +81,7 @@ class PaginatedListScreen<T, S> extends ConsumerWidget {
                 showSearch(
                   context: context,
                   delegate: _ListSearchDelegate(
-                    onSearch: (keyword) => searchCallback!(ref, keyword),
+                    onSearch: (keyword) => searchCallback(ref, keyword),
                   ),
                 );
               }
