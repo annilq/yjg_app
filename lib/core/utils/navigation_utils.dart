@@ -36,10 +36,9 @@ class NavigationUtils {
     // 这里需要根据实际的 provider 实现
     // 暂时使用占位逻辑
     final params = {
-      'formKey': 'workflow_form',
+      'formKey': item['formKey'] ?? '',
       'processType': 'SEARCH',
       'url': '',
-      'test': true,
       'data': {'id': item['id']},
     };
     context.push('/webview', extra: params);
@@ -51,7 +50,6 @@ class NavigationUtils {
       'formKey': 'backlog_form',
       'processType': 'SEARCH',
       'url': '',
-      'test': true,
       'data': {'id': item.id ?? ''},
     };
     context.push('/webview', extra: params);
@@ -63,7 +61,6 @@ class NavigationUtils {
       'formKey': 'relatedtome_form',
       'processType': 'SEARCH',
       'url': '',
-      'test': true,
       'data': {'id': item.id ?? ''},
     };
     context.push('/webview', extra: params);

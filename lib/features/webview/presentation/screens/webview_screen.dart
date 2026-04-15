@@ -103,8 +103,8 @@ class _WebviewScreenState extends ConsumerState<WebviewScreen> {
 
   Future<void> _loadTestHtml() async {
     try {
-      final htmlString = await rootBundle.loadString('assets/html/test_webview.html');
-      await _controller.loadHtmlString(htmlString, baseUrl: 'https://localhost');
+      final htmlString = await rootBundle.loadString('assets/www/index.html');
+      await _controller.loadHtmlString(htmlString);
     } catch (e) {
       debugPrint('加载测试 HTML 失败: $e');
     }
