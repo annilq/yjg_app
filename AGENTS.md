@@ -29,6 +29,8 @@ lib/
 
 ## 智能体工作流程
 
+### 基本流程
+
 1. **任务理解**: 智能体应首先理解任务需求，确定需要修改的文件和模块。
 
 2. **上下文收集**: 智能体应收集相关的代码和文档，了解当前的实现和约束。
@@ -42,6 +44,73 @@ lib/
 6. **测试验证**: 智能体应运行测试，确保代码的正确性和质量。
 
 7. **提交请求**: 智能体应创建 Pull Request，等待审查和合并。
+
+### 深度优先工作方式
+
+- **模块化构建**: 将更大的目标拆解为更小的构建模块（设计、代码、评审、测试等）
+- **渐进式实现**: 提示智能体去构建这些模块，并使用它们去解锁更复杂的任务
+- **能力扩展**: 当智能体遇到困难时，人类工程师应介入并追问："究竟还需要什么样的能力，我们又该如何让这个能力对智能体来说既清晰可读又可强制执行？"
+
+### 智能体审查机制
+
+- **自我审查**: 智能体应在本地审核其自身的更改
+- **多智能体审查**: 智能体可以请求额外的特定智能体审查
+- **反馈循环**: 智能体应响应任何人工或智能体给出的反馈，并循环往复，直到所有智能体审核人员都满意为止
+- **工具集成**: 智能体应直接使用标准开发工具（如 git 命令、本地脚本和嵌入代码仓库的技能）来收集情境
+
+## Git 提交规范
+
+| 类型       | 用途               |
+| ---------- | ------------------ |
+| `feat`     | 新功能             |
+| `fix`      | 修复 Bug           |
+| `refactor` | 重构（无功能变更） |
+| `perf`     | 性能优化           |
+| `test`     | 测试相关           |
+| `docs`     | 文档更新           |
+| `chore`    | 依赖/配置更新      |
+| `ci`       | CI/CD 相关         |
+
+## 常用命令
+
+```bash
+# 安装依赖
+flutter pub get
+
+# 运行
+flutter run
+
+# 代码生成
+flutter pub run build_runner build
+
+# 代码检查
+flutter analyze
+
+# 运行测试
+flutter test
+```
+
+## 关键约束（不可违背）
+
+RULES:
+
+1. You MUST generate a plan.md BEFORE writing any code.
+2. You MUST NOT execute or generate code until user explicitly approves the plan.
+3. The plan MUST follow the provided structure.
+4. After generating plan, STOP and wait for user confirmation.
+
+Workflow:
+
+- Step 1: Understand task
+- Step 2: Generate plan.md
+- Step 3: Ask for confirmation
+- Step 4: Only after approval → execute
+- Step 5: run `flutter analyze` when task finished
+
+If user says:
+
+- "OK" / "同意" / "执行" → proceed
+- Otherwise → revise plan
 
 ## 关键文档
 
